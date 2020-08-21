@@ -18,7 +18,8 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--batch-size", type=int, default=72, help='Batch size')
 parser.add_argument("--epochs", type=int, default=500, help='Training Epochs')
 parser.add_argument("--burnin", type=int, default=20, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-6, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-5, help='Learning Rate')
+parser.add_argument("--init-gain", type=float, default=1, help='Gain for weight init') #np.sqrt(2)
 
 parser.add_argument("--nclasses", type=int, default=5, help='Number of classes')
 parser.add_argument("--samples-per-class", type=int, default=100, help='Number of samples per classes')
@@ -33,9 +34,12 @@ parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classif
 
 # neural dynamics
 parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
-parser.add_argument("--tau-mem", type=float, default=20, help='Membrane time constant')
-parser.add_argument("--tau-syn", type=float, default=7.5, help='Synaptic time constant')
-parser.add_argument("--tau-ref", type=float, default=1/.35, help='Refractory time constant')
+parser.add_argument("--tau-mem-low", type=float, default=5, help='Membrane time constant')
+parser.add_argument("--tau-syn-low", type=float, default=5, help='Synaptic time constant')
+parser.add_argument("--tau-ref-low", type=float, default=1/.35, help='Refractory time constant')
+parser.add_argument("--tau-mem-high", type=float, default=35, help='Membrane time constant')
+parser.add_argument("--tau-syn-high", type=float, default=10, help='Synaptic time constant')
+parser.add_argument("--tau-ref-high", type=float, default=1/.35, help='Refractory time constant')
 
 args = parser.parse_args()
 
@@ -57,15 +61,18 @@ class SmoothStep(torch.autograd.Function):
 
 
 class LIF_FC_Layer(torch.nn.Module):
-    def __init__(self, input_neurons, output_neurons, tau_syn, tau_mem, tau_ref, delta_t, bias, dtype):
+    def __init__(self, input_neurons, output_neurons, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, bias, gain, dtype):
         super(LIF_FC_Layer, self).__init__()   
         self.dtype = dtype
         self.inp_neurons = input_neurons      
         self.out_neurons = output_neurons
-        self.init =  np.sqrt(6 / self.inp_neurons)
+
+        self.init =  np.sqrt(6 / (self.inp_neurons + self.out_neurons))
                 
         self.weights = torch.nn.Parameter(torch.empty((self.inp_neurons, self.out_neurons), dtype = dtype, requires_grad = True))
-        torch.nn.init.uniform_(self.weights, a = -self.init, b = self.init)
+        #torch.nn.init.uniform_(self.weights, a = -self.init, b = self.init)
+        torch.nn.init.xavier_normal_(self.weights, gain = gain)
+        
         if bias:
             self.bias = torch.nn.Parameter(torch.empty((self.out_neurons), dtype = dtype, requires_grad = True))
             torch.nn.init.uniform_(self.bias, a = -0, b = 0)
@@ -73,12 +80,14 @@ class LIF_FC_Layer(torch.nn.Module):
             self.bias = None
           
         # taus and betas
-        self.beta = 1 - delta_t / tau_syn
-        self.tau_syn = 1. / (1. - self.beta)
-        self.alpha = 1 - delta_t / tau_mem
-        self.tau_mem = 1. / (1. - self.alpha)
-        self.gamma = 1 - delta_t / tau_ref
-        self.tau_ref = 1. / (1. - self.gamma)
+        self.tau_syn = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
+        self.beta = torch.nn.Parameter(1 - delta_t / self.tau_syn)
+
+        self.tau_mem = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
+        self.alpha = torch.nn.Parameter(1 - delta_t / self.tau_mem)
+
+        self.tau_ref = torch.empty(torch.Size((self.out_neurons,)), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
+        self.gamma = torch.nn.Parameter(1 - delta_t / self.tau_ref)
 
         
     def state_init(self, batch_size, device):
@@ -98,7 +107,7 @@ class LIF_FC_Layer(torch.nn.Module):
         return self.S, U
 
 class LIF_Conv_Layer(torch.nn.Module):
-    def __init__(self, x_preview, in_channels, out_channels, kernel_size, tau_syn, tau_mem, tau_ref, delta_t, bias, dtype):
+    def __init__(self, x_preview, in_channels, out_channels, kernel_size, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, bias, gain, dtype):
         super(LIF_Conv_Layer, self).__init__()   
         self.dtype = dtype
         
@@ -111,7 +120,8 @@ class LIF_Conv_Layer(torch.nn.Module):
         
         self.conv_fwd = torch.nn.Conv2d(in_channels = self.in_channels, out_channels = self.out_channels, kernel_size = self.kernel_size, bias = self.bias)
 
-        torch.nn.init.uniform_(self.conv_fwd.weight, a = -self.init, b = self.init)
+        #torch.nn.init.uniform_(self.conv_fwd.weight, a = -self.init, b = self.init)
+        torch.nn.init.xavier_normal_(self.conv_fwd.weight, gain = gain)
         if bias:
             torch.nn.init.uniform_(self.conv_fwd.bias, a = -0, b = 0)
         else:
@@ -120,15 +130,19 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.inp_dim = x_preview.shape[1:]
         self.out_dim = self.conv_fwd(x_preview).shape[1:]
           
-        # taus and betas
-        self.beta = 1 - delta_t / tau_syn
-        self.tau_syn = 1. / (1. - self.beta)
-        self.alpha = 1 - delta_t / tau_mem
-        self.tau_mem = 1. / (1. - self.alpha)
-        self.gamma = 1 - delta_t / tau_ref
-        self.tau_ref = 1. / (1. - self.gamma)
-
         self.state_init(x_preview.shape[0], x_preview.device)
+
+        # taus and betas
+        self.tau_syn = torch.empty(torch.Size(self.inp_dim), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
+        self.beta = torch.nn.Parameter(1 - delta_t / self.tau_syn)
+
+        self.tau_mem = torch.empty(torch.Size(self.inp_dim), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
+        self.alpha = torch.nn.Parameter(1 - delta_t / self.tau_mem)
+
+        self.tau_ref = torch.empty(torch.Size(self.out_dim), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
+        self.gamma = torch.nn.Parameter(1 - delta_t / self.tau_ref)
+
+        
 
         
     def state_init(self, batch_size, device):
@@ -151,7 +165,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
 class backbone_conv_model(torch.nn.Module):
-    def __init__(self, x_preview, in_channels, oc1, oc2, k1, k2, bias, tau_ref, tau_mem, tau_syn, delta_t, dtype): 
+    def __init__(self, x_preview, in_channels, oc1, oc2, k1, k2, bias, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, gain, dtype): 
         super(backbone_conv_model, self).__init__()
         self.device = device
         self.dtype  = dtype
@@ -160,13 +174,13 @@ class backbone_conv_model(torch.nn.Module):
         x_preview = x_preview[:,0,:,:,:]
         self.mpooling = torch.nn.MaxPool2d(2)
 
-        self.conv_layer1 = LIF_Conv_Layer(x_preview = x_preview, in_channels = in_channels, out_channels = oc1, kernel_size = k1, tau_syn = tau_syn, tau_mem = tau_mem, tau_ref = tau_ref, delta_t = delta_t, bias = bias, dtype = dtype)
+        self.conv_layer1 = LIF_Conv_Layer(x_preview = x_preview, in_channels = in_channels, out_channels = oc1, kernel_size = k1, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, gain = gain, bias = bias, dtype = dtype)
         x_preview, _ = self.conv_layer1.forward(x_preview)
         x_preview    = self.mpooling(x_preview)
 
         self.f1_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
 
-        self.conv_layer2 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc1, out_channels = oc2, kernel_size = k1, tau_syn = tau_syn, tau_mem = tau_mem, tau_ref = tau_ref, delta_t = delta_t, bias = bias, dtype = dtype)
+        self.conv_layer2 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc1, out_channels = oc2, kernel_size = k1, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, gain = gain, bias = bias, dtype = dtype)
         x_preview, _ = self.conv_layer2.forward(x_preview)
         x_preview    = self.mpooling(x_preview)
 
@@ -222,14 +236,14 @@ class backbone_conv_model(torch.nn.Module):
 
 # classifier
 class classifier_model(torch.nn.Module):
-    def __init__(self, T, inp_neurons, output_classes, tau_ref, tau_mem, tau_syn, bias, delta_t, dtype): 
+    def __init__(self, T, inp_neurons, output_classes, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, bias, gain, delta_t, dtype): 
         super(classifier_model, self).__init__()
         self.dtype  = dtype
 
         self.output_classes = output_classes
         self.T = T
 
-        self.layer1 = LIF_FC_Layer(input_neurons = inp_neurons, output_neurons = output_classes, tau_syn = tau_syn , tau_mem = tau_mem, tau_ref = tau_ref, delta_t = delta_t, bias = bias, dtype = dtype)
+        self.layer1 = LIF_FC_Layer(input_neurons = inp_neurons, output_neurons = output_classes, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, gain = gain, bias = bias, dtype = dtype)
 
 
     def forward(self, inputs):
@@ -264,8 +278,8 @@ delta_t = args.delta_t*ms
 T = x_preview.shape[1]
 
  
-backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, k1 = args.k1, k2 = args.k2, bias = args.conv_bias, tau_ref = args.tau_ref*ms, tau_mem = args.tau_mem*ms, tau_syn = args.tau_syn*ms, delta_t = delta_t, dtype = dtype).to(device)
-classifier = classifier_model(T = x_preview.shape[1], inp_neurons = backbone.f_length, output_classes = args.nclasses, tau_ref = args.tau_ref*ms, tau_mem = args.tau_mem*ms, tau_syn = args.tau_syn*ms, bias = args.fc_bias, delta_t = delta_t, dtype = dtype).to(device)
+backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, k1 = args.k1, k2 = args.k2, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, gain = args.init_gain, delta_t = delta_t, dtype = dtype).to(device)
+classifier = classifier_model(T = x_preview.shape[1], inp_neurons = backbone.f_length, output_classes = args.nclasses, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, gain = args.init_gain, delta_t = delta_t, dtype = dtype).to(device)
 
 all_parameters = list(backbone.parameters()) + list(classifier.parameters())
 loss_fn = torch.nn.CrossEntropyLoss() 
@@ -295,8 +309,9 @@ for e in range(args.epochs):
         u_rr = backbone(x_data)
         u_rr = classifier(u_rr)
 
+
         #BPTT approach
-        loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1)/(T-args.burnin), y_data)
+        loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_data)
         loss.backward()
         opt.step()
         opt.zero_grad()
@@ -305,6 +320,7 @@ for e in range(args.epochs):
         running_loss += loss.item()
         running_acc.append(u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data)
 
+    # save stats
     acc_hist.append(torch.cat(running_acc).float().mean())
     loss_hist.append(running_loss)
     act1_hist.append(np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length))
