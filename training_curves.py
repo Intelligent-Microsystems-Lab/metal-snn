@@ -4,7 +4,7 @@ def plot_curves(loss, train, act1, act2, act3, f_name):
     plt.clf()
     fig, axes = plt.subplots(nrows=2, ncols=1) 
     axes[0].plot(train, label = "Train Acc")
-    axes[0].plot(val, label = "Train Loss")
+    axes[0].plot(loss, label = "Train Loss")
     axes[0].xlabel("Epochs")
     axes[0].ylabel("Acc")
     axes[0].legend()

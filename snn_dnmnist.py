@@ -296,8 +296,7 @@ for e in range(args.epochs):
         u_rr = classifier(u_rr)
 
         #BPTT approach
-        import pdb; pdb.set_trace()
-        loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_data)
+        loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1)/(T-args.burnin), y_data)
         loss.backward()
         opt.step()
         opt.zero_grad()
