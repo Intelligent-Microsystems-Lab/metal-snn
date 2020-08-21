@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--batch-size", type=int, default=72, help='Batch size')
 parser.add_argument("--epochs", type=int, default=500, help='Training Epochs')
 parser.add_argument("--burnin", type=int, default=20, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-5, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-9, help='Learning Rate')
 parser.add_argument("--init-gain", type=float, default=1, help='Gain for weight init') #np.sqrt(2)
 
 parser.add_argument("--nclasses", type=int, default=5, help='Number of classes')
