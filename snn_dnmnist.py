@@ -17,8 +17,8 @@ ms = 1e-3
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--batch-size", type=int, default=72, help='Batch size')
 parser.add_argument("--epochs", type=int, default=500, help='Training Epochs')
-parser.add_argument("--burnin", type=int, default=20, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-9, help='Learning Rate')
+parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
+parser.add_argument("--lr", type=float, default=1.0e-6, help='Learning Rate')
 parser.add_argument("--init-gain", type=float, default=1, help='Gain for weight init') #np.sqrt(2)
 
 parser.add_argument("--nclasses", type=int, default=5, help='Number of classes')
@@ -34,11 +34,11 @@ parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classif
 
 # neural dynamics
 parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
-parser.add_argument("--tau-mem-low", type=float, default=5, help='Membrane time constant')
-parser.add_argument("--tau-syn-low", type=float, default=5, help='Synaptic time constant')
+parser.add_argument("--tau-mem-low", type=float, default=20, help='Membrane time constant')
+parser.add_argument("--tau-syn-low", type=float, default=7.5, help='Synaptic time constant')
 parser.add_argument("--tau-ref-low", type=float, default=1/.35, help='Refractory time constant')
-parser.add_argument("--tau-mem-high", type=float, default=35, help='Membrane time constant')
-parser.add_argument("--tau-syn-high", type=float, default=10, help='Synaptic time constant')
+parser.add_argument("--tau-mem-high", type=float, default=20, help='Membrane time constant')
+parser.add_argument("--tau-syn-high", type=float, default=7.5, help='Synaptic time constant')
 parser.add_argument("--tau-ref-high", type=float, default=1/.35, help='Refractory time constant')
 
 args = parser.parse_args()
@@ -81,13 +81,13 @@ class LIF_FC_Layer(torch.nn.Module):
           
         # taus and betas
         self.tau_syn = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
-        self.beta = torch.nn.Parameter(1 - delta_t / self.tau_syn)
+        self.beta = torch.nn.Parameter(1 - delta_t / self.tau_syn, requires_grad = False)
 
         self.tau_mem = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
-        self.alpha = torch.nn.Parameter(1 - delta_t / self.tau_mem)
+        self.alpha = torch.nn.Parameter(1 - delta_t / self.tau_mem, requires_grad = False)
 
         self.tau_ref = torch.empty(torch.Size((self.out_neurons,)), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
-        self.gamma = torch.nn.Parameter(1 - delta_t / self.tau_ref)
+        self.gamma = torch.nn.Parameter(1 - delta_t / self.tau_ref, requires_grad = False)
 
         
     def state_init(self, batch_size, device):
@@ -134,13 +134,13 @@ class LIF_Conv_Layer(torch.nn.Module):
 
         # taus and betas
         self.tau_syn = torch.empty(torch.Size(self.inp_dim), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
-        self.beta = torch.nn.Parameter(1 - delta_t / self.tau_syn)
+        self.beta = torch.nn.Parameter(1 - delta_t / self.tau_syn, requires_grad = False)
 
         self.tau_mem = torch.empty(torch.Size(self.inp_dim), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
-        self.alpha = torch.nn.Parameter(1 - delta_t / self.tau_mem)
+        self.alpha = torch.nn.Parameter(1 - delta_t / self.tau_mem, requires_grad = False)
 
         self.tau_ref = torch.empty(torch.Size(self.out_dim), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
-        self.gamma = torch.nn.Parameter(1 - delta_t / self.tau_ref)
+        self.gamma = torch.nn.Parameter(1 - delta_t / self.tau_ref, requires_grad = False)
 
         
 
