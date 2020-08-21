@@ -272,7 +272,7 @@ train_dl, test_dl = sample_double_mnist_task(
             num_workers=4)
 
 x_preview, y_labels = next(iter(train_dl))
-label_to_class = dict(zip(y_labels.unique().tolist(),range(5)))
+label_to_class = dict(zip(y_labels.unique().tolist(),range(args.nclasses)))
 
 delta_t = args.delta_t*ms
 T = x_preview.shape[1]
