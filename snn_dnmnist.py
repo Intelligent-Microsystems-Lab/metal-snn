@@ -273,10 +273,14 @@ class classifier_model(torch.nn.Module):
 
         return s_t
 
-def aux_task_gen(x_data):
-    import pdb; pdb.set_trace()
+def aux_task_gen(x_data, k):
+    y_labels = np.random.choice(k, x_data.shape[0])
 
-    return x_data, y_labels
+    for i in range(1, k):
+        c_ind = np.argwhere(y_labels == i)
+        x_data[c_ind, :, :, :, :] = torch.rot90(x_data[c_ind, :, :, :, :], i, [4,5])
+
+    return x_data, torch.tensor(y_labels).to(x_data.device)
 
 def util_first_spike(x):
     ind_mask = torch.ones_like(x)
@@ -287,7 +291,7 @@ def util_first_spike(x):
     return 1 - m/spk_temp.shape[1]
 
 def run_test():
-    print("Start Testing")
+    #print("Start Testing")
     running_acc  = []
     start_time = time.time()
     for x_data, y_data in test_dl:
@@ -349,8 +353,7 @@ model_uuid = str(uuid.uuid4())
 print(args)
 print(model_uuid)
 print("Start Training")
-print("Epoch   Loss           Accuracy  S_Conv1   S_Conv2   S_Class   Time  TestAcc AuxAcc")
-# Training
+print("Epoch   Loss           Accuracy  S_Conv1   S_Conv2   S_Class   TestAcc    AuxAcc   Time")
 for e in range(args.epochs):
     running_loss = 0
     running_acc  = []
@@ -362,7 +365,7 @@ for e in range(args.epochs):
         y_data = torch.tensor([label_to_class[y.item()] for y in y_data], device = device)
 
         # create aux task
-        x_data, aux_y = aux_task_gen(x_data)
+        x_data, aux_y = aux_task_gen(x_data, args.aux_classes)
 
         # forwardpass
         bb_rr  = backbone(x_data)
@@ -402,7 +405,7 @@ for e in range(args.epochs):
     act3_hist.append(np.sum(classifier.spike_count[args.burnin:])/(args.nclasses*T))
     
     # pring log 
-    print("{0:04d}    {1:011.4F}    {2:6.4f}    {3:6.4f}    {4:6.4f}    {5:6.4f}    {6:.4f}    {7:.4}    {8:.4}".format(e+1, loss_hist[-1], acc_hist[-1], act1_hist[-1], act2_hist[-1], act3_hist[-1], time.time() - start_time, test_hist[-1], aux_hist[-1] ))
+    print("{0:04d}    {1:011.4F}    {2:6.4f}    {3:6.4f}    {4:6.4f}    {5:6.4f}    {6:6.4f}    {7:6.4f}    {8:.4f}".format(e+1, loss_hist[-1], acc_hist[-1], act1_hist[-1], act2_hist[-1], act3_hist[-1], test_hist[-1], aux_hist[-1], time.time() - start_time ))
     # plot train curve
     plot_curves(loss = loss_hist, train = acc_hist, aux = aux_hist, test = test_hist, act1 = act1_hist, act2 = act2_hist, act3 = act3_hist, f_name = model_uuid)
 
@@ -411,7 +414,8 @@ for e in range(args.epochs):
         best_acc = acc_hist[-1]
         checkpoint_dict = {
                 'backbone'   : backbone.state_dict(), 
-                'classifer'  : classifier.state_dict(), 
+                'classifer'  : classifier.state_dict(),
+                'aux_class'  : aux_classifier.state_dict(), 
                 'optimizer'  : opt.state_dict(),
                 'epoch'      : e, 
                 'arguments'  : args,
@@ -433,4 +437,3 @@ for e in range(args.epochs):
 
 #fst = util_first_spike(u_rr)
 #loss = loss_fn(fst, y_data)
-
