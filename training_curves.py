@@ -12,7 +12,7 @@ def plot_curves(loss, train, act1, act2, act3, f_name):
     lns2 = ax2.plot(loss, label = "Train Loss", color = 'tab:red')
     ax2.set_ylabel("Loss")
 
-    lns = lns1+lns2+lns3
+    lns = lns1+lns2
     labs = [l.get_label() for l in lns]
     axes[0].legend(lns, labs, loc=0)
 

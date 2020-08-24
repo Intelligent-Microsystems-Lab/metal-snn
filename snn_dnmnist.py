@@ -19,8 +19,8 @@ parser.add_argument("--batch-size", type=int, default=72, help='Batch size')
 parser.add_argument("--epochs", type=int, default=500, help='Training Epochs')
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
 parser.add_argument("--lr", type=float, default=1.0e-8, help='Learning Rate')
-parser.add_argument("--init-gain-backbone", type=float, default=.1, help='Gain for weight init') #np.sqrt(2)
-parser.add_argument("--init-gain-fc", type=float, default=.1, help='Gain for weight init')
+parser.add_argument("--init-gain-backbone", type=float, default=.05, help='Gain for weight init') #np.sqrt(2)
+parser.add_argument("--init-gain-fc", type=float, default=.01, help='Gain for weight init')
 
 parser.add_argument("--nclasses", type=int, default=5, help='Number of classes')
 parser.add_argument("--samples-per-class", type=int, default=100, help='Number of samples per classes')
@@ -28,8 +28,8 @@ parser.add_argument("--samples-per-class", type=int, default=100, help='Number o
 #architecture
 parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
 parser.add_argument("--k2", type=int, default=7, help='Kernel Size 2')
-parser.add_argument("--oc1", type=int, default=4, help='Output Channels 1')
-parser.add_argument("--oc2", type=int, default=8, help='Output Channels 2')
+parser.add_argument("--oc1", type=int, default=8, help='Output Channels 1')
+parser.add_argument("--oc2", type=int, default=16, help='Output Channels 2')
 parser.add_argument("--conv-bias", type=bool, default=True, help='Bias for conv layers')
 parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classifier')
 
@@ -185,13 +185,13 @@ class backbone_conv_model(torch.nn.Module):
 
         self.conv_layer1 = LIF_Conv_Layer(x_preview = x_preview, in_channels = in_channels, out_channels = oc1, kernel_size = k1, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain, thr = thr, bias = bias, dtype = dtype)
         x_preview, _ = self.conv_layer1.forward(x_preview)
-        #x_preview    = self.mpooling(x_preview)
+        x_preview    = self.mpooling(x_preview)
 
         self.f1_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
 
         self.conv_layer2 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc1, out_channels = oc2, kernel_size = k1, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain, thr = thr, bias = bias, dtype = dtype)
         x_preview, _ = self.conv_layer2.forward(x_preview)
-        #x_preview    = self.mpooling(x_preview)
+        x_preview    = self.mpooling(x_preview)
 
         self.f_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
 
@@ -207,10 +207,10 @@ class backbone_conv_model(torch.nn.Module):
         # go through time steps
         for t in range(self.T):
             x, _       = self.conv_layer1.forward(inputs[:,t,:,:,:])
-            #x          = self.mpooling(x)
+            x          = self.mpooling(x)
             self.spike_count1[t] += x.view(x.shape[0], -1).sum(dim=1).mean().item()
             x, _       = self.conv_layer2.forward(x)
-            #x          = self.mpooling(x)
+            x          = self.mpooling(x)
             self.spike_count2[t] += x.view(x.shape[0], -1).sum(dim=1).mean().item()
             s_t[:,t,:] = x.view(-1,self.f_length)
 
@@ -314,9 +314,9 @@ label_to_class = dict(zip(y_labels.unique().tolist(),range(args.nclasses)))
 delta_t = args.delta_t*ms
 T = x_preview.shape[1]
  
-backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, k1 = args.k1, k2 = args.k2, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain = args.init_gain_backbone, delta_t = delta_t, dtype = dtype).to(device)
+#backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, k1 = args.k1, k2 = args.k2, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain = args.init_gain_backbone, delta_t = delta_t, dtype = dtype).to(device)
 
-#backbone = backbone_fc(T = x_preview.shape[1], inp_neurons = 2*64*64, output_classes = 1000, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain, delta_t = delta_t, dtype = dtype).to(device)
+backbone = backbone_fc(T = x_preview.shape[1], inp_neurons = 2*64*64, output_classes = 1000, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_backbone, delta_t = delta_t, dtype = dtype).to(device)
 
 classifier = classifier_model(T = x_preview.shape[1], inp_neurons = backbone.f_length, output_classes = args.nclasses, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
 
@@ -353,7 +353,7 @@ for e in range(args.epochs):
         #BPTT approach + spike count target
         #spike_reg = (np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length) - .1)**2 + (np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length) - .1)**2 + (np.sum(classifier.spike_count[args.burnin:])/(args.nclasses*T) - .1)**2
 
-        loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_data) #+ spike_reg
+        loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1)/(T-args.burnin), y_data) #+ spike_reg
         loss.backward()
         opt.step()
         opt.zero_grad()
