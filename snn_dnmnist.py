@@ -18,12 +18,13 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--batch-size", type=int, default=72, help='Batch size')
 parser.add_argument("--epochs", type=int, default=500, help='Training Epochs')
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-6, help='Learning Rate')
-parser.add_argument("--init-gain-backbone", type=float, default=1, help='Gain for weight init') #np.sqrt(2)
+parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
+parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init') #np.sqrt(2)
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
 
 parser.add_argument("--nclasses", type=int, default=5, help='Number of classes')
 parser.add_argument("--samples-per-class", type=int, default=100, help='Number of samples per classes')
+parser.add_argument("--aux-classes", type=int, default=4, help='Auxiliar task number of classes')
 
 #architecture
 parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
@@ -217,31 +218,6 @@ class backbone_conv_model(torch.nn.Module):
         return s_t
 
 
-# # auxiliary task
-# class aux_class(torch.nn.Module):
-#     def __init__(self, in_channels, out_classes, tau_ref, tau_mem, tau_syn, delta_t, dtype, device): 
-#         super(SNN_fc_model, self).__init__()
-#         self.device = device
-#         self.dtype  = dtype
-
-#         self.T = inputs.shape[1]
-
-#         self.layer1 = LIF_FC_Layer(input_neurons = x_dim*y_dim*channels, output_neurons = 100, tau_syn = tau_syn , tau_mem = tau_mem, tau_ref = tau_ref, delta_t = delta_t, bias = True, device = device, dtype = dtype).to(device)
-
-
-#     def forward(self, inputs):
-#         # init
-#         self.conv_layer1.state_init(inputs.shape[0])
-#         self.conv_layer2.state_init(inputs.shape[0])
-#         self.conv_layer3.state_init(inputs.shape[0])
-#         s_t = torch.zeros((inputs.shape[0], T, args.nclasses), device = self.device)
-
-#         # go through time steps
-#         for t in range(self.T):
-#             x             = inputs[:,t,:,:,:].reshape((inputs.shape[0],  -1))
-#             s_t[:,t,:], _ = layer1.forward(x)
-
-#         return s_t
 
 
 # classifier
@@ -297,6 +273,10 @@ class classifier_model(torch.nn.Module):
 
         return s_t
 
+def aux_task_gen(x_data):
+    import pdb; pdb.set_trace()
+
+    return x_data, y_labels
 
 def util_first_spike(x):
     ind_mask = torch.ones_like(x)
@@ -305,6 +285,24 @@ def util_first_spike(x):
     spk_temp[spk_temp==0] = spk_temp.shape[1]
     m, _ = torch.min(spk_temp,1)
     return 1 - m/spk_temp.shape[1]
+
+def run_test():
+    print("Start Testing")
+    running_acc  = []
+    start_time = time.time()
+    for x_data, y_data in test_dl:
+        x_data = x_data.to(device)
+        y_data = torch.tensor([label_to_class[y.item()] for y in y_data], device = device)
+
+        u_rr = backbone(x_data)
+        u_rr = classifier(u_rr)
+
+        # stats
+        running_acc.append(u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data)
+
+    #print("Test Accuracy: {0:.4f} Test Time {1:7.4f} ".format(torch.cat(running_acc).float().mean(), time.time() - start_time))
+    return torch.cat(running_acc).float().mean()
+
 
 # data loader
 train_dl, test_dl = sample_double_mnist_task(
@@ -322,21 +320,28 @@ label_to_class = dict(zip(y_labels.unique().tolist(),range(args.nclasses)))
 delta_t = args.delta_t*ms
 T = x_preview.shape[1]
  
-#backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, k1 = args.k1, k2 = args.k2, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain = args.init_gain_backbone, delta_t = delta_t, dtype = dtype).to(device)
+# backbone Conv
+backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, k1 = args.k1, k2 = args.k2, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain = args.init_gain_backbone, delta_t = delta_t, dtype = dtype).to(device)
 
-backbone = backbone_fc(T = x_preview.shape[1], inp_neurons = 2*64*64, output_classes = 1000, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_backbone, delta_t = delta_t, dtype = dtype).to(device)
+# backbone FC
+#backbone = backbone_fc(T = x_preview.shape[1], inp_neurons = 2*64*64, output_classes = 1000, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_backbone, delta_t = delta_t, dtype = dtype).to(device)
 
 classifier = classifier_model(T = x_preview.shape[1], inp_neurons = backbone.f_length, output_classes = args.nclasses, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
+
+aux_classifier = classifier_model(T = x_preview.shape[1], inp_neurons = backbone.f_length, output_classes = args.aux_classes, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
 
 all_parameters = list(backbone.parameters()) + list(classifier.parameters())
 #loss_fn = torch.nn.CrossEntropyLoss() 
 loss_fn = torch.nn.MSELoss()
 opt = torch.optim.SGD(all_parameters, lr = args.lr)
 acc_hist = []
+test_hist = []
+aux_hist = []
 loss_hist = []
 act1_hist = [0]
 act2_hist = [0]
 act3_hist = [0]
+act4_hist = [0]
 best_acc = 0
 
 model_uuid = str(uuid.uuid4())
@@ -344,31 +349,39 @@ model_uuid = str(uuid.uuid4())
 print(args)
 print(model_uuid)
 print("Start Training")
-print("Epoch   Loss           Accuracy  S_Conv1   S_Conv2   S_Class   Time")
+print("Epoch   Loss           Accuracy  S_Conv1   S_Conv2   S_Class   Time  TestAcc AuxAcc")
 # Training
 for e in range(args.epochs):
     running_loss = 0
     running_acc  = []
+    running_aux  = []
     start_time = time.time()
 
     for x_data, y_data in train_dl:
         x_data = x_data.to(device)
         y_data = torch.tensor([label_to_class[y.item()] for y in y_data], device = device)
 
-        # Forwardpass
-        u_rr = backbone(x_data)
-        u_rr = classifier(u_rr)
+        # create aux task
+        x_data, aux_y = aux_task_gen(x_data)
 
-
+        # forwardpass
+        bb_rr  = backbone(x_data)
+        u_rr   = classifier(bb_rr)
+        aux_rr = aux_classifier(bb_rr)
         
+        # class loss
+        y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.unsqueeze(dim = 1), T - args.burnin)
+        class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
 
-        #BPTT approach + spike count target
-        #spike_reg = (np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length) - .1)**2 + (np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length) - .1)**2 + (np.sum(classifier.spike_count[args.burnin:])/(args.nclasses*T) - .1)**2
+        # aux loss
+        aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), T - args.burnin)
+        aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
 
-        #loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_data) #+ spike_reg #/(T-args.burnin)
-        fst = util_first_spike(u_rr)
-        loss = loss_fn(fst, y_data)
+        # manifold regularizer
 
+
+        # BPTT
+        loss = class_loss + aux_loss
         loss.backward()
         opt.step()
         opt.zero_grad()
@@ -376,18 +389,22 @@ for e in range(args.epochs):
         # stats
         running_loss += loss.item()
         running_acc.append(u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data)
+        running_aux.append(aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y)
+
 
     # save stats
     acc_hist.append(torch.cat(running_acc).float().mean())
+    test_hist.append(run_test())
+    aux_hist.append(torch.cat(running_aux).float().mean())
     loss_hist.append(running_loss)
     act1_hist.append(np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f_length))
-    #act2_hist.append(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length))
+    act2_hist.append(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length))
     act3_hist.append(np.sum(classifier.spike_count[args.burnin:])/(args.nclasses*T))
     
     # pring log 
-    print("{0:04d}    {1:011.4F}    {2:6.4f}    {3:6.4f}    {4:6.4f}    {5:6.4f}    {6:.4f}".format(e+1, loss_hist[-1], acc_hist[-1], act1_hist[-1], act2_hist[-1], act3_hist[-1], time.time() - start_time ))
+    print("{0:04d}    {1:011.4F}    {2:6.4f}    {3:6.4f}    {4:6.4f}    {5:6.4f}    {6:.4f}    {7:.4}    {8:.4}".format(e+1, loss_hist[-1], acc_hist[-1], act1_hist[-1], act2_hist[-1], act3_hist[-1], time.time() - start_time, test_hist[-1], aux_hist[-1] ))
     # plot train curve
-    plot_curves(loss = loss_hist, train = acc_hist, act1 = act1_hist, act2 = act2_hist, act3 = act3_hist, f_name = model_uuid)
+    plot_curves(loss = loss_hist, train = acc_hist, aux = aux_hist, test = test_hist, act1 = act1_hist, act2 = act2_hist, act3 = act3_hist, f_name = model_uuid)
 
     # save best model
     if acc_hist[-1] > best_acc:
@@ -405,20 +422,15 @@ for e in range(args.epochs):
         del checkpoint_dict
 
 
-print("Start Testing")
-running_acc  = []
-start_time = time.time()
-for x_data, y_data in test_dl:
-    x_data = x_data.to(device)
-    y_data = torch.tensor([label_to_class[y.item()] for y in y_data], device = device)
-
-    u_rr = backbone(x_data)
-    u_rr = classifier(u_rr)
-
-    # stats
-    running_acc.append(u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data)
-
-print("Test Accuracy: {0:.4f} Test Time {1:7.4f} ".format(torch.cat(running_acc).float().mean(), time.time() - start_time))
 
 
+
+
+#BPTT approach + spike count target
+#spike_reg = (np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length) - .1)**2 + (np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length) - .1)**2 + (np.sum(classifier.spike_count[args.burnin:])/(args.nclasses*T) - .1)**2
+
+#loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_data) #+ spike_reg #/(T-args.burnin)
+
+#fst = util_first_spike(u_rr)
+#loss = loss_fn(fst, y_data)
 
