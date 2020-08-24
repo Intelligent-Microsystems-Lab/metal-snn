@@ -5,7 +5,7 @@ def plot_curves(loss, train, aux, test, act1, act2, act3, f_name):
     fig, axes = plt.subplots(nrows=2, ncols=1) 
     lns1 = axes[0].plot(train, label = "Train Acc", color = 'tab:blue')
     lns3 = axes[0].plot(aux, label = "Aux. Acc", color = 'tab:orange')
-    lns4 = axes[0].plot(test, label = "Test Acc", color = 'tab:black')
+    lns4 = axes[0].plot(test, label = "Test Acc", color = 'tab:brown')
     axes[0].set_xlabel("Epochs")
     axes[0].set_ylabel("Acc")
     #axes[0].legend()
