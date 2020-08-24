@@ -18,7 +18,7 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--batch-size", type=int, default=72, help='Batch size')
 parser.add_argument("--epochs", type=int, default=500, help='Training Epochs')
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-8, help='Learning Rate')
 parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init') #np.sqrt(2)
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
 
@@ -353,7 +353,7 @@ model_uuid = str(uuid.uuid4())
 print(args)
 print(model_uuid)
 print("Start Training")
-print("Epoch   Loss           Accuracy  S_Conv1   S_Conv2   S_Class   TestAcc    AuxAcc   Time")
+print("Epoch   Loss           Accuracy  S_Conv1   S_Conv2   S_Class   TestAcc   AuxAcc    Time")
 for e in range(args.epochs):
     running_loss = 0
     running_acc  = []
@@ -437,3 +437,5 @@ for e in range(args.epochs):
 
 #fst = util_first_spike(u_rr)
 #loss = loss_fn(fst, y_data)
+
+
