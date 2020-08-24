@@ -18,9 +18,9 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--batch-size", type=int, default=72, help='Batch size')
 parser.add_argument("--epochs", type=int, default=500, help='Training Epochs')
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-8, help='Learning Rate')
-parser.add_argument("--init-gain-backbone", type=float, default=.05, help='Gain for weight init') #np.sqrt(2)
-parser.add_argument("--init-gain-fc", type=float, default=.01, help='Gain for weight init')
+parser.add_argument("--lr", type=float, default=1.0e-6, help='Learning Rate')
+parser.add_argument("--init-gain-backbone", type=float, default=1, help='Gain for weight init') #np.sqrt(2)
+parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
 
 parser.add_argument("--nclasses", type=int, default=5, help='Number of classes')
 parser.add_argument("--samples-per-class", type=int, default=100, help='Number of samples per classes')
@@ -298,6 +298,14 @@ class classifier_model(torch.nn.Module):
         return s_t
 
 
+def util_first_spike(x):
+    ind_mask = torch.ones_like(x)
+    ind_mask = torch.cumsum(ind_mask, dim=1)
+    spk_temp = ind_mask * x
+    spk_temp[spk_temp==0] = spk_temp.shape[1]
+    m, _ = torch.min(spk_temp,1)
+    return 1 - m/spk_temp.shape[1]
+
 # data loader
 train_dl, test_dl = sample_double_mnist_task(
             meta_dataset_type = 'train',
@@ -321,7 +329,8 @@ backbone = backbone_fc(T = x_preview.shape[1], inp_neurons = 2*64*64, output_cla
 classifier = classifier_model(T = x_preview.shape[1], inp_neurons = backbone.f_length, output_classes = args.nclasses, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
 
 all_parameters = list(backbone.parameters()) + list(classifier.parameters())
-loss_fn = torch.nn.CrossEntropyLoss() 
+#loss_fn = torch.nn.CrossEntropyLoss() 
+loss_fn = torch.nn.MSELoss()
 opt = torch.optim.SGD(all_parameters, lr = args.lr)
 acc_hist = []
 loss_hist = []
@@ -350,10 +359,16 @@ for e in range(args.epochs):
         u_rr = backbone(x_data)
         u_rr = classifier(u_rr)
 
+
+        
+
         #BPTT approach + spike count target
         #spike_reg = (np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length) - .1)**2 + (np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length) - .1)**2 + (np.sum(classifier.spike_count[args.burnin:])/(args.nclasses*T) - .1)**2
 
-        loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1)/(T-args.burnin), y_data) #+ spike_reg
+        #loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_data) #+ spike_reg #/(T-args.burnin)
+        fst = util_first_spike(u_rr)
+        loss = loss_fn(fst, y_data)
+
         loss.backward()
         opt.step()
         opt.zero_grad()
@@ -366,7 +381,7 @@ for e in range(args.epochs):
     acc_hist.append(torch.cat(running_acc).float().mean())
     loss_hist.append(running_loss)
     act1_hist.append(np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f_length))
-    act2_hist.append(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length))
+    #act2_hist.append(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length))
     act3_hist.append(np.sum(classifier.spike_count[args.burnin:])/(args.nclasses*T))
     
     # pring log 
