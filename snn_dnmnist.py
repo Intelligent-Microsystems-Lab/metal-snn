@@ -15,11 +15,12 @@ dtype = torch.float32
 ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--batch-size", type=int, default=256, help='Batch size')
+parser.add_argument("--batch-size", type=int, default=128, help='Batch size')
 parser.add_argument("--epochs", type=int, default=400, help='Training Epochs')
 parser.add_argument("--epochs-nk", type=int, default=50, help='Training Epochs Few Shot Learning')
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
 parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
+parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate')
 parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init') #np.sqrt(2)
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
 
@@ -31,7 +32,6 @@ parser.add_argument("--aux-classes", type=int, default=4, help='Auxiliar task nu
 
 parser.add_argument("--n-way", type=int, default=5, help='N-way')
 parser.add_argument("--k-shot", type=int, default=1, help='K-shot')
-
 
 #architecture
 parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
@@ -316,7 +316,7 @@ def run_test():
 
 
 # data loader
-train_dl, test_dl = sample_double_mnist_task(
+train_dl, _ = sample_double_mnist_task(
             meta_dataset_type = 'train',
             N = args.nclasses,
             K = args.samples_per_class,
@@ -325,32 +325,8 @@ train_dl, test_dl = sample_double_mnist_task(
             ds=args.delta_t,
             num_workers=4)
 
-val_train, val_test = sample_double_mnist_task(
-            meta_dataset_type = 'val',
-            N = args.ft_nclasses,
-            K = args.ft_samples_per_class,
-            root='data.nosync/nmnist/n_mnist.hdf5',
-            batch_size=args.batch_size,
-            ds=args.delta_t,
-            num_workers=4)
-
-nk_train, nk_test = sample_double_mnist_task(
-            meta_dataset_type = 'test',
-            N = args.n_way,
-            K = args.k_shot,
-            root='data.nosync/nmnist/n_mnist.hdf5',
-            batch_size=args.batch_size,
-            ds=args.delta_t,
-            num_workers=4)
-
 x_preview, y_labels = next(iter(train_dl))
-label_to_class = dict(zip(y_labels.unique().tolist(),range(args.nclasses)))
-
-x_pre_val, y_val_labels = next(iter(val_train))
-label_to_val = dict(zip(y_labels.unique().tolist(),range(args.ft_nclasses)))
-
-x_pre_test, y_test_labels = next(iter(nk_train))
-label_to_test = dict(zip(y_labels.unique().tolist(),range(args.n_way)))
+label_to_class = dict(zip(range(64),range(args.nclasses)))
 
 delta_t = args.delta_t*ms
 T = x_preview.shape[1]
@@ -365,9 +341,6 @@ classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_cla
 
 aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.aux_classes, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
 
-ft_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.ft_nclasses, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
-
-nk_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_way, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
 
 all_parameters = list(backbone.parameters()) + list(classifier.parameters())
 loss_fn = torch.nn.MSELoss(reduction = 'mean')
@@ -389,6 +362,11 @@ print(model_uuid)
 print("Start Training Backbone")
 print("Epoch   Loss           Accuracy  S_Conv1   S_Conv2   S_Class   AuxAcc    Time")
 for e in range(args.epochs):
+
+    if e%args.lr_div == 0 and e != 0:
+        opt.param_groups[-1]['lr'] /= 2
+        print("[New lr: {0:6.4f}]".format(opt.param_groups[-1]['lr']))
+
     for x_data, y_data in train_dl:
         start_time = time.time()
         x_data = x_data.to(device)
@@ -446,8 +424,22 @@ for e in range(args.epochs):
     torch.save(checkpoint_dict, './checkpoints/'+model_uuid+'.pkl')
     del checkpoint_dict
 
+del classifier, train_dl
+torch.cuda.empty_cache()
 
+val_train, _ = sample_double_mnist_task(
+            meta_dataset_type = 'val',
+            N = args.ft_nclasses,
+            K = args.ft_samples_per_class,
+            root='data.nosync/nmnist/n_mnist.hdf5',
+            batch_size=args.batch_size,
+            ds=args.delta_t,
+            num_workers=4)
 
+x_pre_val, y_val_labels = next(iter(val_train))
+label_to_val = dict(zip(range(64,80),range(args.ft_nclasses)))
+
+ft_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.ft_nclasses, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
 
 all_parameters = list(backbone.parameters()) + list(ft_classifier.parameters())
 loss_fn = torch.nn.MSELoss(reduction = 'mean')
@@ -457,7 +449,7 @@ print("Start Finetuning Backbone")
 print("Epoch   Loss           Accuracy  S_Conv1   S_Conv2   S_Class   AuxAcc    Time")
 best_val = 0
 e = 0
-while true:
+while True:
     for x_data, y_data in val_train:
         start_time = time.time()
         x_data = x_data.to(device)
@@ -493,7 +485,7 @@ while true:
         loss_hist.append(loss.item())
         act1_hist.append(np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f_length))
         act2_hist.append(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length))
-        act3_hist.append(np.sum(classifier.spike_count[args.burnin:])/(args.nclasses*T))
+        act3_hist.append(np.sum(ft_classifier.spike_count[args.burnin:])/(args.nclasses*T))
     
         # pring log 
         print("{0:04d}    {1:011.4F}    {2:6.4f}    {3:6.4f}    {4:6.4f}    {5:6.4f}    {6:6.4f}    {7:.4f}".format(e+1, loss_hist[-1], acc_hist[-1], act1_hist[-1], act2_hist[-1], act3_hist[-1], aux_hist[-1], time.time() - start_time ))
@@ -509,7 +501,7 @@ while true:
     # save model
     checkpoint_dict = {
             'backbone'     : backbone.state_dict(), 
-            'classifer'    : classifier.state_dict(),
+            #'classifer'    : classifier.state_dict(),
             'ft_classifer' : ft_classifier.state_dict(),
             'aux_class'    : aux_classifier.state_dict(), 
             'optimizer'    : opt.state_dict(),
@@ -522,6 +514,22 @@ while true:
     torch.save(checkpoint_dict, './checkpoints/'+model_uuid+'.pkl')
     del checkpoint_dict
 
+del ft_classifier, aux_classifier, val_train
+torch.cuda.empty_cache()
+
+nk_train, _ = sample_double_mnist_task(
+            meta_dataset_type = 'test',
+            N = args.n_way,
+            K = args.k_shot,
+            root='data.nosync/nmnist/n_mnist.hdf5',
+            batch_size=args.batch_size,
+            ds=args.delta_t,
+            num_workers=4)
+
+nk_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_way, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
+
+x_pre_test, y_test_labels = next(iter(nk_train))
+label_to_test = dict(zip(y_test_labels.unique().tolist(),range(args.n_way)))
 
 # Final Test of few shot learning
 loss_fn = torch.nn.MSELoss(reduction = 'mean')
@@ -554,7 +562,7 @@ for e in range(args.epochs_nk):
         loss_hist.append(loss.item())
         act1_hist.append(np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f_length))
         act2_hist.append(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length))
-        act3_hist.append(np.sum(classifier.spike_count[args.burnin:])/(args.nclasses*T))
+        act3_hist.append(np.sum(nk_classifier.spike_count[args.burnin:])/(args.nclasses*T))
     
         # pring log 
         print("{0:04d}    {1:011.4F}    {2:6.4f}    {3:6.4f}    {4:6.4f}    {5:6.4f}    {6:.4f}".format(e+1, loss_hist[-1], acc_hist[-1], act1_hist[-1], act2_hist[-1], act3_hist[-1], time.time() - start_time ))
@@ -564,10 +572,10 @@ for e in range(args.epochs_nk):
     # save model
     checkpoint_dict = {
             'backbone'     : backbone.state_dict(), 
-            'classifer'    : classifier.state_dict(),
-            'ft_classifer' : ft_classifier.state_dict(),
+            #'classifer'    : classifier.state_dict(),
+            #'ft_classifer' : ft_classifier.state_dict(),
             'nk_classifer' : nk_classifier.state_dict(),
-            'aux_class'    : aux_classifier.state_dict(), 
+            #'aux_class'    : aux_classifier.state_dict(), 
             'optimizer'    : opt.state_dict(),
             'epoch'        : e, 
             'arguments'    : args,
