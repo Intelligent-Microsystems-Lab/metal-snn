@@ -132,7 +132,6 @@ class LIF_Conv_Layer(torch.nn.Module):
 class backbone_conv_model(torch.nn.Module):
     def __init__(self, x_preview, in_channels, oc1, oc2, k1, k2, bias, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, reset, thr, gain, dtype): 
         super(backbone_conv_model, self).__init__()
-        self.device = device
         self.dtype  = dtype
 
         self.T = x_preview.shape[1]
