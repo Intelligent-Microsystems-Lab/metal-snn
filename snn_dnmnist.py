@@ -20,11 +20,11 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--batch-size", type=int, default=16, help='Batch size')
 parser.add_argument("--batch-size-test", type=int, default=4, help='Batch size')
 parser.add_argument("--batch-size-test-test", type=int, default=128, help='Batch size test test')
-parser.add_argument("--epochs", type=int, default=1, help='Training Epochs')
+parser.add_argument("--epochs", type=int, default=50, help='Training Epochs')
 parser.add_argument("--epochs-nk", type=int, default=31, help='Training Epochs Few Shot Learning')
-parser.add_argument("--iter-test", type=int, default=2, help='Test Iter')
+parser.add_argument("--iter-test", type=int, default=10, help='Test Iter')
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-6, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
 #parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate')
 parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init') #np.sqrt(2)
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
@@ -35,9 +35,9 @@ parser.add_argument("--train-samples", type=int, default=100, help='Number of sa
 parser.add_argument("--val-samples", type=int, default=100, help='Number of samples per classes')
 parser.add_argument("--test-samples", type=int, default=100, help='Number of samples per classes')
 parser.add_argument("--aux-classes", type=int, default=4, help='Auxiliar task number of classes (you cant change this)')
-parser.add_argument("--aux-impo", type=float, default=.5, help='Weight of aux loss')
+#parser.add_argument("--aux-impo", type=float, default=.5, help='Weight of aux loss')
 
-parser.add_argument("--n-train", type=int, default=10, help='N-way')
+parser.add_argument("--n-train", type=int, default=10, help='N-way for training technically I guess more (?)')
 
 parser.add_argument("--n-way", type=int, default=5, help='N-way')
 parser.add_argument("--k-shot", type=int, default=5, help='K-shot')
@@ -60,8 +60,8 @@ parser.add_argument("--tau-syn-high", type=float, default=7.5, help='Synaptic ti
 parser.add_argument("--tau-ref-high", type=float, default=1/.35, help='Refractory time constant')
 parser.add_argument("--reset", type=float, default=1, help='Refractory time constant')
 parser.add_argument("--thr", type=float, default=.5, help='Firing Threshold')
-parser.add_argument("--target_act", type=float, default=.9, help='Firing Threshold')
-parser.add_argument("--none_act", type=float, default=.1, help='Firing Threshold')
+parser.add_argument("--target_act", type=float, default=.95, help='Firing Threshold')
+parser.add_argument("--none_act", type=float, default=.05, help='Firing Threshold')
 
 args = parser.parse_args()
 
@@ -163,7 +163,8 @@ for e in range(args.epochs):
         avg_loss = avg_loss+class_loss.data.item()
         avg_rloss = avg_rloss+aux_loss.data.item()
 
-        print('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}'.format(e, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
+        if i % 10 == 0:
+            print('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
         
 
     # then accuracy on test!
@@ -186,8 +187,8 @@ for e in range(args.epochs):
             rcorrect += (aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum()
             total += x_data.shape[0]
     torch.cuda.empty_cache()
-    
-    print("Epoch {0} : Accuracy {1}, Rotate Accuracy {2}".format(epoch,(float(correct)*100)/total,(float(rcorrect)*100)/total))
+
+    print("Epoch {:d} : Accuracy {:f}, Rotate Accuracy {:f}".format(e,(float(correct)*100)/total,(float(rcorrect)*100)/total))
 
     # model save!
 
@@ -313,13 +314,10 @@ for i in range(args.iter_test):
 
     classifier_nk = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_way, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
 
-
     # Final Test of few shot learning
     loss_fn = torch.nn.MSELoss(reduction = 'mean')
     opt = torch.optim.SGD(classifier_nk.parameters(), lr = args.lr)
 
-    best_val = 0
-    final_acc = [0]
     for e in range(args.epochs_nk):
         print(".", end='')
         for x_data, y_data in support_ds:
