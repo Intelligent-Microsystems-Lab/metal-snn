@@ -1,6 +1,6 @@
 import os
 
-ident_word = "UnQuantized"
+ident_word = "Sweep"
 
 part1 = "#!/bin/csh \n#$ -M cschaef6@nd.edu \n#$ -m abe\n#$ -q " 
 part11 = "\n#$ -l gpu_card=1\n#$ -N "
@@ -12,7 +12,7 @@ part3 = ".txt\n#$ -e ./logs/error_"+ident_word+"_"
 part4 = ".txt\nmodule load python\nsetenv OMP_NUM_THREADS $NSLOTS\npython snn_dnmnist.py"
 
 
-sweep_parameters = {'nclasses':[4,5,6]}
+sweep_parameters = {'batch-size':[16]}
 
 trials = 3
 

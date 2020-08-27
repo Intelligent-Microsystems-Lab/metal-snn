@@ -226,12 +226,3 @@ class classifier_model(torch.nn.Module):
             self.spike_count[t] += s_t[:,t,:].view(s_t[:,t,:].shape[0], -1).sum(dim=1).mean().item()
 
         return s_t
-
-def aux_task_gen(x_data, k):
-    y_labels = np.random.choice(k, x_data.shape[0])
-
-    for i in range(1, k):
-        c_ind = np.argwhere(y_labels == i)
-        x_data[c_ind, :, :, :, :] = torch.rot90(x_data[c_ind, :, :, :, :], i, [4,5])
-
-    return x_data, torch.tensor(y_labels).to(x_data.device)
