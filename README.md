@@ -9,7 +9,7 @@ Training Spiking Neural Networks for few-shot learning based on https://arxiv.or
 ## Training
 
 ```
-python train --data-set [DNMNIST/DDVSGesture/ASL-DVS]
+python train --data-set [DNMNIST/DDVSGesture/ASL-DVS-FS]
 ```
 
 ## Testing
@@ -20,9 +20,9 @@ python test --checkpoint [uuid]
 
 ## Results
 
-| Method       |  DNMNIST      |       | DDVSGesture |       | ASL-DVS |       |
-|:------------:|:-------------:|:-----:|:-----------:|:-----:|:-------:|:-----:|
-|              | 1-shot        | 5-shot|1-shot       | 5-shot|1-shot   | 5-shot|
-| MAML         | ??            | ??    |??           |??     |??       |??     |
-| Baseline     | ??            | ??    |??           |??     |??       |??     |
-| Rotation     | ??            | ??    |??           |??     |??       |??     |
+| Method       |  DNMNIST      |       | DDVSGesture |       | ASL-DVS-FS |       |
+|:------------:|:-------------:|:-----:|:-----------:|:-----:|:----------:|:-----:|
+|              | 1-shot        | 5-shot|1-shot       | 5-shot|1-shot      | 5-shot|
+| MAML         | ??            | ??    |??           |??     |??          |??     |
+| Baseline     | ??            | ??    |??           |??     |??          |??     |
+| Rotation     | ??            | ??    |??           |??     |??          |??     |

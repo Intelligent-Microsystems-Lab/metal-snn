@@ -20,27 +20,19 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--batch-size", type=int, default=16, help='Batch size')
 parser.add_argument("--batch-size-test", type=int, default=4, help='Batch size')
 parser.add_argument("--batch-size-test-test", type=int, default=128, help='Batch size test test')
-parser.add_argument("--epochs", type=int, default=400, help='Training Epochs')
-parser.add_argument("--epochs-nk", type=int, default=301, help='Training Epochs Few Shot Learning')
-parser.add_argument("--iter-test", type=int, default=600, help='Test Iter')
+parser.add_argument("--epochs", type=int, default=1, help='Training Epochs')   # up here
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
-#parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate')
-parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init') #np.sqrt(2)
+parser.add_argument("--lr", type=float, default=1.0e-8, help='Learning Rate')
+parser.add_argument("--lr-div", type=int, default=150, help='Learning Rate Division')
+parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init')
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
-#parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
-#parser.add_argument("--n-avg-acc", type=int, default=10, help='Averaging for Acc')
+parser.add_argument("--log-int", type=int, default=10, help='Logging Interval')
+parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 
-parser.add_argument("--train-samples", type=int, default=100, help='Number of samples per classes')
-parser.add_argument("--val-samples", type=int, default=100, help='Number of samples per classes')
-parser.add_argument("--test-samples", type=int, default=100, help='Number of samples per classes')
+parser.add_argument("--train-samples", type=int, default=100, help='Number of samples per classes') # up here
+parser.add_argument("--test-samples", type=int, default=100, help='Number of samples per classes') # up here
 parser.add_argument("--aux-classes", type=int, default=4, help='Auxiliar task number of classes (you cant change this)')
-#parser.add_argument("--aux-impo", type=float, default=.5, help='Weight of aux loss')
-
-parser.add_argument("--n-train", type=int, default=20, help='N-way for training technically I guess more (?)')
-
-parser.add_argument("--n-way", type=int, default=5, help='N-way')
-parser.add_argument("--k-shot", type=int, default=5, help='K-shot')
+parser.add_argument("--n-train", type=int, default=30, help='N-way for training technically I guess more (64?)')
 
 #architecture
 parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
@@ -101,24 +93,29 @@ opt = torch.optim.Adam([
 
 
 acc_hist = []
-test_hist = []
 aux_hist = []
-loss_hist = []
-act1_hist = [0]
-act2_hist = [0]
-act3_hist = [0]
-act4_hist = [0]
-best_acc = 0
+clal_hist = []
+auxl_hist = []
+
+act1_hist = []
+act2_hist = []
+act3_hist = []
 
 model_uuid = str(uuid.uuid4())
 
-print(args)
-print(model_uuid)
-print("Start Training Backbone")
+with open("logs/train_"+model_uuid+".txt", "w+") as file_object:
+    print(args)
+    print(model_uuid)
+    print("Start Training Backbone")
 
 for e in range(args.epochs):
-    avg_loss=0
-    avg_rloss=0
+    e_time = time.time()
+    avg_loss, avg_rloss, avg_s1, avg_s2, avg_s3  = 0
+
+    # learning rate divide
+    if e%args.lr_div == 0 and e != 0:
+        for param_group in opt.param_groups:
+            param_group['lr'] /= 2
 
     for i, (x_data, y_data) in enumerate(train_dl):
         start_time = time.time()
@@ -147,14 +144,18 @@ for e in range(args.epochs):
         opt.step()
         opt.zero_grad()
 
-        avg_loss = avg_loss+class_loss.data.item()
-        avg_rloss = avg_rloss+aux_loss.data.item()
+        avg_loss = avg_loss + class_loss.data.item()
+        avg_rloss = avg_rloss + aux_loss.data.item()
+        avg_s1 = avg_s1 + np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f_length)
+        avg_s2 = avg_s2 + np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length) 
+        avg_s3 = avg_s3 + np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T)
 
-        if i % 10 == 0:
-            print('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
+        if i % args.log_int == 0:
+            with open("logs/"+model_uuid+".txt", "a") as file_object:
+                print('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
         
 
-    # then accuracy on test!
+    # accuracy on test
     with torch.no_grad():
         correct = rcorrect = total = 0
         for x_data, y_data in test_dl:
@@ -175,187 +176,39 @@ for e in range(args.epochs):
             total += x_data.shape[0]
     torch.cuda.empty_cache()
 
-    print("Epoch {:d} : Accuracy {:f}, Rotate Accuracy {:f}".format(e+1,(float(correct)*100)/total,(float(rcorrect)*100)/total))
+    # stats save
+    acc_hist.append((float(correct)*100)/total)
+    aux_hist.append((float(rcorrect)*100)/total)
+    clal_hist.append(avg_loss/float(i+1))
+    auxl_hist.append(avg_rloss/float(i+1))
 
-    # model save!
+    act1_hist.append(avg_s1/float(i+1))
+    act2_hist.append(avg_s1/float(i+1))
+    act3_hist.append(avg_s1/float(i+1))
+
+    # logging and plotting
+    with open("logs/"+model_uuid+".txt", "a") as file_object:
+        print("Epoch {:d} : Accuracy {:f}, Rotate Accuracy {:f}, Time {:f}".format(e+1,(float(correct)*100)/total,(float(rcorrect)*100)/total, time.time() - e_time))
+    plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, act3_hist, model_uuid)
+
+    # model save
+    if e % args.save_int == 0:
+        checkpoint_dict = {
+                'backbone'     : backbone.state_dict(), 
+                'classifer'    : classifier.state_dict(),
+                'aux_class'    : aux_classifier.state_dict(), 
+                'optimizer'    : opt.state_dict(),
+                'epoch'        : e, 
+                'arguments'    : args,
+
+                'loss_cla'     : clal_hist,
+                'loss_aux'     : auxl_hist,
+                'acc_cla'      : acc_hist,
+                'acc_aux'      : aux_hist
+        }
+        torch.save(checkpoint_dict, './checkpoints/'+model_uuid+'.pkl')
+        del checkpoint_dict
 
 
-del train_dl, classifier
-torch.cuda.empty_cache()
-
-# val_train, _ = sample_double_mnist_task(
-#             meta_dataset_type = 'val',
-#             N = args.n_way,
-#             K = args.val_samples,
-#             K_test = args.val_samples,
-#             root='data.nosync/nmnist/n_mnist.hdf5',
-#             batch_size=args.batch_size,
-#             ds=args.delta_t,
-#             num_workers=4)
-
-# x_pre_val, y_val_labels = next(iter(val_train))
-
-# all_parameters = list(backbone.parameters()) + list(classifier.parameters())
-# loss_fn = torch.nn.MSELoss(reduction = 'mean')
-# opt = torch.optim.SGD(all_parameters, lr = args.lr)
-
-# print("Start Finetuning Backbone")
-# print("Epoch   Loss           Accuracy  S_Conv1   S_Conv2   S_Class   AuxAcc    Time")
-
-# ft_acc = [0]
-# best_val = 0
-# run_e = 0
-# while True:
-#     for x_data, y_data in val_train:
-#         best_val = np.mean(ft_acc[-args.n_avg_acc:])
-#         start_time = time.time()
-#         x_data = x_data.to(device)
-#         y_data = y_data.to(device)
-#         #y_data = torch.tensor([label_to_val[y.item()] for y in y_data], device = device)
-
-#         # create aux task
-#         x_data, aux_y = aux_task_gen(x_data, args.aux_classes)
-
-#         # forwardpass
-#         bb_rr  = backbone(x_data)
-#         u_rr   = classifier(bb_rr)
-#         aux_rr = aux_classifier(bb_rr)
-        
-#         # class loss
-#         y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-#         class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
-
-#         # aux loss
-#         aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), T - args.burnin)
-#         aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
-
-#         # Manifold loss...
-
-#         # BPTT
-#         loss = class_loss + args.aux_impo * aux_loss
-#         loss.backward()
-#         opt.step()
-#         opt.zero_grad()
-
-#         # save stats
-#         acc_hist.append((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().mean().item())
-#         ft_acc.append(acc_hist[-1])
-#         aux_hist.append((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().mean().item())
-#         loss_hist.append(loss.item())
-#         act1_hist.append(np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f_length))
-#         act2_hist.append(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length))
-#         act3_hist.append(np.sum(classifier.spike_count[args.burnin:])/(args.n_way*T))
-    
-#         # pring log 
-#         print("{0:04d}    {1:011.4F}    {2:6.4f}    {3:6.4f}    {4:6.4f}    {5:6.4f}    {6:6.4f}    {7:.4f}".format(run_e+1, loss_hist[-1], np.mean(ft_acc[-args.n_avg_acc:]), act1_hist[-1], act2_hist[-1], act3_hist[-1], np.mean(aux_hist[-args.n_avg_acc:]), time.time() - start_time ))
-#         # plot train curve
-#         plot_curves(loss = loss_hist, train = acc_hist, aux = aux_hist, test = test_hist, act1 = act1_hist, act2 = act2_hist, act3 = act3_hist, f_name = model_uuid)
-#         if best_val > np.mean(ft_acc[-args.n_avg_acc:]):
-#             break
-#     else:
-#         # save model
-#         checkpoint_dict = {
-#                 'backbone'     : backbone.state_dict(), 
-#                 'classifer'    : classifier.state_dict(),
-#                 'aux_class'    : aux_classifier.state_dict(), 
-#                 'optimizer'    : opt.state_dict(),
-#                 'epoch'        : e, 
-#                 'arguments'    : args,
-#                 'train_loss'   : loss_hist,
-#                 'train_curve'  : acc_hist,
-#                 'aux_curve'    : aux_hist
-#         }
-#         torch.save(checkpoint_dict, './checkpoints/'+model_uuid+'.pkl')
-#         del checkpoint_dict
-#         continue
-#     break
 
     
-
-# del val_train, aux_classifier
-# torch.cuda.empty_cache()
-
-
-##################
-# META Training
-##################
-
-print("Evaluating over %d classes with %d examples"%(args.n_way, args.k_shot))
-
-acc_all = [[],[],[]]
-for i in range(args.iter_test):
-
-    # new task
-    support_ds, query_ds = sample_double_mnist_task(
-                meta_dataset_type = 'test',
-                N = args.n_way,
-                K = args.k_shot,
-                K_test = args.test_samples,
-                root='data.nosync/nmnist/n_mnist.hdf5',
-                batch_size = args.batch_size_test,
-                batch_size_test = args.batch_size_test_test,
-                ds=args.delta_t,
-                num_workers=4)
-
-    x_pre_test, y_test_labels = next(iter(support_ds))
-
-    classifier_nk = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_way, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
-
-    # Final Test of few shot learning
-    loss_fn = torch.nn.MSELoss(reduction = 'mean')
-    opt = torch.optim.Adam(classifier_nk.parameters(), lr = args.lr) # SGD before
-
-    for e in range(args.epochs_nk):
-        print(".", end='')
-        for x_data, y_data in support_ds:
-            start_time = time.time()
-            x_data = x_data.to(device)
-            y_data = y_data.to(device)
-
-            # forwardpass
-            bb_rr  = backbone(x_data)
-            u_rr   = classifier_nk(bb_rr)
-            
-            # class loss
-            y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-            class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
-
-            # BPTT
-            class_loss.backward()
-            opt.step()
-            opt.zero_grad()
-
-        del x_data, y_data, y_onehot, bb_rr, u_rr, class_loss
-        torch.cuda.empty_cache()
-
-        # test data at 100, 200, 300
-        if e%10 == 0 and e != 0:
-            test_acc = []
-            with torch.no_grad():
-                for x_data, y_data in query_ds:
-                    start_time = time.time()
-                    x_data = x_data.to(device)
-                    y_data = y_data.to(device)
-
-                    # forwardpass
-                    bb_rr  = backbone(x_data)
-                    u_rr   = classifier_nk(bb_rr)
-
-                    test_acc.append((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float())
-                    del x_data, y_data, bb_rr, u_rr
-                    torch.cuda.empty_cache()
-            acc_all[int(e/10)-1] = torch.cat(test_acc).mean().item()*100
-            print("|",end='')
-    print("%d steps reached and the mean acc is %g , %g , %g"%(i, np.mean(np.array(acc_all[0])),np.mean(np.array(acc_all[1])),np.mean(np.array(acc_all[2])) ))
-
-
-acc_mean1 = np.mean(acc_all[0])
-acc_mean2 = np.mean(acc_all[1])
-acc_mean3 = np.mean(acc_all[2])
-acc_std1  = np.std(acc_all[0])
-acc_std2  = np.std(acc_all[1])
-acc_std3  = np.std(acc_all[2])
-print('%d Test Acc at 100e= %4.2f%% +- %4.2f%%' %(args.iter_test, acc_mean1, 1.96* acc_std1/np.sqrt(args.iter_test)))
-print('%d Test Acc at 200e= %4.2f%% +- %4.2f%%' %(args.iter_test, acc_mean2, 1.96* acc_std2/np.sqrt(args.iter_test)))
-print('%d Test Acc at 300e= %4.2f%% +- %4.2f%%' %(args.iter_test, acc_mean3, 1.96* acc_std3/np.sqrt(args.iter_test)))
-
