@@ -1,2 +1,4 @@
 data.nosync/
 torchneuromorphic/
+.DS_Store
+__pycache__/
