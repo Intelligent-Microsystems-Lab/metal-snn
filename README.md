@@ -8,15 +8,15 @@ Training Spiking Neural Networks for few-shot learning based on https://arxiv.or
 
 ## Training
 
-'''
+```
 python train --data-set [DNMNIST/DDVSGesture/ASL-DVS]
-'''
+```
 
 ## Testing
 
-'''
+```
 python test --checkpoint [uuid]
-'''
+```
 
 ## Results
 
