@@ -1,1 +1,1 @@
-Epoch 1 | Batch 0/188 | Loss 35505.921875 | Rotate Loss 25826.742188 | Time 4.934341
+Epoch 1 | Batch 0/188 | Loss 35505.921875 | Rotate Loss 25826.742188 | Time 4.934341Epoch 1 | Batch 10/188 | Loss 35515.771662 | Rotate Loss 26319.752841 | Time 5.167867Epoch 1 | Batch 20/188 | Loss 35412.259115 | Rotate Loss 26162.442336 | Time 5.100175
