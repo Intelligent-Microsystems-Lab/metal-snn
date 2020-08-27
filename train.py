@@ -5,7 +5,7 @@ import numpy as np
 from torchneuromorphic.torchneuromorphic.doublenmnist.doublenmnist_dataloaders import *
 from training_curves import plot_curves
 
-from lif_snn import backbone_conv_model, classifier_model#, aux_task_gen
+from lif_snn import backbone_conv_model, classifier_model, aux_task_gen
 
 torch.manual_seed(42)
 if torch.cuda.is_available():
@@ -65,17 +65,6 @@ parser.add_argument("--none_act", type=float, default=.05, help='Firing Threshol
 
 args = parser.parse_args()
 
-
-def aux_task_gen(x_data, k, y_data):
-    xtemp = [x_data] 
-    ytemp = [y_data, y_data, y_data, y_data]
-    aux_ytemp = [ torch.tensor([0]*x_data.shape[0]) ]
-
-    for i in range(1, k):
-        xtemp.append(xtemp[-1].transpose(3,4).flip(1))
-        aux_ytemp.append(torch.tensor([i]*x_data.shape[0]))
-
-    return torch.cat(xtemp).to(x_data.device), torch.cat(ytemp).to(x_data.device), torch.cat(aux_ytemp).to(x_data.device)
 
 # training data
 train_dl, test_dl  = sample_double_mnist_task(

@@ -308,7 +308,11 @@ for i in range(args.iter_test):
                 ds=args.delta_t,
                 num_workers=4)
 
-    x_pre_test, y_test_labels = next(iter(support_ds))
+    x_preview, _ = next(iter(support_ds))
+
+    delta_t = args.delta_t*ms
+    T = x_preview.shape[1]
+    max_act = T - args.burnin
 
     classifier_nk = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_way, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
 
