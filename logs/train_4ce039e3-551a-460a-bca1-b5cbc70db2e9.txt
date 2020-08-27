@@ -3,3 +3,9 @@ Namespace(aux_classes=4, batch_size=16, batch_size_test=4, batch_size_test_test=
 Start Training Backbone
 Epoch 1 | Batch 0/188 | Loss 35707.050781 | Rotate Loss 24026.273438 | Time 4.891373
 Epoch 1 | Batch 10/188 | Loss 35061.576705 | Rotate Loss 25053.475142 | Time 5.132031
+Epoch 1 | Batch 20/188 | Loss 35066.563058 | Rotate Loss 25493.219122 | Time 5.133377
+Epoch 1 | Batch 30/188 | Loss 35000.398564 | Rotate Loss 25490.419103 | Time 5.129514
+Epoch 1 | Batch 40/188 | Loss 35103.504573 | Rotate Loss 25467.695884 | Time 5.125794
+Epoch 1 | Batch 50/188 | Loss 35046.030331 | Rotate Loss 25192.816330 | Time 22.293507
+Epoch 1 | Batch 60/188 | Loss 35065.020108 | Rotate Loss 25136.279073 | Time 5.124051
+Epoch 1 | Batch 70/188 | Loss 35046.430898 | Rotate Loss 24999.450594 | Time 5.127450
