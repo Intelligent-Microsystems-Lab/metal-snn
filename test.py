@@ -19,12 +19,12 @@ ms = 1e-3
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--checkpoint", type=str, default='2b29b60b-100c-40b2-aa9d-ec083fa3a2e9', help='UUID for checkpoint to be tested')
 
-parser.add_argument("--epochs", type=int, default=10, help='Training Epochs') 
+parser.add_argument("--epochs", type=int, default=91, help='Training Epochs') 
 parser.add_argument("--batch-size-test", type=int, default=4, help='Batch size')
 parser.add_argument("--batch-size-test-test", type=int, default=128, help='Batch size test test')
 parser.add_argument("--progressbar-off", type=float, default=False, help='False: progressbar activated')
 
-parser.add_argument("--iter-test", type=int, default=1, help='Test Iter')
+parser.add_argument("--iter-test", type=int, default=300, help='Test Iter')
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
 parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
@@ -130,7 +130,7 @@ for i in range(args.iter_test):
         torch.cuda.empty_cache()
 
         # test data at 100, 200, 300
-        if e%1 == 0 and e != 0:
+        if e%30 == 0 and e != 0:
             test_acc = []
             with torch.no_grad():
                 for x_data, y_data in query_ds:
