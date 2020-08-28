@@ -27,7 +27,7 @@ parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weig
 parser.add_argument("--log-int", type=int, default=10, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 
-parser.add_argument("--train-samples", type=int, default=200, help='Number of samples per classes')
+parser.add_argument("--train-samples", type=int, default=100, help='Number of samples per classes')
 parser.add_argument("--aux-classes", type=int, default=4, help='Auxiliar task number of classes (you cant change this)')
 parser.add_argument("--n-train", type=int, default=15, help='N-way for training technically I guess more (64?)')
 
@@ -180,8 +180,8 @@ for e in range(args.epochs):
     auxl_hist.append(avg_rloss/float(i+1))
 
     act1_hist.append(avg_s1/float(i+1))
-    act2_hist.append(avg_s1/float(i+1))
-    act3_hist.append(avg_s1/float(i+1))
+    act2_hist.append(avg_s2/float(i+1))
+    act3_hist.append(avg_s3/float(i+1))
 
     # logging and plotting
     with open("logs/train_"+model_uuid+".txt", "a") as file_object:

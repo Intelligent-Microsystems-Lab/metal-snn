@@ -13,7 +13,7 @@ part4 = ".txt\nmodule load python\nsetenv OMP_NUM_THREADS $NSLOTS\npython train.
 
 
 #sweep_parameters = {'n-train':[15,25],'train-samples':[200]}
-sweep_parameters = {'train-samples':[100]}
+sweep_parameters = {'n-train':[10,15,25], 'train-samples':[200]}
 
 trials = 2
 
