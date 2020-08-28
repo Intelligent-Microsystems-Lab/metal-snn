@@ -20,3 +20,4 @@ Epoch 1 | Batch 150/188 | Loss 35078.174203 | Rotate Loss 25199.924772 | Time 5.
 Epoch 1 | Batch 160/188 | Loss 35081.118012 | Rotate Loss 25219.099524 | Time 5.059649
 Epoch 1 | Batch 170/188 | Loss 35076.446043 | Rotate Loss 25234.080683 | Time 5.053130
 Epoch 1 | Batch 180/188 | Loss 35084.213506 | Rotate Loss 25265.294069 | Time 5.058333
+Epoch 1 : Accuracy 3.050000, Rotate Accuracy 26.258333, Time 1122.360480
