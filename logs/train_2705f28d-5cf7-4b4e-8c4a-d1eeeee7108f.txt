@@ -873,3 +873,23 @@ Epoch 79 : Accuracy 6.666667, Rotate Accuracy 32.066667, Time 550.356457
 Epoch 80 | Batch 0/94 | Loss 10728.958984 | Rotate Loss 18428.078125 | Time 5.015765
 Epoch 80 | Batch 10/94 | Loss 12142.002930 | Rotate Loss 17757.938210 | Time 5.287337
 Epoch 80 | Batch 20/94 | Loss 12504.373651 | Rotate Loss 17466.094494 | Time 5.340934
+Epoch 80 | Batch 30/94 | Loss 12358.343309 | Rotate Loss 17658.887853 | Time 5.272812
+Epoch 80 | Batch 40/94 | Loss 12520.972251 | Rotate Loss 17544.544588 | Time 5.367666
+Epoch 80 | Batch 50/94 | Loss 12724.490809 | Rotate Loss 17621.950214 | Time 5.244751
+Epoch 80 | Batch 60/94 | Loss 12783.112305 | Rotate Loss 17489.026383 | Time 5.215350
+Epoch 80 | Batch 70/94 | Loss 12791.097024 | Rotate Loss 17452.481514 | Time 5.193695
+Epoch 80 | Batch 80/94 | Loss 12811.626652 | Rotate Loss 17578.812693 | Time 5.209231
+Epoch 80 | Batch 90/94 | Loss 12818.688777 | Rotate Loss 17629.032538 | Time 5.184302
+Epoch 80 : Accuracy 6.933333, Rotate Accuracy 32.316667, Time 559.926005
+Epoch 81 | Batch 0/94 | Loss 11980.896484 | Rotate Loss 18099.789062 | Time 5.017767
+Epoch 81 | Batch 10/94 | Loss 12589.891513 | Rotate Loss 17687.163352 | Time 5.242938
+Epoch 81 | Batch 20/94 | Loss 12459.667690 | Rotate Loss 17537.427827 | Time 5.188587
+Epoch 81 | Batch 30/94 | Loss 12367.030053 | Rotate Loss 17714.988155 | Time 5.163611
+Epoch 81 | Batch 40/94 | Loss 12577.143388 | Rotate Loss 17617.783537 | Time 5.201744
+Epoch 81 | Batch 50/94 | Loss 12694.979684 | Rotate Loss 17692.115349 | Time 5.380642
+Epoch 81 | Batch 60/94 | Loss 12759.760166 | Rotate Loss 17603.106942 | Time 5.427339
+Epoch 81 | Batch 70/94 | Loss 12649.355703 | Rotate Loss 17464.118178 | Time 5.221872
+Epoch 81 | Batch 80/94 | Loss 12626.143289 | Rotate Loss 17611.790702 | Time 5.145785
+Epoch 81 | Batch 90/94 | Loss 12660.486414 | Rotate Loss 17656.777215 | Time 5.118710
+Epoch 81 : Accuracy 7.233333, Rotate Accuracy 32.633333, Time 549.812588
+Epoch 82 | Batch 0/94 | Loss 13553.142578 | Rotate Loss 17908.664062 | Time 5.005274
