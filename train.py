@@ -18,21 +18,18 @@ ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--batch-size", type=int, default=16, help='Batch size')
-parser.add_argument("--batch-size-test", type=int, default=4, help='Batch size')
-parser.add_argument("--batch-size-test-test", type=int, default=128, help='Batch size test test')
-parser.add_argument("--epochs", type=int, default=1, help='Training Epochs')   # up here
+parser.add_argument("--epochs", type=int, default=400, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-8, help='Learning Rate')
-parser.add_argument("--lr-div", type=int, default=150, help='Learning Rate Division')
+parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
+parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
 parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init')
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
 parser.add_argument("--log-int", type=int, default=10, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 
-parser.add_argument("--train-samples", type=int, default=100, help='Number of samples per classes') # up here
-parser.add_argument("--test-samples", type=int, default=100, help='Number of samples per classes') # up here
+parser.add_argument("--train-samples", type=int, default=200, help='Number of samples per classes')
 parser.add_argument("--aux-classes", type=int, default=4, help='Auxiliar task number of classes (you cant change this)')
-parser.add_argument("--n-train", type=int, default=30, help='N-way for training technically I guess more (64?)')
+parser.add_argument("--n-train", type=int, default=15, help='N-way for training technically I guess more (64?)')
 
 #architecture
 parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
@@ -63,7 +60,7 @@ train_dl, test_dl  = sample_double_mnist_task(
             meta_dataset_type = 'train',
             N = args.n_train,
             K = args.train_samples,
-            K_test = args.test_samples,
+            K_test = args.train_samples,
             root='data.nosync/nmnist/n_mnist.hdf5',
             batch_size=args.batch_size,
             batch_size_test=args.batch_size,
@@ -104,13 +101,13 @@ act3_hist = []
 model_uuid = str(uuid.uuid4())
 
 with open("logs/train_"+model_uuid+".txt", "w+") as file_object:
-    print(args)
-    print(model_uuid)
-    print("Start Training Backbone")
+    file_object.write(str(args) + "\n")
+    file_object.write(model_uuid+ "\n")
+    file_object.write("Start Training Backbone\n")
 
 for e in range(args.epochs):
     e_time = time.time()
-    avg_loss, avg_rloss, avg_s1, avg_s2, avg_s3  = 0
+    avg_loss = avg_rloss = avg_s1 = avg_s2 = avg_s3  = 0
 
     # learning rate divide
     if e%args.lr_div == 0 and e != 0:
@@ -151,8 +148,8 @@ for e in range(args.epochs):
         avg_s3 = avg_s3 + np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T)
 
         if i % args.log_int == 0:
-            with open("logs/"+model_uuid+".txt", "a") as file_object:
-                print('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
+            with open("logs/train_"+model_uuid+".txt", "a") as file_object:
+                file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}\n'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
         
 
     # accuracy on test
@@ -187,8 +184,8 @@ for e in range(args.epochs):
     act3_hist.append(avg_s1/float(i+1))
 
     # logging and plotting
-    with open("logs/"+model_uuid+".txt", "a") as file_object:
-        print("Epoch {:d} : Accuracy {:f}, Rotate Accuracy {:f}, Time {:f}".format(e+1,(float(correct)*100)/total,(float(rcorrect)*100)/total, time.time() - e_time))
+    with open("logs/train_"+model_uuid+".txt", "a") as file_object:
+        file_object.write("Epoch {:d} : Accuracy {:f}, Rotate Accuracy {:f}, Time {:f}\n".format(e+1,(float(correct)*100)/total,(float(rcorrect)*100)/total, time.time() - e_time))
     plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, act3_hist, model_uuid)
 
     # model save
@@ -204,7 +201,11 @@ for e in range(args.epochs):
                 'loss_cla'     : clal_hist,
                 'loss_aux'     : auxl_hist,
                 'acc_cla'      : acc_hist,
-                'acc_aux'      : aux_hist
+                'acc_aux'      : aux_hist,
+
+                's1c'          : act1_hist,
+                's2c'          : act2_hist,
+                's3c'          : act3_hist
         }
         torch.save(checkpoint_dict, './checkpoints/'+model_uuid+'.pkl')
         del checkpoint_dict

@@ -52,9 +52,10 @@ args = parser.parse_args()
 # load backbone
 checkpoint_dict = torch.load('./checkpoints/'+ args.checkpoint +'.pkl')
 backbone = checkpoint_dict['backbone']
+e = checkpoint_dict['epoch']
 del checkpoint_dict
 
-print("Evaluating over %d classes with %d examples"%(args.n_way, args.k_shot))
+print("Evaluating model %s at epoch %d over %d classes with %d examples"%(args.checkpoint, e, args.n_way, args.k_shot))
 
 acc_all = [[],[],[]]
 for i in range(args.iter_test):
