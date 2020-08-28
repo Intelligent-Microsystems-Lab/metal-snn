@@ -73,6 +73,7 @@ x_preview, _ = next(iter(support_ds))
 delta_t = args.delta_t*ms
 T = x_preview.shape[1]
 max_act = T - args.burnin
+acc_point_e = (args.epochs-1)/3
 
 backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, k1 = args.k1, k2 = args.k2, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain = args.init_gain_backbone, delta_t = delta_t, dtype = dtype).to(device)
 
@@ -130,7 +131,7 @@ for i in range(args.iter_test):
         torch.cuda.empty_cache()
 
         # test data at 100, 200, 300
-        if e%30 == 0 and e != 0:
+        if e%acc_point_e == 0 and e != 0:
             test_acc = []
             with torch.no_grad():
                 for x_data, y_data in query_ds:
@@ -145,7 +146,7 @@ for i in range(args.iter_test):
                     test_acc.append((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float())
                     del x_data, y_data, bb_rr, u_rr
                     torch.cuda.empty_cache()
-            acc_all[int(e/10)-1] = torch.cat(test_acc).mean().item()*100
+            acc_all[int(e/acc_point_e)-1] = torch.cat(test_acc).mean().item()*100
     with open("logs/test_"+model_uuid+".txt", "a") as file_object:
         file_object.write("%d steps reached and the mean acc is %g , %g , %g time %4.2f%%\n"%(i, np.mean(np.array(acc_all[0])),np.mean(np.array(acc_all[1])),np.mean(np.array(acc_all[2])), time.time() - start_time))
 
@@ -157,7 +158,7 @@ acc_std1  = np.std(acc_all[0])
 acc_std2  = np.std(acc_all[1])
 acc_std3  = np.std(acc_all[2])
 with open("logs/test_"+model_uuid+".txt", "a") as file_object:
-    file_object.write('%d Test Acc at 100e= %4.2f%% +- %4.2f%%\n' %(args.iter_test, acc_mean1, 1.96* acc_std1/np.sqrt(args.iter_test)))
-    file_object.write('%d Test Acc at 200e= %4.2f%% +- %4.2f%%\n' %(args.iter_test, acc_mean2, 1.96* acc_std2/np.sqrt(args.iter_test)))
-    file_object.write('%d Test Acc at 300e= %4.2f%% +- %4.2f%%\n' %(args.iter_test, acc_mean3, 1.96* acc_std3/np.sqrt(args.iter_test)))
+    file_object.write('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 1*acc_point_e, acc_mean1, 1.96* acc_std1/np.sqrt(args.iter_test)))
+    file_object.write('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 1*acc_point_e, acc_mean2, 1.96* acc_std2/np.sqrt(args.iter_test)))
+    file_object.write('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 1*acc_point_e, acc_mean3, 1.96* acc_std3/np.sqrt(args.iter_test)))
 
