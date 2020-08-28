@@ -1,0 +1,25 @@
+Namespace(aux_classes=4, batch_size=16, burnin=10, conv_bias=True, delta_t=1, epochs=400, fc_bias=True, init_gain_backbone=0.5, init_gain_fc=1, k1=7, k2=7, log_int=10, lr=1e-07, lr_div=100, n_train=25, none_act=0.05, oc1=8, oc2=24, reset=1, save_int=5, target_act=0.95, tau_mem_high=20, tau_mem_low=20, tau_ref_high=2.857142857142857, tau_ref_low=2.857142857142857, tau_syn_high=7.5, tau_syn_low=7.5, thr=0.5, train_samples=100)
+f55bbde6-98ff-4fa0-be2b-ddaf6de7ac1c
+Start Training Backbone
+Epoch 1 | Batch 0/157 | Loss 35612.628906 | Rotate Loss 37388.062500 | Time 5.101754
+Epoch 1 | Batch 10/157 | Loss 35072.910511 | Rotate Loss 35815.745739 | Time 5.240965
+Epoch 1 | Batch 20/157 | Loss 34906.101562 | Rotate Loss 35897.965030 | Time 5.294691
+Epoch 1 | Batch 30/157 | Loss 34862.925277 | Rotate Loss 35608.231855 | Time 5.336948
+Epoch 1 | Batch 40/157 | Loss 34813.469417 | Rotate Loss 35672.366806 | Time 5.263119
+Epoch 1 | Batch 50/157 | Loss 34852.773744 | Rotate Loss 35608.046262 | Time 5.292367
+Epoch 1 | Batch 60/157 | Loss 34795.906474 | Rotate Loss 35767.865523 | Time 5.319144
+Epoch 1 | Batch 70/157 | Loss 34865.806035 | Rotate Loss 35864.400638 | Time 5.238192
+Epoch 1 | Batch 80/157 | Loss 34882.551481 | Rotate Loss 35928.361208 | Time 5.265089
+Epoch 1 | Batch 90/157 | Loss 34840.560161 | Rotate Loss 35937.342720 | Time 5.208730
+Epoch 1 | Batch 100/157 | Loss 34845.568591 | Rotate Loss 35887.088490 | Time 5.149911
+Epoch 1 | Batch 110/157 | Loss 34833.771132 | Rotate Loss 35915.727407 | Time 5.762156
+Epoch 1 | Batch 120/157 | Loss 34831.278942 | Rotate Loss 35947.578125 | Time 5.273814
+Epoch 1 | Batch 130/157 | Loss 34764.805209 | Rotate Loss 35978.641281 | Time 5.221042
+Epoch 1 | Batch 140/157 | Loss 34746.720481 | Rotate Loss 35984.551751 | Time 5.169802
+Epoch 1 | Batch 150/157 | Loss 34730.812332 | Rotate Loss 35954.493688 | Time 5.135349
+Epoch 1 : Accuracy 4.300000, Rotate Accuracy 30.070000, Time 916.869880
+Epoch 2 | Batch 0/157 | Loss 34548.726562 | Rotate Loss 35796.445312 | Time 4.959873
+Epoch 2 | Batch 10/157 | Loss 34466.066051 | Rotate Loss 35696.191051 | Time 5.255019
+Epoch 2 | Batch 20/157 | Loss 34342.889509 | Rotate Loss 35134.327009 | Time 5.176617
+Epoch 2 | Batch 30/157 | Loss 34336.368322 | Rotate Loss 35071.986391 | Time 5.190316
+Epoch 2 | Batch 40/157 | Loss 34213.772961 | Rotate Loss 35010.904916 | Time 5.233785

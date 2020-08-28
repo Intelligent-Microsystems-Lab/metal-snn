@@ -80,3 +80,8 @@ Epoch 4 | Batch 150/188 | Loss 36181.802721 | Rotate Loss 30911.197796 | Time 5.
 Epoch 4 | Batch 160/188 | Loss 36184.345133 | Rotate Loss 30921.152174 | Time 5.147802
 Epoch 4 | Batch 170/188 | Loss 36182.579450 | Rotate Loss 30828.904697 | Time 5.131960
 Epoch 4 | Batch 180/188 | Loss 36152.361749 | Rotate Loss 30828.915746 | Time 5.341583
+Epoch 4 : Accuracy 6.400000, Rotate Accuracy 35.108333, Time 1129.566592
+Epoch 5 | Batch 0/188 | Loss 36313.812500 | Rotate Loss 29147.101562 | Time 5.016543
+Epoch 5 | Batch 10/188 | Loss 34621.380149 | Rotate Loss 30323.218750 | Time 5.232169
+Epoch 5 | Batch 20/188 | Loss 35092.863002 | Rotate Loss 30618.223958 | Time 5.326480
+Epoch 5 | Batch 30/188 | Loss 35269.081338 | Rotate Loss 30237.284022 | Time 5.350265

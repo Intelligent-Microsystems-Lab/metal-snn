@@ -3,3 +3,19 @@ Evaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes 
 1 Test Acc at 100e=  nan% +-  nan%
 1 Test Acc at 200e=  nan% +-  nan%
 1 Test Acc at 300e=  nan% +-  nan%
+
+Evaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examples
+
+Evaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examples
+0 steps reached and the mean acc is nan , nan , 17.8 time 1.38%
+1 Test Acc at 100e=  nan% +-  nan%
+1 Test Acc at 200e=  nan% +-  nan%
+1 Test Acc at 300e= 17.80% +- 0.00%
+
+Evaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examples
+0 steps reached and the mean acc is nan , nan , 20.2 time 1.39%
+1 steps reached and the mean acc is nan , nan , 19.6 time 1.38%
+2 steps reached and the mean acc is nan , nan , 17.8 time 1.51%
+3 Test Acc at 100e=  nan% +-  nan%
+3 Test Acc at 200e=  nan% +-  nan%
+3 Test Acc at 300e= 17.80% +- 0.00%

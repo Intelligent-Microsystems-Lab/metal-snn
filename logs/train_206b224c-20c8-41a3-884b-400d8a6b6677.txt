@@ -1,0 +1,26 @@
+Namespace(aux_classes=4, batch_size=16, burnin=10, conv_bias=True, delta_t=1, epochs=400, fc_bias=True, init_gain_backbone=0.5, init_gain_fc=1, k1=7, k2=7, log_int=10, lr=1e-07, lr_div=100, n_train=15, none_act=0.05, oc1=8, oc2=24, reset=1, save_int=5, target_act=0.95, tau_mem_high=20, tau_mem_low=20, tau_ref_high=2.857142857142857, tau_ref_low=2.857142857142857, tau_syn_high=7.5, tau_syn_low=7.5, thr=0.5, train_samples=100)
+206b224c-20c8-41a3-884b-400d8a6b6677
+Start Training Backbone
+Epoch 1 | Batch 0/94 | Loss 36882.179688 | Rotate Loss 33306.742188 | Time 4.998890
+Epoch 1 | Batch 10/94 | Loss 38059.191406 | Rotate Loss 34530.122159 | Time 5.329485
+Epoch 1 | Batch 20/94 | Loss 38092.055990 | Rotate Loss 34523.110491 | Time 5.241193
+Epoch 1 | Batch 30/94 | Loss 37814.506300 | Rotate Loss 34081.130040 | Time 5.208970
+Epoch 1 | Batch 40/94 | Loss 37866.191787 | Rotate Loss 34517.653773 | Time 5.176768
+Epoch 1 | Batch 50/94 | Loss 37787.070466 | Rotate Loss 34366.929841 | Time 5.219302
+Epoch 1 | Batch 60/94 | Loss 37674.521388 | Rotate Loss 34259.711450 | Time 5.384409
+Epoch 1 | Batch 70/94 | Loss 37708.297260 | Rotate Loss 34347.526629 | Time 5.289606
+Epoch 1 | Batch 80/94 | Loss 37719.826919 | Rotate Loss 34381.117477 | Time 5.272096
+Epoch 1 | Batch 90/94 | Loss 37680.403975 | Rotate Loss 34347.586195 | Time 5.254331
+Epoch 1 : Accuracy 6.600000, Rotate Accuracy 27.766667, Time 551.868046
+Epoch 2 | Batch 0/94 | Loss 37155.101562 | Rotate Loss 33726.859375 | Time 4.974215
+Epoch 2 | Batch 10/94 | Loss 37911.492898 | Rotate Loss 34049.483665 | Time 5.189913
+Epoch 2 | Batch 20/94 | Loss 37398.864769 | Rotate Loss 33893.508185 | Time 5.209625
+Epoch 2 | Batch 30/94 | Loss 37301.499622 | Rotate Loss 33495.633569 | Time 5.221794
+Epoch 2 | Batch 40/94 | Loss 37473.687309 | Rotate Loss 33995.417873 | Time 5.185753
+Epoch 2 | Batch 50/94 | Loss 37388.982767 | Rotate Loss 33943.983150 | Time 5.164141
+Epoch 2 | Batch 60/94 | Loss 37363.327869 | Rotate Loss 33866.915215 | Time 5.185165
+Epoch 2 | Batch 70/94 | Loss 37353.087863 | Rotate Loss 33984.564481 | Time 5.269494
+Epoch 2 | Batch 80/94 | Loss 37336.734713 | Rotate Loss 33988.665413 | Time 5.321075
+Epoch 2 | Batch 90/94 | Loss 37320.101520 | Rotate Loss 34071.809152 | Time 5.278818
+Epoch 2 : Accuracy 7.066667, Rotate Accuracy 27.433333, Time 550.073400
+Epoch 3 | Batch 0/94 | Loss 35447.695312 | Rotate Loss 31308.976562 | Time 4.978864

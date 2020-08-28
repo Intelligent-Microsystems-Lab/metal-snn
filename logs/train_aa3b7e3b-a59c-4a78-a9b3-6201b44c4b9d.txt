@@ -75,3 +75,8 @@ Epoch 7 | Batch 40/94 | Loss 35474.183308 | Rotate Loss 32371.257622 | Time 5.26
 Epoch 7 | Batch 50/94 | Loss 35376.761719 | Rotate Loss 32306.908395 | Time 5.159256
 Epoch 7 | Batch 60/94 | Loss 35418.998783 | Rotate Loss 32293.114242 | Time 5.276919
 Epoch 7 | Batch 70/94 | Loss 35335.085552 | Rotate Loss 32250.293024 | Time 5.228431
+Epoch 7 | Batch 80/94 | Loss 35262.375072 | Rotate Loss 32045.440683 | Time 5.297305
+Epoch 7 | Batch 90/94 | Loss 35260.412324 | Rotate Loss 31887.384444 | Time 5.148872
+Epoch 7 : Accuracy 7.100000, Rotate Accuracy 27.133333, Time 564.257082
+Epoch 8 | Batch 0/94 | Loss 34606.480469 | Rotate Loss 31067.859375 | Time 4.894359
+Epoch 8 | Batch 10/94 | Loss 35240.914418 | Rotate Loss 31096.682528 | Time 5.267988

@@ -1,0 +1,28 @@
+Namespace(aux_classes=4, batch_size=16, burnin=10, conv_bias=True, delta_t=1, epochs=400, fc_bias=True, init_gain_backbone=0.5, init_gain_fc=1, k1=7, k2=7, log_int=10, lr=1e-07, lr_div=100, n_train=10, none_act=0.05, oc1=8, oc2=24, reset=1, save_int=5, target_act=0.95, tau_mem_high=20, tau_mem_low=20, tau_ref_high=2.857142857142857, tau_ref_low=2.857142857142857, tau_syn_high=7.5, tau_syn_low=7.5, thr=0.5, train_samples=100)
+bd1ab2b1-7d98-45a2-8cb7-70fcccbccb18
+Start Training Backbone
+Epoch 1 | Batch 0/63 | Loss 43571.371094 | Rotate Loss 30829.156250 | Time 4.998234
+Epoch 1 | Batch 10/63 | Loss 43878.337713 | Rotate Loss 31638.031960 | Time 5.305341
+Epoch 1 | Batch 20/63 | Loss 43758.940290 | Rotate Loss 31559.310268 | Time 5.265036
+Epoch 1 | Batch 30/63 | Loss 43742.061240 | Rotate Loss 31416.122228 | Time 5.281474
+Epoch 1 | Batch 40/63 | Loss 43741.439120 | Rotate Loss 31463.261242 | Time 5.272769
+Epoch 1 | Batch 50/63 | Loss 43573.614047 | Rotate Loss 31424.861673 | Time 5.269947
+Epoch 1 | Batch 60/63 | Loss 43621.396388 | Rotate Loss 31383.871798 | Time 5.253458
+Epoch 1 : Accuracy 9.350000, Rotate Accuracy 25.125000, Time 371.353519
+Epoch 2 | Batch 0/63 | Loss 42579.324219 | Rotate Loss 31029.726562 | Time 4.910214
+Epoch 2 | Batch 10/63 | Loss 44213.689631 | Rotate Loss 31543.900568 | Time 5.180803
+Epoch 2 | Batch 20/63 | Loss 43840.103051 | Rotate Loss 31506.031622 | Time 5.196025
+Epoch 2 | Batch 30/63 | Loss 43884.093876 | Rotate Loss 31302.078377 | Time 5.331696
+Epoch 2 | Batch 40/63 | Loss 43766.713510 | Rotate Loss 31291.384527 | Time 5.551398
+Epoch 2 | Batch 50/63 | Loss 43616.711091 | Rotate Loss 31204.557598 | Time 5.145113
+Epoch 2 | Batch 60/63 | Loss 43627.346247 | Rotate Loss 31152.334144 | Time 5.150731
+Epoch 2 : Accuracy 10.750000, Rotate Accuracy 25.075000, Time 366.837893
+Epoch 3 | Batch 0/63 | Loss 43945.812500 | Rotate Loss 31715.593750 | Time 4.947804
+Epoch 3 | Batch 10/63 | Loss 43210.255327 | Rotate Loss 31665.333807 | Time 5.225081
+Epoch 3 | Batch 20/63 | Loss 43544.911644 | Rotate Loss 31301.455357 | Time 5.236520
+Epoch 3 | Batch 30/63 | Loss 43468.914315 | Rotate Loss 31194.011845 | Time 5.271003
+Epoch 3 | Batch 40/63 | Loss 43231.906631 | Rotate Loss 31209.933689 | Time 5.215742
+Epoch 3 | Batch 50/63 | Loss 43179.374157 | Rotate Loss 31121.979473 | Time 5.183242
+Epoch 3 | Batch 60/63 | Loss 43353.727331 | Rotate Loss 31071.353484 | Time 5.204950
+Epoch 3 : Accuracy 10.650000, Rotate Accuracy 25.100000, Time 367.382148
+Epoch 4 | Batch 0/63 | Loss 45243.308594 | Rotate Loss 30403.109375 | Time 4.976033
