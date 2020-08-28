@@ -51,3 +51,26 @@ Epoch 5 | Batch 20/94 | Loss 36054.513765 | Rotate Loss 33546.327009 | Time 6.17
 Epoch 5 | Batch 30/94 | Loss 36145.490927 | Rotate Loss 33747.343246 | Time 5.163114
 Epoch 5 | Batch 40/94 | Loss 36136.757812 | Rotate Loss 33034.187500 | Time 5.265931
 Epoch 5 | Batch 50/94 | Loss 36004.641850 | Rotate Loss 33056.891085 | Time 5.104476
+Epoch 5 | Batch 60/94 | Loss 36021.277088 | Rotate Loss 32984.239882 | Time 5.229984
+Epoch 5 | Batch 70/94 | Loss 36000.746094 | Rotate Loss 32808.341109 | Time 5.349879
+Epoch 5 | Batch 80/94 | Loss 35899.850164 | Rotate Loss 33032.072145 | Time 5.364468
+Epoch 5 | Batch 90/94 | Loss 35960.004894 | Rotate Loss 32977.240041 | Time 5.300927
+Epoch 5 : Accuracy 6.600000, Rotate Accuracy 27.866667, Time 564.358916
+Epoch 6 | Batch 0/94 | Loss 34582.144531 | Rotate Loss 32017.679688 | Time 5.140453
+Epoch 6 | Batch 10/94 | Loss 35274.472301 | Rotate Loss 33896.935369 | Time 5.143846
+Epoch 6 | Batch 20/94 | Loss 35554.486979 | Rotate Loss 33828.125000 | Time 5.320650
+Epoch 6 | Batch 30/94 | Loss 35676.501008 | Rotate Loss 33770.075353 | Time 5.339278
+Epoch 6 | Batch 40/94 | Loss 35803.026200 | Rotate Loss 32975.411966 | Time 5.248184
+Epoch 6 | Batch 50/94 | Loss 35722.440487 | Rotate Loss 32808.489430 | Time 5.203123
+Epoch 6 | Batch 60/94 | Loss 35786.857070 | Rotate Loss 32674.749360 | Time 5.395105
+Epoch 6 | Batch 70/94 | Loss 35750.437555 | Rotate Loss 32512.708627 | Time 5.278338
+Epoch 6 | Batch 80/94 | Loss 35677.266011 | Rotate Loss 32661.111497 | Time 5.346021
+Epoch 6 | Batch 90/94 | Loss 35692.889638 | Rotate Loss 32624.778589 | Time 5.170970
+Epoch 6 : Accuracy 7.133333, Rotate Accuracy 26.850000, Time 568.645803
+Epoch 7 | Batch 0/94 | Loss 37370.281250 | Rotate Loss 32189.281250 | Time 5.007881
+Epoch 7 | Batch 10/94 | Loss 35326.951172 | Rotate Loss 33554.655540 | Time 5.148154
+Epoch 7 | Batch 20/94 | Loss 35170.744699 | Rotate Loss 33215.920387 | Time 5.287842
+Epoch 7 | Batch 30/94 | Loss 35246.187815 | Rotate Loss 33320.120716 | Time 5.350724
+Epoch 7 | Batch 40/94 | Loss 35182.305021 | Rotate Loss 32575.585747 | Time 5.323828
+Epoch 7 | Batch 50/94 | Loss 35161.635991 | Rotate Loss 32528.664369 | Time 5.186432
+Epoch 7 | Batch 60/94 | Loss 35178.757973 | Rotate Loss 32361.360528 | Time 5.167378

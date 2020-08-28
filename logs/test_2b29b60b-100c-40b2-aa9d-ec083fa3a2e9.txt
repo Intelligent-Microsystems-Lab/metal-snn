@@ -1,1 +1,5 @@
-Evaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examplesEvaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examplesEvaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examples
+Evaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examplesEvaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examplesEvaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examplesEvaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examples
+0 steps reached and the mean acc is nan , nan , nan time 2.54%
+1 Test Acc at 100e=  nan% +-  nan%
+1 Test Acc at 200e=  nan% +-  nan%
+1 Test Acc at 300e=  nan% +-  nan%

@@ -62,3 +62,23 @@ Epoch 2 | Batch 240/313 | Loss 32386.393688 | Rotate Loss 36946.323100 | Time 5.
 Epoch 2 | Batch 250/313 | Loss 32368.031476 | Rotate Loss 36951.248132 | Time 5.123985
 Epoch 2 | Batch 260/313 | Loss 32337.610266 | Rotate Loss 36901.260477 | Time 5.086603
 Epoch 2 | Batch 270/313 | Loss 32328.513319 | Rotate Loss 36881.103725 | Time 5.134694
+Epoch 2 | Batch 280/313 | Loss 32305.827625 | Rotate Loss 36860.451679 | Time 5.175718
+Epoch 2 | Batch 290/313 | Loss 32285.811580 | Rotate Loss 36845.403538 | Time 5.212971
+Epoch 2 | Batch 300/313 | Loss 32263.158021 | Rotate Loss 36862.357870 | Time 5.143627
+Epoch 2 | Batch 310/313 | Loss 32236.782305 | Rotate Loss 36853.284239 | Time 5.119335
+Epoch 2 : Accuracy 3.940000, Rotate Accuracy 22.565000, Time 1838.129067
+Epoch 3 | Batch 0/313 | Loss 31832.048828 | Rotate Loss 36097.179688 | Time 4.948623
+Epoch 3 | Batch 10/313 | Loss 31642.478338 | Rotate Loss 35904.025568 | Time 5.109555
+Epoch 3 | Batch 20/313 | Loss 31833.319661 | Rotate Loss 36334.049851 | Time 5.122800
+Epoch 3 | Batch 30/313 | Loss 31763.541898 | Rotate Loss 36340.299143 | Time 5.108448
+Epoch 3 | Batch 40/313 | Loss 31784.684642 | Rotate Loss 36412.373666 | Time 5.243262
+Epoch 3 | Batch 50/313 | Loss 31818.755783 | Rotate Loss 36501.569240 | Time 5.213185
+Epoch 3 | Batch 60/313 | Loss 31784.845959 | Rotate Loss 36430.503714 | Time 5.161006
+Epoch 3 | Batch 70/313 | Loss 31802.844768 | Rotate Loss 36448.426056 | Time 5.160821
+Epoch 3 | Batch 80/313 | Loss 31768.658275 | Rotate Loss 36411.106289 | Time 5.220091
+Epoch 3 | Batch 90/313 | Loss 31744.259036 | Rotate Loss 36535.370622 | Time 5.197829
+Epoch 3 | Batch 100/313 | Loss 31668.488281 | Rotate Loss 36454.475093 | Time 5.104545
+Epoch 3 | Batch 110/313 | Loss 31649.890889 | Rotate Loss 36395.631194 | Time 5.116737
+Epoch 3 | Batch 120/313 | Loss 31663.290273 | Rotate Loss 36401.174910 | Time 5.156443
+Epoch 3 | Batch 130/313 | Loss 31643.992471 | Rotate Loss 36361.765327 | Time 5.150790
+Epoch 3 | Batch 140/313 | Loss 31658.034104 | Rotate Loss 36365.889738 | Time 5.121109
