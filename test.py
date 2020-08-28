@@ -20,13 +20,12 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--checkpoint", type=str, default='invalid', help='UUID for checkpoint to be tested')
 
 parser.add_argument("--batch-size-test", type=int, default=4, help='Batch size')
-parser.add_argument("--batch-size-test", type=int, default=4, help='Batch size')
 parser.add_argument("--batch-size-test-test", type=int, default=128, help='Batch size test test')
 parser.add_argument("--progressbar", type=float, default=False, help='False: progressbar activated')
 
 parser.add_argument("--iter-test", type=int, default=600, help='Test Iter')
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-8, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
 
 
@@ -55,7 +54,8 @@ backbone = checkpoint_dict['backbone']
 e = checkpoint_dict['epoch']
 del checkpoint_dict
 
-print("Evaluating model %s at epoch %d over %d classes with %d examples"%(args.checkpoint, e, args.n_way, args.k_shot))
+with open("logs/test_"+model_uuid+".txt", "a") as file_object:
+    file_object.write("Evaluating model %s at epoch %d over %d classes with %d examples"%(args.checkpoint, e, args.n_way, args.k_shot))
 
 acc_all = [[],[],[]]
 for i in range(args.iter_test):
@@ -123,7 +123,8 @@ for i in range(args.iter_test):
                     del x_data, y_data, bb_rr, u_rr
                     torch.cuda.empty_cache()
             acc_all[int(e/10)-1] = torch.cat(test_acc).mean().item()*100
-    print("%d steps reached and the mean acc is %g , %g , %g"%(i, np.mean(np.array(acc_all[0])),np.mean(np.array(acc_all[1])),np.mean(np.array(acc_all[2])) ))
+    with open("logs/test_"+model_uuid+".txt", "a") as file_object:
+        file_object.write("%d steps reached and the mean acc is %g , %g , %g"%(i, np.mean(np.array(acc_all[0])),np.mean(np.array(acc_all[1])),np.mean(np.array(acc_all[2])) ))
 
 
 acc_mean1 = np.mean(acc_all[0])
@@ -132,7 +133,8 @@ acc_mean3 = np.mean(acc_all[2])
 acc_std1  = np.std(acc_all[0])
 acc_std2  = np.std(acc_all[1])
 acc_std3  = np.std(acc_all[2])
-print('%d Test Acc at 100e= %4.2f%% +- %4.2f%%' %(args.iter_test, acc_mean1, 1.96* acc_std1/np.sqrt(args.iter_test)))
-print('%d Test Acc at 200e= %4.2f%% +- %4.2f%%' %(args.iter_test, acc_mean2, 1.96* acc_std2/np.sqrt(args.iter_test)))
-print('%d Test Acc at 300e= %4.2f%% +- %4.2f%%' %(args.iter_test, acc_mean3, 1.96* acc_std3/np.sqrt(args.iter_test)))
+with open("logs/test_"+model_uuid+".txt", "a") as file_object:
+    file_object.write('%d Test Acc at 100e= %4.2f%% +- %4.2f%%' %(args.iter_test, acc_mean1, 1.96* acc_std1/np.sqrt(args.iter_test)))
+    file_object.write('%d Test Acc at 200e= %4.2f%% +- %4.2f%%' %(args.iter_test, acc_mean2, 1.96* acc_std2/np.sqrt(args.iter_test)))
+    file_object.write('%d Test Acc at 300e= %4.2f%% +- %4.2f%%' %(args.iter_test, acc_mean3, 1.96* acc_std3/np.sqrt(args.iter_test)))
 
