@@ -4,3 +4,20 @@ Evaluating model f55bbde6-98ff-4fa0-be2b-ddaf6de7ac1c at epoch 10 over 5 classes
 Evaluating model f55bbde6-98ff-4fa0-be2b-ddaf6de7ac1c at epoch 45 over 5 classes with 5 examples
 
 Evaluating model f55bbde6-98ff-4fa0-be2b-ddaf6de7ac1c at epoch 45 over 5 classes with 5 examples
+0 steps reached and the mean acc is 20.6 , 18.8 , 20.2 time 1.42%
+1 steps reached and the mean acc is 17.4 , 22.8 , 24 time 1.47%
+2 steps reached and the mean acc is 20.8 , 21 , 18.4 time 1.45%
+3 steps reached and the mean acc is 22.4 , 22.2 , 18.4 time 1.45%
+4 steps reached and the mean acc is 16.2 , 16.8 , 19.4 time 1.50%
+5 steps reached and the mean acc is 19.8 , 23.2 , 19.8 time 1.49%
+6 steps reached and the mean acc is 18.6 , 18.8 , 20 time 1.47%
+7 steps reached and the mean acc is 19.8 , 19.8 , 22.2 time 1.39%
+8 steps reached and the mean acc is 17.2 , 16.8 , 18 time 1.41%
+9 steps reached and the mean acc is 20 , 20.4 , 18.4 time 1.47%
+10 steps reached and the mean acc is 20.4 , 20 , 17.8 time 1.52%
+11 steps reached and the mean acc is 20.2 , 14.8 , 16.4 time 1.43%
+12 steps reached and the mean acc is 17.2 , 17.4 , 17.4 time 1.38%
+13 steps reached and the mean acc is 22.8 , 20.6 , 23.4 time 1.51%
+14 steps reached and the mean acc is 20.4 , 18 , 19.4 time 1.52%
+15 steps reached and the mean acc is 18 , 20.8 , 20.8 time 1.46%
+16 steps reached and the mean acc is 20 , 20.6 , 20.2 time 1.38%
