@@ -1,0 +1,4 @@
+
+Evaluating model 2705f28d-5cf7-4b4e-8c4a-d1eeeee7108f at epoch 20 over 5 classes with 5 examples
+
+Evaluating model 2705f28d-5cf7-4b4e-8c4a-d1eeeee7108f at epoch 75 over 5 classes with 5 examples

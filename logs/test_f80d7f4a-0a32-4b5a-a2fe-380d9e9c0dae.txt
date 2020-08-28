@@ -1,0 +1,4 @@
+
+Evaluating model f80d7f4a-0a32-4b5a-a2fe-380d9e9c0dae at epoch 35 over 5 classes with 5 examples
+
+Evaluating model f80d7f4a-0a32-4b5a-a2fe-380d9e9c0dae at epoch 110 over 5 classes with 5 examples

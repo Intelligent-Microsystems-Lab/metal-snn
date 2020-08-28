@@ -1,0 +1,4 @@
+
+Evaluating model 039b8454-1d57-4534-801a-6ae170dc368c at epoch 10 over 5 classes with 5 examples
+
+Evaluating model 039b8454-1d57-4534-801a-6ae170dc368c at epoch 35 over 5 classes with 5 examples

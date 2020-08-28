@@ -1,0 +1,11 @@
+#!/bin/csh 
+#$ -M cschaef6@nd.edu 
+#$ -m abe
+#$ -q gpu@@joshi
+#$ -l gpu_card=1
+#$ -N fl_test_checkpoint_bd1ab2b1-7d98-45a2-8cb7-70fcccbccb18_0
+#$ -o ./logs/output_fl_test_fl_test_checkpoint_bd1ab2b1-7d98-45a2-8cb7-70fcccbccb18_0.txt
+#$ -e ./logs/error_fl_test_fl_test_checkpoint_bd1ab2b1-7d98-45a2-8cb7-70fcccbccb18_0.txt
+module load python
+setenv OMP_NUM_THREADS $NSLOTS
+python test.py --checkpoint bd1ab2b1-7d98-45a2-8cb7-70fcccbccb18

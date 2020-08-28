@@ -1,0 +1,4 @@
+
+Evaluating model f55bbde6-98ff-4fa0-be2b-ddaf6de7ac1c at epoch 10 over 5 classes with 5 examples
+
+Evaluating model f55bbde6-98ff-4fa0-be2b-ddaf6de7ac1c at epoch 45 over 5 classes with 5 examples

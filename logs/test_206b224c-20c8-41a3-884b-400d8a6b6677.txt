@@ -1,0 +1,4 @@
+
+Evaluating model 206b224c-20c8-41a3-884b-400d8a6b6677 at epoch 20 over 5 classes with 5 examples
+
+Evaluating model 206b224c-20c8-41a3-884b-400d8a6b6677 at epoch 75 over 5 classes with 5 examples

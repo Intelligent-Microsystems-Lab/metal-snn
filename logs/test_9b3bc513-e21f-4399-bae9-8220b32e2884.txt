@@ -1,0 +1,4 @@
+
+Evaluating model 9b3bc513-e21f-4399-bae9-8220b32e2884 at epoch 10 over 5 classes with 5 examples
+
+Evaluating model 9b3bc513-e21f-4399-bae9-8220b32e2884 at epoch 35 over 5 classes with 5 examples
