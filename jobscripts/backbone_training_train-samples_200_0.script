@@ -1,0 +1,11 @@
+#!/bin/csh 
+#$ -M cschaef6@nd.edu 
+#$ -m abe
+#$ -q gpu@qa-rtx6k-040.crc.nd.edu
+#$ -l gpu_card=1
+#$ -N backbone_training_train-samples_200_0
+#$ -o ./logs/output_backbone_training_backbone_training_train-samples_200_0.txt
+#$ -e ./logs/error_backbone_training_backbone_training_train-samples_200_0.txt
+module load python
+setenv OMP_NUM_THREADS $NSLOTS
+python train.py --train-samples 200

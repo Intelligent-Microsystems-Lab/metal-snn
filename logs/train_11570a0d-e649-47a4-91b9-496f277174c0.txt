@@ -1,0 +1,11 @@
+Namespace(aux_classes=4, batch_size=16, burnin=10, conv_bias=True, delta_t=1, epochs=400, fc_bias=True, init_gain_backbone=0.5, init_gain_fc=1, k1=7, k2=7, log_int=10, lr=1e-07, lr_div=100, n_train=15, none_act=0.05, oc1=8, oc2=24, reset=1, save_int=5, target_act=0.95, tau_mem_high=20, tau_mem_low=20, tau_ref_high=2.857142857142857, tau_ref_low=2.857142857142857, tau_syn_high=7.5, tau_syn_low=7.5, thr=0.5, train_samples=200)
+11570a0d-e649-47a4-91b9-496f277174c0
+Start Training Backbone
+Epoch 1 | Batch 0/188 | Loss 38756.644531 | Rotate Loss 31386.773438 | Time 5.052443
+Epoch 1 | Batch 10/188 | Loss 39188.700994 | Rotate Loss 32390.469460 | Time 5.313134
+Epoch 1 | Batch 20/188 | Loss 39039.030878 | Rotate Loss 32475.688616 | Time 5.192580
+Epoch 1 | Batch 30/188 | Loss 39092.871220 | Rotate Loss 32915.931956 | Time 5.168130
+Epoch 1 | Batch 40/188 | Loss 38828.843655 | Rotate Loss 32890.657774 | Time 5.226583
+Epoch 1 | Batch 50/188 | Loss 38664.509574 | Rotate Loss 32868.037684 | Time 5.286042
+Epoch 1 | Batch 60/188 | Loss 38700.429495 | Rotate Loss 32755.732838 | Time 5.262820
+Epoch 1 | Batch 70/188 | Loss 38727.694872 | Rotate Loss 32707.138864 | Time 5.318554
