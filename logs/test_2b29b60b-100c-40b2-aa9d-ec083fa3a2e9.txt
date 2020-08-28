@@ -1,0 +1,1 @@
+Evaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examplesEvaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examplesEvaluating model 2b29b60b-100c-40b2-aa9d-ec083fa3a2e9 at epoch 0 over 5 classes with 5 examples
