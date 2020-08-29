@@ -132,3 +132,6 @@ Evaluating model 9b3bc513-e21f-4399-bae9-8220b32e2884 at epoch 35 over 5 classes
 125 steps reached and the mean acc is 20.6 , 20.6 , 19.4 time 1.47%
 126 steps reached and the mean acc is 17.6 , 17.4 , 16.4 time 1.37%
 127 steps reached and the mean acc is 23.4 , 22.2 , 21.8 time 1.42%
+128 steps reached and the mean acc is 19.2 , 18.4 , 21.8 time 1.37%
+
+Evaluating model 9b3bc513-e21f-4399-bae9-8220b32e2884 at epoch 135 over 5 classes with 5 examples

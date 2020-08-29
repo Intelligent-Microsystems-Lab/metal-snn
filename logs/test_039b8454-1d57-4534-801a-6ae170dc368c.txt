@@ -250,3 +250,6 @@ Evaluating model 039b8454-1d57-4534-801a-6ae170dc368c at epoch 35 over 5 classes
 117 steps reached and the mean acc is 18.8 , 19 , 18.4 time 1.51%
 124 steps reached and the mean acc is 17.6 , 17.2 , 17.8 time 1.43%
 118 steps reached and the mean acc is 18.8 , 20.2 , 20.8 time 1.38%
+125 steps reached and the mean acc is 17.2 , 15 , 18 time 1.40%
+
+Evaluating model 039b8454-1d57-4534-801a-6ae170dc368c at epoch 135 over 5 classes with 5 examples

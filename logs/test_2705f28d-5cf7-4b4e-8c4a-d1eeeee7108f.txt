@@ -130,3 +130,5 @@ Evaluating model 2705f28d-5cf7-4b4e-8c4a-d1eeeee7108f at epoch 75 over 5 classes
 123 steps reached and the mean acc is 20 , 19.4 , 17.4 time 1.41%
 124 steps reached and the mean acc is 24 , 22.4 , 24.4 time 1.41%
 125 steps reached and the mean acc is 18 , 19.6 , 19.2 time 1.42%
+
+Evaluating model 2705f28d-5cf7-4b4e-8c4a-d1eeeee7108f at epoch 275 over 5 classes with 5 examples

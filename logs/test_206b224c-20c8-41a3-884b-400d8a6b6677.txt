@@ -16,3 +16,5 @@ Evaluating model 206b224c-20c8-41a3-884b-400d8a6b6677 at epoch 75 over 5 classes
 9 steps reached and the mean acc is 21.2 , 19.4 , 20.4 time 1.40%
 10 steps reached and the mean acc is 18.8 , 17.6 , 16.6 time 1.39%
 11 steps reached and the mean acc is 17 , 18 , 15.8 time 1.50%
+
+Evaluating model 206b224c-20c8-41a3-884b-400d8a6b6677 at epoch 275 over 5 classes with 5 examples
