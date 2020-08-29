@@ -130,3 +130,4 @@ Evaluating model f80d7f4a-0a32-4b5a-a2fe-380d9e9c0dae at epoch 115 over 5 classe
 123 steps reached and the mean acc is 23.6 , 19.8 , 15 time 1.36%
 
 Evaluating model f80d7f4a-0a32-4b5a-a2fe-380d9e9c0dae at epoch 395 over 5 classes with 5 examples
+0 steps reached and the mean acc is 20 , 21.4 , 21.6 time 1.36899

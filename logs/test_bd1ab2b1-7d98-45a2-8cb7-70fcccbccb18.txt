@@ -124,3 +124,4 @@ Evaluating model bd1ab2b1-7d98-45a2-8cb7-70fcccbccb18 at epoch 115 over 5 classe
 117 steps reached and the mean acc is 24 , 21.4 , 19.8 time 1.36%
 
 Evaluating model bd1ab2b1-7d98-45a2-8cb7-70fcccbccb18 at epoch 395 over 5 classes with 5 examples
+0 steps reached and the mean acc is 20.2 , 19.6 , 18.8 time 1.36022

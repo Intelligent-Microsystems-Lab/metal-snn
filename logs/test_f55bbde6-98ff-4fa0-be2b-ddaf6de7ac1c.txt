@@ -127,3 +127,4 @@ Evaluating model f55bbde6-98ff-4fa0-be2b-ddaf6de7ac1c at epoch 45 over 5 classes
 120 steps reached and the mean acc is 22.8 , 24.2 , 21.6 time 1.39%
 
 Evaluating model f55bbde6-98ff-4fa0-be2b-ddaf6de7ac1c at epoch 165 over 5 classes with 5 examples
+0 steps reached and the mean acc is 23 , 20 , 24.8 time 1.36263

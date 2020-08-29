@@ -3071,3 +3071,23 @@ Epoch 279 | Batch 80/94 | Loss 5501.070210 | Rotate Loss 13426.230324 | Time 5.2
 Epoch 279 | Batch 90/94 | Loss 5507.929011 | Rotate Loss 13457.093578 | Time 5.170961
 Epoch 279 : Accuracy 5.366667, Rotate Accuracy 45.116667, Time 548.684544
 Epoch 280 | Batch 0/94 | Loss 5825.925293 | Rotate Loss 14938.054688 | Time 5.081252
+Epoch 280 | Batch 10/94 | Loss 5508.547585 | Rotate Loss 13587.544034 | Time 5.460073
+Epoch 280 | Batch 20/94 | Loss 5447.972284 | Rotate Loss 13388.118676 | Time 5.199943
+Epoch 280 | Batch 30/94 | Loss 5409.914094 | Rotate Loss 13436.552167 | Time 5.345520
+Epoch 280 | Batch 40/94 | Loss 5433.055235 | Rotate Loss 13419.062881 | Time 5.315674
+Epoch 280 | Batch 50/94 | Loss 5427.955241 | Rotate Loss 13463.993873 | Time 5.239747
+Epoch 280 | Batch 60/94 | Loss 5434.617268 | Rotate Loss 13408.829278 | Time 5.222099
+Epoch 280 | Batch 70/94 | Loss 5451.636478 | Rotate Loss 13425.902069 | Time 5.155401
+Epoch 280 | Batch 80/94 | Loss 5459.184848 | Rotate Loss 13450.364294 | Time 5.183767
+Epoch 280 | Batch 90/94 | Loss 5465.969920 | Rotate Loss 13490.998626 | Time 5.437790
+Epoch 280 : Accuracy 6.033333, Rotate Accuracy 44.800000, Time 550.073561
+Epoch 281 | Batch 0/94 | Loss 5314.045898 | Rotate Loss 13330.968750 | Time 4.961132
+Epoch 281 | Batch 10/94 | Loss 5484.026101 | Rotate Loss 13204.269886 | Time 5.180569
+Epoch 281 | Batch 20/94 | Loss 5479.101888 | Rotate Loss 13240.776414 | Time 5.284955
+Epoch 281 | Batch 30/94 | Loss 5443.295205 | Rotate Loss 13350.056200 | Time 5.123155
+Epoch 281 | Batch 40/94 | Loss 5457.739639 | Rotate Loss 13369.910633 | Time 5.183118
+Epoch 281 | Batch 50/94 | Loss 5481.682904 | Rotate Loss 13405.680300 | Time 5.262234
+Epoch 281 | Batch 60/94 | Loss 5492.113834 | Rotate Loss 13346.014344 | Time 5.233616
+Epoch 281 | Batch 70/94 | Loss 5488.433814 | Rotate Loss 13371.382152 | Time 5.367619
+Epoch 281 | Batch 80/94 | Loss 5494.862443 | Rotate Loss 13385.192708 | Time 5.177662
+Epoch 281 | Batch 90/94 | Loss 5490.213395 | Rotate Loss 13405.148523 | Time 5.123403

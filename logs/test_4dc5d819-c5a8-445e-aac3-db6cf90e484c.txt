@@ -131,3 +131,4 @@ Evaluating model 4dc5d819-c5a8-445e-aac3-db6cf90e484c at epoch 45 over 5 classes
 124 steps reached and the mean acc is 17 , 20 , 20.6 time 1.45%
 
 Evaluating model 4dc5d819-c5a8-445e-aac3-db6cf90e484c at epoch 160 over 5 classes with 5 examples
+0 steps reached and the mean acc is 16.2 , 17 , 17.6 time 1.49463
