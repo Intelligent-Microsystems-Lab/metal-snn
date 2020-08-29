@@ -148,7 +148,7 @@ for i in range(args.iter_test):
                     torch.cuda.empty_cache()
             acc_all[int(e/acc_point_e)-1] = torch.cat(test_acc).mean().item()*100
     with open("logs/test_"+model_uuid+".txt", "a") as file_object:
-        file_object.write("%d steps reached and the mean acc is %g , %g , %g time %4.2f%%\n"%(i, np.mean(np.array(acc_all[0])),np.mean(np.array(acc_all[1])),np.mean(np.array(acc_all[2])), time.time() - start_time))
+        file_object.write("%d steps reached and the mean acc is %g , %g , %g time %g\n"%(i, np.mean(np.array(acc_all[0])),np.mean(np.array(acc_all[1])),np.mean(np.array(acc_all[2])), time.time() - start_time))
 
 
 acc_mean1 = np.mean(acc_all[0])
