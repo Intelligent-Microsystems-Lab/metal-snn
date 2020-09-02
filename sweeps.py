@@ -9,7 +9,7 @@ part2 = "\n#$ -o ./logs/output_"+ident_word+"_"
 
 part3 = ".txt\n#$ -e ./logs/error_"+ident_word+"_"
 
-part4 = ".txt\nmodule load python\nsetenv OMP_NUM_THREADS $NSLOTS\npython test.py"
+part4 = ".txt\nmodule load python\nsetenv OMP_NUM_THREADS $NSLOTS\npython train.py"
 
 
 #sweep_parameters = {'n-train':[15,25],'train-samples':[200]}
