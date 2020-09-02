@@ -13,3 +13,11 @@ Epoch 1 | Batch 80/438 | Loss 3420.026527 | Rotate Loss 3126.459780 | Time 1.014
 Epoch 1 | Batch 90/438 | Loss 3336.171416 | Rotate Loss 3079.070012 | Time 0.997947
 Epoch 1 | Batch 100/438 | Loss 3246.354688 | Rotate Loss 3027.209352 | Time 0.999541
 Epoch 1 | Batch 110/438 | Loss 3163.160420 | Rotate Loss 2978.797579 | Time 1.026919
+Epoch 1 | Batch 120/438 | Loss 3087.287868 | Rotate Loss 2929.378067 | Time 0.998190
+Epoch 1 | Batch 130/438 | Loss 3013.671349 | Rotate Loss 2879.479843 | Time 1.041652
+Epoch 1 | Batch 140/438 | Loss 2946.646206 | Rotate Loss 2830.372340 | Time 1.026153
+Epoch 1 | Batch 150/438 | Loss 2880.293772 | Rotate Loss 2785.067544 | Time 0.983106
+Epoch 1 | Batch 160/438 | Loss 2819.552982 | Rotate Loss 2742.429809 | Time 1.051561
+Epoch 1 | Batch 170/438 | Loss 2761.606658 | Rotate Loss 2704.389871 | Time 1.041034
+Epoch 1 | Batch 180/438 | Loss 2706.912851 | Rotate Loss 2665.035070 | Time 1.048900
+Epoch 1 | Batch 190/438 | Loss 2655.549079 | Rotate Loss 2630.775401 | Time 0.988236
