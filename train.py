@@ -3,6 +3,7 @@ import argparse, time, uuid
 import torch
 import numpy as np
 from torchneuromorphic.torchneuromorphic.doublenmnist.doublenmnist_dataloaders import *
+from torchneuromorphic.torchneuromorphic.dvs_asl.dvsasl_dataloaders import *
 from training_curves import plot_curves
 
 from lif_snn import backbone_conv_model, classifier_model, aux_task_gen
@@ -17,19 +18,23 @@ dtype = torch.float32
 ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--batch-size", type=int, default=16, help='Batch size')
+parser.add_argument("--batch-size", type=int, default=32, help='Batch size')
 parser.add_argument("--epochs", type=int, default=400, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-5, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
 parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init')
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
 parser.add_argument("--log-int", type=int, default=10, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 
-parser.add_argument("--train-samples", type=int, default=100, help='Number of samples per classes')
+# dataset specific
+parser.add_argument("--dataset", type=str, default="ASL-DVS", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
+parser.add_argument("--train-samples", type=int, default=1000, help='Number of samples per classes')
+parser.add_argument("--n-train", type=int, default=14, help='N-way for training technically I guess more')
+
+# aux settings, actually not changable
 parser.add_argument("--aux-classes", type=int, default=4, help='Auxiliar task number of classes (you cant change this)')
-parser.add_argument("--n-train", type=int, default=15, help='N-way for training technically I guess more (64?)')
 
 #architecture
 parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
@@ -56,17 +61,47 @@ args = parser.parse_args()
 
 
 # training data
-train_dl, test_dl  = sample_double_mnist_task(
-            meta_dataset_type = 'train',
-            N = args.n_train,
-            K = args.train_samples,
-            K_test = args.train_samples,
-            root='data.nosync/nmnist/n_mnist.hdf5',
-            batch_size=args.batch_size,
-            batch_size_test=args.batch_size,
-            ds=args.delta_t,
-            num_workers=4)
+
+# Double NMNIST
+if args.dataset == 'DNMNIST':
+    train_dl, test_dl  = sample_double_mnist_task(
+                meta_dataset_type = 'train',
+                N = args.n_train,
+                K = args.train_samples,
+                K_test = args.train_samples,
+                root='data.nosync/nmnist/n_mnist.hdf5',
+                batch_size=args.batch_size,
+                batch_size_test=args.batch_size,
+                ds=args.delta_t,
+                num_workers=4)
+elif args.dataset == 'ASL-DVS':
+    train_dl, test_dl  = sample_dvsasl_task(
+                meta_dataset_type = 'train',
+                N = args.n_train,
+                K = args.train_samples,
+                K_test = args.train_samples,
+                root='data.nosync/dvsasl/dvsasl.hdf5',
+                batch_size=args.batch_size,
+                batch_size_test=args.batch_size,
+                ds=4,
+                num_workers=4)
+elif args.dataset == 'DDVSGesture':
+    train_dl, test_dl  = sample_double_mnist_task(
+                meta_dataset_type = 'train',
+                N = args.n_train,
+                K = args.train_samples,
+                K_test = args.train_samples,
+                root='data.nosync/nmnist/n_mnist.hdf5',
+                batch_size=args.batch_size,
+                batch_size_test=args.batch_size,
+                ds=args.delta_t,
+                num_workers=4)
+else:
+    raise Exception("Invalid dataset")
+
+
 x_preview, y_labels = next(iter(train_dl))
+
 
 delta_t = args.delta_t*ms
 T = x_preview.shape[1]
@@ -118,6 +153,7 @@ for e in range(args.epochs):
         start_time = time.time()
         x_data = x_data.to(device)
 
+
         # create aux task
         x_data, y_data, aux_y  = aux_task_gen(x_data, args.aux_classes, y_data)
 
@@ -127,7 +163,8 @@ for e in range(args.epochs):
         aux_rr = aux_classifier(bb_rr)
         
         # class loss
-        y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
+        #y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
+        y_onehot = (y_data[:, ::100, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
         class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
 
         # aux loss
@@ -212,4 +249,19 @@ for e in range(args.epochs):
 
 
 
-    
+# # test new data set
+# from torchneuromorphic.torchneuromorphic.dvs_asl.dvsasl_dataloaders import *
+
+# train_dl, test_dl  = sample_dvsasl_task(
+#             meta_dataset_type = 'train',
+#             N = 5,
+#             K = 1,
+#             K_test = 128,
+#             root='data.nosync/dvsasl/dvsasl.hdf5',
+#             batch_size=72,
+#             batch_size_test=72,
+#             ds=1,
+#             num_workers=0)
+
+# x_preview, y_labels = next(iter(train_dl))
+
