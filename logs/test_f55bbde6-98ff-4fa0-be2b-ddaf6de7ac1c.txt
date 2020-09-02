@@ -410,3 +410,23 @@ Evaluating model f55bbde6-98ff-4fa0-be2b-ddaf6de7ac1c at epoch 165 over 5 classe
 280 steps reached and the mean acc is 18.4 , 16.8 , 16.4 time 1.36168
 281 steps reached and the mean acc is 16.8 , 19 , 19.6 time 1.37456
 282 steps reached and the mean acc is 22.8 , 22.6 , 21.8 time 1.4154
+283 steps reached and the mean acc is 19.4 , 19.4 , 17.4 time 1.40314
+284 steps reached and the mean acc is 23.6 , 19 , 21.2 time 1.46743
+285 steps reached and the mean acc is 23.8 , 19.8 , 20.6 time 1.40922
+286 steps reached and the mean acc is 22.4 , 20.4 , 22 time 1.48017
+287 steps reached and the mean acc is 20 , 20.8 , 20.8 time 1.4939
+288 steps reached and the mean acc is 17.8 , 22 , 22.8 time 1.49022
+289 steps reached and the mean acc is 16.8 , 18.8 , 17.4 time 1.47151
+290 steps reached and the mean acc is 16.2 , 16.2 , 17.8 time 1.32949
+291 steps reached and the mean acc is 20.8 , 20.2 , 20.2 time 1.40741
+292 steps reached and the mean acc is 22.6 , 21 , 21.8 time 1.36138
+293 steps reached and the mean acc is 17.2 , 17.2 , 18 time 1.42139
+294 steps reached and the mean acc is 18 , 20.8 , 20.4 time 1.43806
+295 steps reached and the mean acc is 19.4 , 18.4 , 17.8 time 1.39615
+296 steps reached and the mean acc is 19.8 , 19.2 , 19.4 time 1.48124
+297 steps reached and the mean acc is 18.8 , 17.2 , 17.8 time 1.4044
+298 steps reached and the mean acc is 20 , 19.6 , 16.6 time 1.437
+299 steps reached and the mean acc is 20.8 , 21.4 , 20.8 time 1.45299
+300 Test Acc at 30e= 20.80% +- 0.00%
+300 Test Acc at 30e= 21.40% +- 0.00%
+300 Test Acc at 30e= 20.80% +- 0.00%

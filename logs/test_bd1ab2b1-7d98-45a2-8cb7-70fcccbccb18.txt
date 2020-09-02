@@ -419,3 +419,11 @@ Evaluating model bd1ab2b1-7d98-45a2-8cb7-70fcccbccb18 at epoch 395 over 5 classe
 292 steps reached and the mean acc is 23.4 , 20.8 , 20.2 time 1.39744
 293 steps reached and the mean acc is 17.8 , 20.6 , 18.8 time 1.42847
 294 steps reached and the mean acc is 19.2 , 18.2 , 18.8 time 1.3972
+295 steps reached and the mean acc is 19 , 19.2 , 19.8 time 1.42935
+296 steps reached and the mean acc is 20 , 23.4 , 19 time 1.35779
+297 steps reached and the mean acc is 20.4 , 20.6 , 19.2 time 1.42569
+298 steps reached and the mean acc is 20 , 21.6 , 21.4 time 1.40206
+299 steps reached and the mean acc is 19.6 , 21.6 , 21.8 time 1.38669
+300 Test Acc at 30e= 19.60% +- 0.00%
+300 Test Acc at 30e= 21.60% +- 0.00%
+300 Test Acc at 30e= 21.80% +- 0.00%

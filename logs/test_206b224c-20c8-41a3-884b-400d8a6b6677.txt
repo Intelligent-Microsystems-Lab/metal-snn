@@ -298,3 +298,26 @@ Evaluating model 206b224c-20c8-41a3-884b-400d8a6b6677 at epoch 275 over 5 classe
 277 steps reached and the mean acc is 18.4 , 18.8 , 17.8 time 1.32751
 278 steps reached and the mean acc is 19.6 , 19.6 , 20.2 time 1.39996
 279 steps reached and the mean acc is 18 , 16 , 21.4 time 1.44461
+280 steps reached and the mean acc is 20.2 , 20.6 , 18.6 time 1.37563
+281 steps reached and the mean acc is 23.6 , 21.2 , 22.8 time 1.41356
+282 steps reached and the mean acc is 20.4 , 20.4 , 19.4 time 1.37826
+283 steps reached and the mean acc is 20.2 , 20 , 18.6 time 1.39734
+284 steps reached and the mean acc is 18.4 , 17.8 , 18.4 time 1.45108
+285 steps reached and the mean acc is 20.6 , 20.2 , 21.6 time 1.46841
+286 steps reached and the mean acc is 20 , 19.8 , 20.2 time 1.34699
+287 steps reached and the mean acc is 25.8 , 21 , 23.8 time 5.26485
+288 steps reached and the mean acc is 18 , 19.6 , 19.4 time 1.44306
+289 steps reached and the mean acc is 18.6 , 19 , 19.4 time 1.36293
+290 steps reached and the mean acc is 21.2 , 21.6 , 20.2 time 1.40116
+291 steps reached and the mean acc is 20.8 , 20.4 , 20.8 time 1.46028
+292 steps reached and the mean acc is 23.2 , 22.6 , 21.2 time 1.46336
+293 steps reached and the mean acc is 21.8 , 22.6 , 23.4 time 1.34333
+294 steps reached and the mean acc is 18.4 , 20.6 , 19 time 1.38846
+295 steps reached and the mean acc is 20 , 22 , 20.2 time 1.41951
+296 steps reached and the mean acc is 17.6 , 15.8 , 16.4 time 1.44148
+297 steps reached and the mean acc is 20 , 18.8 , 21.6 time 1.47439
+298 steps reached and the mean acc is 21.4 , 19.8 , 20 time 1.3766
+299 steps reached and the mean acc is 22.2 , 24 , 23.2 time 1.39873
+300 Test Acc at 30e= 22.20% +- 0.00%
+300 Test Acc at 30e= 24.00% +- 0.00%
+300 Test Acc at 30e= 23.20% +- 0.00%

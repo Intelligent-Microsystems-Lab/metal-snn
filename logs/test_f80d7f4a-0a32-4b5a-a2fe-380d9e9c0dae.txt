@@ -417,3 +417,19 @@ Evaluating model f80d7f4a-0a32-4b5a-a2fe-380d9e9c0dae at epoch 395 over 5 classe
 284 steps reached and the mean acc is 19 , 19.2 , 20 time 1.36742
 285 steps reached and the mean acc is 20.6 , 20.2 , 18.6 time 1.42329
 286 steps reached and the mean acc is 19 , 20 , 20.6 time 1.4596
+287 steps reached and the mean acc is 19.6 , 23 , 20.8 time 1.40312
+288 steps reached and the mean acc is 20.8 , 18.6 , 21.4 time 1.41786
+289 steps reached and the mean acc is 20.4 , 19 , 19.6 time 1.40227
+290 steps reached and the mean acc is 19 , 20 , 22.4 time 1.35198
+291 steps reached and the mean acc is 20 , 19.6 , 19.6 time 1.38168
+292 steps reached and the mean acc is 21 , 20.4 , 19.6 time 1.40172
+293 steps reached and the mean acc is 21.4 , 22.6 , 21.6 time 1.37392
+294 steps reached and the mean acc is 16.4 , 20.6 , 17.6 time 1.40061
+295 steps reached and the mean acc is 21.8 , 18.6 , 22.8 time 1.41583
+296 steps reached and the mean acc is 18 , 20 , 21.8 time 1.38776
+297 steps reached and the mean acc is 17.2 , 19.4 , 21.4 time 1.39738
+298 steps reached and the mean acc is 18.6 , 20.4 , 19.2 time 1.3658
+299 steps reached and the mean acc is 22.6 , 22.8 , 21 time 1.3933
+300 Test Acc at 30e= 22.60% +- 0.00%
+300 Test Acc at 30e= 22.80% +- 0.00%
+300 Test Acc at 30e= 21.00% +- 0.00%
