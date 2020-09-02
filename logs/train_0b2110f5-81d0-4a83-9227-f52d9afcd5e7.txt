@@ -1,0 +1,15 @@
+Namespace(aux_classes=4, batch_size=32, burnin=10, conv_bias=True, dataset='ASL-DVS', delta_t=1, epochs=400, fc_bias=True, init_gain_backbone=0.5, init_gain_fc=1, k1=7, k2=7, log_int=10, lr=1e-05, lr_div=100, n_train=14, none_act=0.05, oc1=8, oc2=24, reset=1, save_int=5, target_act=0.95, tau_mem_high=20, tau_mem_low=20, tau_ref_high=2.857142857142857, tau_ref_low=2.857142857142857, tau_syn_high=7.5, tau_syn_low=7.5, thr=0.5, train_samples=1000)
+0b2110f5-81d0-4a83-9227-f52d9afcd5e7
+Start Training Backbone
+Epoch 1 | Batch 0/438 | Loss 3941.714355 | Rotate Loss 3596.417969 | Time 0.993609
+Epoch 1 | Batch 10/438 | Loss 3984.853050 | Rotate Loss 3541.680398 | Time 1.053265
+Epoch 1 | Batch 20/438 | Loss 3939.768462 | Rotate Loss 3445.596912 | Time 1.025756
+Epoch 1 | Batch 30/438 | Loss 3846.115668 | Rotate Loss 3376.443800 | Time 0.980896
+Epoch 1 | Batch 40/438 | Loss 3764.562232 | Rotate Loss 3325.344893 | Time 1.001610
+Epoch 1 | Batch 50/438 | Loss 3687.214001 | Rotate Loss 3267.542356 | Time 0.997221
+Epoch 1 | Batch 60/438 | Loss 3597.606125 | Rotate Loss 3215.470671 | Time 1.021186
+Epoch 1 | Batch 70/438 | Loss 3506.457430 | Rotate Loss 3169.431668 | Time 1.057287
+Epoch 1 | Batch 80/438 | Loss 3420.026527 | Rotate Loss 3126.459780 | Time 1.014531
+Epoch 1 | Batch 90/438 | Loss 3336.171416 | Rotate Loss 3079.070012 | Time 0.997947
+Epoch 1 | Batch 100/438 | Loss 3246.354688 | Rotate Loss 3027.209352 | Time 0.999541
+Epoch 1 | Batch 110/438 | Loss 3163.160420 | Rotate Loss 2978.797579 | Time 1.026919

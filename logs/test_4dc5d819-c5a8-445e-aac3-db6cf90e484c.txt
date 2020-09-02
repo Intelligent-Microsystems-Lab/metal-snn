@@ -428,3 +428,9 @@ Evaluating model 4dc5d819-c5a8-445e-aac3-db6cf90e484c at epoch 160 over 5 classe
 294 steps reached and the mean acc is 23.6 , 24 , 22.2 time 1.40442
 295 steps reached and the mean acc is 21.2 , 24.4 , 20 time 1.45638
 296 steps reached and the mean acc is 23 , 22.6 , 18.8 time 1.4172
+297 steps reached and the mean acc is 19.2 , 18.6 , 19.8 time 1.36151
+298 steps reached and the mean acc is 22.4 , 20.8 , 20 time 1.49461
+299 steps reached and the mean acc is 20.4 , 19 , 18.6 time 1.42183
+300 Test Acc at 30e= 20.40% +- 0.00%
+300 Test Acc at 30e= 19.00% +- 0.00%
+300 Test Acc at 30e= 18.60% +- 0.00%

@@ -1,0 +1,17 @@
+Loading python/3.7.3
+  Loading requirement: tcl/8.6.8 gcc/8.3.0
+usage: test.py [-h] [--checkpoint CHECKPOINT] [--epochs EPOCHS]
+               [--batch-size-test BATCH_SIZE_TEST]
+               [--batch-size-test-test BATCH_SIZE_TEST_TEST]
+               [--progressbar-off PROGRESSBAR_OFF] [--iter-test ITER_TEST]
+               [--burnin BURNIN] [--lr LR] [--init-gain-fc INIT_GAIN_FC]
+               [--init-gain-backbone INIT_GAIN_BACKBONE]
+               [--test-samples TEST_SAMPLES] [--n-way N_WAY] [--k-shot K_SHOT]
+               [--k1 K1] [--k2 K2] [--oc1 OC1] [--oc2 OC2]
+               [--conv-bias CONV_BIAS] [--fc-bias FC_BIAS] [--delta-t DELTA_T]
+               [--tau-mem-low TAU_MEM_LOW] [--tau-syn-low TAU_SYN_LOW]
+               [--tau-ref-low TAU_REF_LOW] [--tau-mem-high TAU_MEM_HIGH]
+               [--tau-syn-high TAU_SYN_HIGH] [--tau-ref-high TAU_REF_HIGH]
+               [--reset RESET] [--thr THR] [--target_act TARGET_ACT]
+               [--none_act NONE_ACT]
+test.py: error: ambiguous option: --batch-size could match --batch-size-test, --batch-size-test-test
