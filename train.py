@@ -21,7 +21,7 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--batch-size", type=int, default=32, help='Batch size')
 parser.add_argument("--epochs", type=int, default=400, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-5, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-6, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
 parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init')
 parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
@@ -30,7 +30,7 @@ parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Int
 
 # dataset specific
 parser.add_argument("--dataset", type=str, default="ASL-DVS", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
-parser.add_argument("--train-samples", type=int, default=1000, help='Number of samples per classes')
+parser.add_argument("--train-samples", type=int, default=300, help='Number of samples per classes')
 parser.add_argument("--n-train", type=int, default=14, help='N-way for training technically I guess more')
 
 # aux settings, actually not changable
