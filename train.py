@@ -149,44 +149,44 @@ for e in range(args.epochs):
         for param_group in opt.param_groups:
             param_group['lr'] /= 2
 
-    # for i, (x_data, y_data) in enumerate(train_dl):
-    #     start_time = time.time()
-    #     x_data = x_data.to(device)
+    for i, (x_data, y_data) in enumerate(train_dl):
+        start_time = time.time()
+        x_data = x_data.to(device)
 
 
-    #     # create aux task
-    #     x_data, y_data, aux_y  = aux_task_gen(x_data, args.aux_classes, y_data)
+        # create aux task
+        x_data, y_data, aux_y  = aux_task_gen(x_data, args.aux_classes, y_data)
 
-    #     # forwardpass
-    #     bb_rr  = backbone(x_data)
-    #     u_rr   = classifier(bb_rr)
-    #     aux_rr = aux_classifier(bb_rr)
+        # forwardpass
+        bb_rr  = backbone(x_data)
+        u_rr   = classifier(bb_rr)
+        aux_rr = aux_classifier(bb_rr)
         
-    #     # class loss
-    #     #y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-    #     y_onehot = (y_data[:, ::100, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
-    #     class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
+        # class loss
+        y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
+        #y_onehot = (y_data[:, ::100, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
+        class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
 
-    #     # aux loss
-    #     aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-    #     aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
+        # aux loss
+        aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
+        aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
 
 
-    #     # BPTT
-    #     loss = .5 * class_loss + .5 * aux_loss
-    #     loss.backward()
-    #     opt.step()
-    #     opt.zero_grad()
+        # BPTT
+        loss = .5 * class_loss + .5 * aux_loss
+        loss.backward()
+        opt.step()
+        opt.zero_grad()
 
-    #     avg_loss = avg_loss + class_loss.data.item()
-    #     avg_rloss = avg_rloss + aux_loss.data.item()
-    #     avg_s1 = avg_s1 + np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f_length)
-    #     avg_s2 = avg_s2 + np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length) 
-    #     avg_s3 = avg_s3 + np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T)
+        avg_loss = avg_loss + class_loss.data.item()
+        avg_rloss = avg_rloss + aux_loss.data.item()
+        avg_s1 = avg_s1 + np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f_length)
+        avg_s2 = avg_s2 + np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f_length) 
+        avg_s3 = avg_s3 + np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T)
 
-    #     if i % args.log_int == 0:
-    #         with open("logs/train_"+model_uuid+".txt", "a") as file_object:
-    #             file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}\n'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
+        if i % args.log_int == 0:
+            with open("logs/train_"+model_uuid+".txt", "a") as file_object:
+                file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}\n'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
         
 
     # accuracy on test
