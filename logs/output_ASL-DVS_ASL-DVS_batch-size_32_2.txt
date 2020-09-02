@@ -32,3 +32,40 @@ usage: test.py [-h] [--checkpoint CHECKPOINT] [--epochs EPOCHS]
                [--reset RESET] [--thr THR] [--target_act TARGET_ACT]
                [--none_act NONE_ACT]
 test.py: error: ambiguous option: --batch-size could match --batch-size-test, --batch-size-test-test
+Loading python/3.7.3
+  Loading requirement: tcl/8.6.8 gcc/8.3.0
+Traceback (most recent call last):
+  File "train.py", line 195, in <module>
+    for x_data, y_data in test_dl:
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 345, in __next__
+    data = self._next_data()
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 856, in _next_data
+    return self._process_data(data)
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/utils/data/dataloader.py", line 881, in _process_data
+    data.reraise()
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/_utils.py", line 395, in reraise
+    raise self.exc_type(msg)
+ValueError: Caught ValueError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/utils/data/_utils/worker.py", line 178, in _worker_loop
+    data = fetcher.fetch(index)
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 44, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/utils/data/_utils/fetch.py", line 44, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+  File "/afs/crc.nd.edu/user/c/cschaef6/metal-snn/torchneuromorphic/torchneuromorphic/dvs_asl/dvsasl_dataloaders.py", line 128, in __getitem__
+    key = f['extra']['test_keys'][self.keys[key]]
+  File "h5py/_objects.pyx", line 54, in h5py._objects.with_phil.wrapper
+  File "h5py/_objects.pyx", line 55, in h5py._objects.with_phil.wrapper
+  File "/opt/crc/p/python/3.7.3/gcc/lib/python3.7/site-packages/h5py/_hl/dataset.py", line 553, in __getitem__
+    selection = sel.select(self.shape, args, dsid=self.id)
+  File "/opt/crc/p/python/3.7.3/gcc/lib/python3.7/site-packages/h5py/_hl/selections.py", line 94, in select
+    sel[args]
+  File "/opt/crc/p/python/3.7.3/gcc/lib/python3.7/site-packages/h5py/_hl/selections.py", line 261, in __getitem__
+    start, count, step, scalar = _handle_simple(self.shape,args)
+  File "/opt/crc/p/python/3.7.3/gcc/lib/python3.7/site-packages/h5py/_hl/selections.py", line 457, in _handle_simple
+    x,y,z = _translate_int(int(arg), length)
+  File "/opt/crc/p/python/3.7.3/gcc/lib/python3.7/site-packages/h5py/_hl/selections.py", line 477, in _translate_int
+    raise ValueError("Index (%s) out of range (0-%s)" % (exp, length-1))
+ValueError: Index (80775) out of range (0-20159)
+

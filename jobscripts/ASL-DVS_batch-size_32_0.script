@@ -8,4 +8,4 @@
 #$ -e ./logs/error_ASL-DVS_ASL-DVS_batch-size_32_0.txt
 module load python
 setenv OMP_NUM_THREADS $NSLOTS
-python test.py --batch-size 32
+python train.py --batch-size 32
