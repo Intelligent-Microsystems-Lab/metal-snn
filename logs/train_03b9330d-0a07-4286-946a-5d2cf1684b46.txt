@@ -1572,3 +1572,6 @@ Epoch 35 | Batch 370/438 | Loss 526.780854 | Rotate Loss 1317.224720 | Time 0.94
 Epoch 35 | Batch 380/438 | Loss 526.666850 | Rotate Loss 1317.127532 | Time 0.944415
 Epoch 35 | Batch 390/438 | Loss 526.657075 | Rotate Loss 1317.151315 | Time 0.943047
 Epoch 35 | Batch 400/438 | Loss 526.530702 | Rotate Loss 1316.818695 | Time 0.943145
+Epoch 35 | Batch 410/438 | Loss 526.562683 | Rotate Loss 1317.455938 | Time 0.940364
+Epoch 35 | Batch 420/438 | Loss 526.550506 | Rotate Loss 1316.995175 | Time 0.936274
+Epoch 35 | Batch 430/438 | Loss 526.550707 | Rotate Loss 1316.287005 | Time 0.940296
