@@ -145,6 +145,7 @@ class backbone_conv_model(torch.nn.Module):
         super(backbone_conv_model, self).__init__()
         self.dtype  = dtype
 
+        import pdb; pdb.set_trace()
         self.T = x_preview.shape[1]
         x_preview = x_preview[:,0,:,:,:]
         self.mpooling = torch.nn.MaxPool2d(2)
