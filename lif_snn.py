@@ -65,7 +65,7 @@ class LIF_FC_Layer(torch.nn.Module):
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
         self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
-
+        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
         
     def state_init(self, batch_size, device):
         self.P = torch.zeros((batch_size,) + (self.inp_neurons,), dtype = self.dtype, device = device)
@@ -93,7 +93,7 @@ class LIF_FC_Layer(torch.nn.Module):
 
         U = torch.einsum('ab,bc->ac', self.P, self.weights) + self.bias - self.R
         self.S = SmoothStep.apply(U, self.thr)
-        self.R += self.S * self.reset
+        self.R += self.S * self.r_mult
 
         return self.S, U
 
@@ -141,7 +141,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
         self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
-
+        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
         
 
         
@@ -157,7 +157,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
         U = self.conv_fwd(self.P) - self.R
         self.S = SmoothStep.apply(U, self.thr)
-        self.R += self.S * self.reset
+        self.R += self.S * self.r_mult
 
         return self.S, U
 
