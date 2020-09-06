@@ -63,8 +63,8 @@ class LIF_FC_Layer(torch.nn.Module):
         self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
         self.reset = 1. / (1. - self.gamma)
 
-        self.q_mult = self.tau_syn
-        self.p_mult = self.tau_mem
+        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
+        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
         
     def state_init(self, batch_size, device):
@@ -139,8 +139,8 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
         self.reset = 1. / (1. - self.gamma)
 
-        self.q_mult = self.tau_syn
-        self.p_mult = self.tau_mem
+        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
+        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
         
 
