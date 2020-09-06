@@ -147,7 +147,7 @@ else:
 
 for e in range(args.epochs):
     e_time = time.time()
-    avg_loss = avg_rloss = avg_s1 = avg_s2 = avg_s3 = avg_s4 = 0
+    avg_loss = avg_rloss = avg_s1 = avg_s2 = avg_s3 = avg_s4 = correct = rcorrect = total = 0
 
     # learning rate divide
     if e%args.lr_div == 0 and e != 0:
@@ -189,12 +189,16 @@ for e in range(args.epochs):
         avg_s3 = avg_s3 + np.sum(backbone.spike_count3[args.burnin:])/(T * backbone.f_length) 
         avg_s4 = avg_s4 + np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T)
 
+        correct += (u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum()
+        rcorrect += (aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum()
+        total += x_data.shape[0]
+
         if i % args.log_int == 0:
             if args.logfile:
                 with open("logs/train_"+model_uuid+".txt", "a") as file_object:
-                    file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}\n'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
+                    file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:4f} | Rotate Accuracy {:.4f} | Time {:.4f}\n'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
             else:
-                print('Epoch {:d} | Batch {:d}/{:d} | Loss {:f} | Rotate Loss {:f} | Time {:f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), time.time() - start_time ))
+                print('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:.4f} | Rotate Accuracy {:.4f} | Time {:.4f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
         
 
     # accuracy on test
