@@ -1,12 +1,12 @@
 import torch
 import numpy as np
 
-def aux_task_gen(x_data, k, y_data):
+def aux_task_gen(x_data, y_data):
     xtemp = [x_data] 
     ytemp = [y_data, y_data, y_data, y_data]
     aux_ytemp = [ torch.tensor([0]*x_data.shape[0]) ]
 
-    for i in range(1, k):
+    for i in range(1, 4):
         xtemp.append(xtemp[-1].transpose(3,4).flip(1))
         aux_ytemp.append(torch.tensor([i]*x_data.shape[0]))
 
@@ -141,7 +141,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
 class backbone_conv_model(torch.nn.Module):
-    def __init__(self, x_preview, in_channels, oc1, oc2, k1, k2, bias, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, reset, thr, gain, dtype): 
+    def __init__(self, x_preview, in_channels, oc1, oc2, oc3, k1, k2, k3, bias, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, reset, thr, gain, dtype): 
         super(backbone_conv_model, self).__init__()
         self.dtype  = dtype
 
@@ -159,6 +159,12 @@ class backbone_conv_model(torch.nn.Module):
         x_preview, _ = self.conv_layer2.forward(x_preview)
         x_preview    = self.mpooling(x_preview)
 
+        self.f2_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
+
+        self.conv_layer3 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc2, out_channels = oc3, kernel_size = k3, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain, thr = thr, bias = bias, dtype = dtype)
+        x_preview, _ = self.conv_layer1.forward(x_preview)
+        x_preview    = self.mpooling(x_preview)
+
         self.f_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
 
 
@@ -166,9 +172,11 @@ class backbone_conv_model(torch.nn.Module):
         # init
         self.conv_layer1.state_init(inputs.shape[0], inputs.device)
         self.conv_layer2.state_init(inputs.shape[0], inputs.device)
+        self.conv_layer3.state_init(inputs.shape[0], inputs.device)
         s_t = torch.zeros((inputs.shape[0], self.T, self.f_length), device = inputs.device)
         self.spike_count1 = [0] * self.T
         self.spike_count2 = [0] * self.T
+        self.spike_count3 = [0] * self.T
 
         # go through time steps
         for t in range(self.T):
@@ -178,6 +186,9 @@ class backbone_conv_model(torch.nn.Module):
             x, _       = self.conv_layer2.forward(x)
             x          = self.mpooling(x)
             self.spike_count2[t] += x.view(x.shape[0], -1).sum(dim=1).mean().item()
+            x, _       = self.conv_layer3.forward(x)
+            x          = self.mpooling(x)
+            self.spike_count3[t] += x.view(x.shape[0], -1).sum(dim=1).mean().item()
             s_t[:,t,:] = x.view(-1,self.f_length)
 
         return s_t
