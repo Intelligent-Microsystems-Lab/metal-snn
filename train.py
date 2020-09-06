@@ -29,15 +29,16 @@ parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weig
 parser.add_argument("--log-int", type=int, default=10, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 
-# dataset specific
+# dataset
 parser.add_argument("--dataset", type=str, default="ASL-DVS", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
 parser.add_argument("--train-samples", type=int, default=100, help='Number of samples per classes')
 parser.add_argument("--n-train", type=int, default=14, help='N-way for training technically I guess more')
+parser.add_argument("--downsampling", type=int, default=4, help='downsampling')
 
 #architecture
-parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
-parser.add_argument("--k2", type=int, default=7, help='Kernel Size 2')
-parser.add_argument("--k3", type=int, default=7, help='Kernel Size 2')
+parser.add_argument("--k1", type=int, default=5, help='Kernel Size 1')
+parser.add_argument("--k2", type=int, default=5, help='Kernel Size 2')
+parser.add_argument("--k3", type=int, default=5, help='Kernel Size 2')
 parser.add_argument("--oc1", type=int, default=8, help='Output Channels 1')
 parser.add_argument("--oc2", type=int, default=16, help='Output Channels 2')
 parser.add_argument("--oc3", type=int, default=32, help='Output Channels 2')
@@ -70,7 +71,7 @@ if args.dataset == 'DNMNIST':
                 root='data.nosync/nmnist/n_mnist.hdf5',
                 batch_size=args.batch_size,
                 batch_size_test=args.batch_size,
-                ds=args.delta_t,
+                ds=args.downsampling,
                 num_workers=4)
 elif args.dataset == 'ASL-DVS':
     train_dl, test_dl  = sample_dvsasl_task(
@@ -81,7 +82,7 @@ elif args.dataset == 'ASL-DVS':
                 root='data.nosync/dvsasl/dvsasl.hdf5',
                 batch_size=args.batch_size,
                 batch_size_test=args.batch_size,
-                ds=4,
+                ds=args.downsampling,
                 num_workers=0)
 elif args.dataset == 'DDVSGesture':
     train_dl, test_dl  = sample_double_mnist_task(
@@ -92,7 +93,7 @@ elif args.dataset == 'DDVSGesture':
                 root='data.nosync/nmnist/n_mnist.hdf5',
                 batch_size=args.batch_size,
                 batch_size_test=args.batch_size,
-                ds=args.delta_t,
+                ds=args.downsampling,
                 num_workers=4)
 else:
     raise Exception("Invalid dataset")
