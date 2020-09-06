@@ -151,6 +151,21 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.R = torch.zeros((batch_size,) + tuple(self.out_dim), dtype = self.dtype, device = device)
         self.S = torch.zeros((batch_size,) + tuple(self.out_dim), dtype = self.dtype, device = device)
         torch.cuda.empty_cache()
+
+
+    def update_taus(self):
+        # make sure tau doesnt dip below... so this is false
+        self.beta = torch.clamp(self.beta, min = 0)
+        self.tau_syn = 1. / (1. - self.gamma)
+
+        self.alpha = torch.clamp(self.alpha, min = 0)
+        self.tau_mem = 1. / (1. - self.alpha)
+
+        self.gamma = torch.clamp(self.gamma, min = 0)
+        self.reset = 1. / (1. - self.gamma)
+
+        self.q_mult = self.tau_syn
+        self.p_mult = self.tau_mem
     
     def forward(self, input_t):
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
@@ -190,6 +205,11 @@ class backbone_conv_model(torch.nn.Module):
         x_preview    = self.mpooling(x_preview)
 
         self.f_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
+
+    def update_taus(self):
+        self.conv_layer1.update_taus()
+        self.conv_layer2.update_taus()
+        self.conv_layer3.update_taus()
 
 
     def forward(self, inputs):
@@ -232,6 +252,8 @@ class backbone_fc(torch.nn.Module):
         self.layer1 = LIF_FC_Layer(input_neurons = inp_neurons, output_neurons = output_classes, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, thr = thr, reset = reset, gain = gain, bias = bias, dtype = dtype)
         self.f_length = output_classes
 
+    def update_taus(self):
+        self.layer1.update_taus()
 
     def forward(self, inputs):
         # init
@@ -259,6 +281,8 @@ class classifier_model(torch.nn.Module):
 
         self.layer1 = LIF_FC_Layer(input_neurons = inp_neurons, output_neurons = output_classes, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, thr = thr, reset = reset, gain = gain, bias = bias, dtype = dtype)
 
+    def update_taus(self):
+        self.layer1.update_taus()
 
     def forward(self, inputs): 
         # init
