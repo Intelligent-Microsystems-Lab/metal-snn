@@ -127,15 +127,15 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.state_init(x_preview.shape[0], x_preview.device)
 
         # taus and betas
-        self.tau_syn = torch.empty(torch.Size((self.inp_dim,)), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
+        self.tau_syn = torch.empty(self.inp_dim, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
         self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = False)
         self.tau_syn = 1. / (1. - self.beta)
 
-        self.tau_mem = torch.empty(torch.Size((self.inp_dim,)), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
+        self.tau_mem = torch.empty(self.inp_dim, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
         self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = False)
         self.tau_mem = 1. / (1. - self.alpha)
 
-        self.tau_ref = torch.empty(torch.Size((self.out_out,)), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
+        self.tau_ref = torch.empty(self.out_out, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
         self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
         self.reset = 1. / (1. - self.gamma)
 
