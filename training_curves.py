@@ -8,7 +8,7 @@ def plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, 
     temp_x.plot(auxl_hist, label = "Rotation Loss", color = 'tab:orange')
     axes[0].set_xlabel("Epochs")
     axes[0].set_ylabel("Loss Class")
-    temp_x..set_ylabel("Loss Aux")
+    temp_x.set_ylabel("Loss Aux")
     axes[0].legend()
 
     axes[1].plot(acc_hist, label = "Classification Acc", color = 'tab:blue')
@@ -16,7 +16,7 @@ def plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, 
     temp_x.plot(aux_hist, label = "Rotation Acc", color = 'tab:orange')
     axes[1].set_xlabel("Epochs")
     axes[1].set_ylabel("Acc Class")
-    temp_x..set_ylabel("Acc Aux")
+    temp_x.set_ylabel("Acc Aux")
     axes[1].legend()
 
     axes[2].plot(act1_hist, label = "Conv1 Spikes")
