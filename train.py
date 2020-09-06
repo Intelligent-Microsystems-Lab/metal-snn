@@ -22,10 +22,8 @@ parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
 parser.add_argument("--batch-size", type=int, default=32, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-6, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
-parser.add_argument("--init-gain-backbone", type=float, default=.5, help='Gain for weight init')
-parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
 parser.add_argument("--log-int", type=int, default=10, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 
@@ -44,6 +42,10 @@ parser.add_argument("--oc2", type=int, default=16, help='Output Channels 2')
 parser.add_argument("--oc3", type=int, default=32, help='Output Channels 2')
 parser.add_argument("--conv-bias", type=bool, default=True, help='Bias for conv layers')
 parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classifier')
+parser.add_argument("--init-gain-conv1", type=float, default=.5, help='Gain for weight init')
+parser.add_argument("--init-gain-conv2", type=float, default=.5, help='Gain for weight init')
+parser.add_argument("--init-gain-conv3", type=float, default=.5, help='Gain for weight init')
+parser.add_argument("--init-gain-fc", type=float, default=1, help='Gain for weight init')
 
 # neural dynamics
 parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
@@ -107,7 +109,7 @@ T = x_preview.shape[1]
 max_act = T - args.burnin
  
 # backbone Conv
-backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, oc3 = args.oc3, k1 = args.k1, k2 = args.k2, k3 = args.k3, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain = args.init_gain_backbone, delta_t = delta_t, dtype = dtype).to(device)
+backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, oc3 = args.oc3, k1 = args.k1, k2 = args.k2, k3 = args.k3, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain1 = args.init_gain_conv1, gain2 = args.init_gain_conv2, gain3 = args.init_gain_conv3, delta_t = delta_t, dtype = dtype).to(device)
 
 classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_train, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
 

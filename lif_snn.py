@@ -36,7 +36,6 @@ class LIF_FC_Layer(torch.nn.Module):
         self.dtype = dtype
         self.inp_neurons = input_neurons      
         self.out_neurons = output_neurons
-        self.reset = reset
         self.thr = thr
 
         self.init =  np.sqrt(6 / (self.inp_neurons)) * gain
@@ -51,16 +50,21 @@ class LIF_FC_Layer(torch.nn.Module):
         else:
             self.bias = None
           
-
         # taus and betas
-        #self.tau_syn = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
-        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_syn_low), requires_grad = False)
+        self.tau_syn = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
+        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = False)
+        self.tau_syn = 1. / (1. - self.beta)
 
-        #self.tau_mem = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
-        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_mem_low), requires_grad = False)
+        self.tau_mem = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
+        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = False)
+        self.tau_mem = 1. / (1. - self.alpha)
 
-        #self.tau_ref = torch.empty(torch.Size((self.out_neurons,)), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
-        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_ref_low), requires_grad = False)
+        self.tau_ref = torch.empty(torch.Size((self.out_neurons,)), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
+        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
+        self.reset = 1. / (1. - self.gamma)
+
+        self.q_mult = self.tau_syn
+        self.p_mult = self.tau_mem
 
         
     def state_init(self, batch_size, device):
@@ -70,8 +74,22 @@ class LIF_FC_Layer(torch.nn.Module):
         self.S = torch.zeros((batch_size,) + (self.out_neurons,), dtype = self.dtype, device = device) 
         torch.cuda.empty_cache()
     
+    def update_taus(self):
+        # make sure tau doesnt dip below... so this is false
+        self.beta = torch.clamp(self.beta, min = 0)
+        self.tau_syn = 1. / (1. - self.gamma)
+
+        self.alpha = torch.clamp(self.alpha, min = 0)
+        self.tau_mem = 1. / (1. - self.alpha)
+
+        self.gamma = torch.clamp(self.gamma, min = 0)
+        self.reset = 1. / (1. - self.gamma)
+
+        self.q_mult = self.tau_syn
+        self.p_mult = self.tau_mem
+
     def forward(self, input_t):
-        self.P, self.R, self.Q = self.alpha * self.P + self.Q, self.gamma * self.R, self.beta * self.Q + input_t
+        self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
 
         U = torch.einsum('ab,bc->ac', self.P, self.weights) + self.bias - self.R
         self.S = SmoothStep.apply(U, self.thr)
@@ -109,14 +127,20 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.state_init(x_preview.shape[0], x_preview.device)
 
         # taus and betas
-        #self.tau_syn = torch.empty(torch.Size(self.inp_dim), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
-        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_syn_low), requires_grad = False)
+        self.tau_syn = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
+        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = False)
+        self.tau_syn = 1. / (1. - self.beta)
 
-        #self.tau_mem = torch.empty(torch.Size(self.inp_dim), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
-        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_mem_low), requires_grad = False)
+        self.tau_mem = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
+        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = False)
+        self.tau_mem = 1. / (1. - self.alpha)
 
-        #self.tau_ref = torch.empty(torch.Size(self.out_dim), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
-        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_ref_low), requires_grad = False)
+        self.tau_ref = torch.empty(torch.Size((self.out_neurons,)), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
+        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
+        self.reset = 1. / (1. - self.gamma)
+
+        self.q_mult = self.tau_syn
+        self.p_mult = self.tau_mem
 
         
 
@@ -129,7 +153,7 @@ class LIF_Conv_Layer(torch.nn.Module):
         torch.cuda.empty_cache()
     
     def forward(self, input_t):
-        self.P, self.R, self.Q = self.alpha * self.P + self.Q, self.gamma * self.R, self.beta * self.Q + input_t
+        self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
 
         U = self.conv_fwd(self.P) - self.R
         self.S = SmoothStep.apply(U, self.thr)
@@ -141,7 +165,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
 class backbone_conv_model(torch.nn.Module):
-    def __init__(self, x_preview, in_channels, oc1, oc2, oc3, k1, k2, k3, bias, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, reset, thr, gain, dtype): 
+    def __init__(self, x_preview, in_channels, oc1, oc2, oc3, k1, k2, k3, bias, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, reset, thr, gain1, gain2, gain3, dtype): 
         super(backbone_conv_model, self).__init__()
         self.dtype  = dtype
 
@@ -149,19 +173,19 @@ class backbone_conv_model(torch.nn.Module):
         x_preview = x_preview[:,0,:,:,:]
         self.mpooling = torch.nn.MaxPool2d(2)
 
-        self.conv_layer1 = LIF_Conv_Layer(x_preview = x_preview, in_channels = in_channels, out_channels = oc1, kernel_size = k1, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain, thr = thr, bias = bias, dtype = dtype)
+        self.conv_layer1 = LIF_Conv_Layer(x_preview = x_preview, in_channels = in_channels, out_channels = oc1, kernel_size = k1, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain1, thr = thr, bias = bias, dtype = dtype)
         x_preview, _ = self.conv_layer1.forward(x_preview)
         x_preview    = self.mpooling(x_preview)
 
         self.f1_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
 
-        self.conv_layer2 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc1, out_channels = oc2, kernel_size = k1, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain, thr = thr, bias = bias, dtype = dtype)
+        self.conv_layer2 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc1, out_channels = oc2, kernel_size = k1, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain2, thr = thr, bias = bias, dtype = dtype)
         x_preview, _ = self.conv_layer2.forward(x_preview)
         x_preview    = self.mpooling(x_preview)
 
         self.f2_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
 
-        self.conv_layer3 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc2, out_channels = oc3, kernel_size = k3, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain, thr = thr, bias = bias, dtype = dtype)
+        self.conv_layer3 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc2, out_channels = oc3, kernel_size = k3, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain3, thr = thr, bias = bias, dtype = dtype)
         x_preview, _ = self.conv_layer3.forward(x_preview)
         x_preview    = self.mpooling(x_preview)
 
