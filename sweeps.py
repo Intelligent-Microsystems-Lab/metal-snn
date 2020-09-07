@@ -19,8 +19,8 @@ part4 = ".txt\nmodule load python\nsetenv OMP_NUM_THREADS $NSLOTS\npython train.
 sweep_parameters = {'batch-size':[128]}
 trials = 4
 
-#avail_q = ['gpu@qa-rtx6k-040.crc.nd.edu', 'gpu@qa-rtx6k-041.crc.nd.edu']
-avail_q = ['gpu@@joshi']
+avail_q = ['gpu@qa-rtx6k-040.crc.nd.edu', 'gpu@qa-rtx6k-041.crc.nd.edu']
+#avail_q = ['gpu@@joshi']
 q_counter = 0
 
 for i in range(trials):
