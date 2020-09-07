@@ -228,7 +228,7 @@ class backbone_conv_model(torch.nn.Module):
             x          = self.mpooling(x)
             self.spike_count1[t] += x.view(x.shape[0], -1).sum(dim=1).mean().item()
             x, _       = self.conv_layer2.forward(x)
-            x          = self.mpooling(x)
+            #x          = self.mpooling(x)
             self.spike_count2[t] += x.view(x.shape[0], -1).sum(dim=1).mean().item()
             x, _       = self.conv_layer3.forward(x)
             x          = self.mpooling(x)

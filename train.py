@@ -2,8 +2,10 @@ import argparse, time, uuid
 
 import torch
 import numpy as np
-from torchneuromorphic.torchneuromorphic.doublenmnist.doublenmnist_dataloaders import *
-from torchneuromorphic.torchneuromorphic.dvs_asl.dvsasl_dataloaders import *
+import torchneuromorphic.torchneuromorphic.doublenmnist.doublenmnist_dataloaders as dmnist
+import torchneuromorphic.torchneuromorphic.dvs_asl.dvsasl_dataloaders as dvs_asl
+import torchneuromorphic.torchneuromorphic.dvs_gestures.dvsgestures_dataloaders as dvs_gestures
+
 from training_curves import plot_curves
 
 from lif_snn import backbone_conv_model, classifier_model, aux_task_gen
@@ -28,18 +30,18 @@ parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 
 # dataset
-parser.add_argument("--dataset", type=str, default="ASL-DVS", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
+parser.add_argument("--dataset", type=str, default="DVSGesture", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
 parser.add_argument("--train-samples", type=int, default=150, help='Number of samples per classes')
-parser.add_argument("--n-train", type=int, default=14, help='N-way for training technically I guess more')
+parser.add_argument("--n-train", type=int, default=11, help='N-way for training technically I guess more')
 parser.add_argument("--downsampling", type=int, default=4, help='downsampling')
 
 #architecture
-parser.add_argument("--k1", type=int, default=5, help='Kernel Size 1')
-parser.add_argument("--k2", type=int, default=5, help='Kernel Size 2')
-parser.add_argument("--k3", type=int, default=5, help='Kernel Size 2')
-parser.add_argument("--oc1", type=int, default=8, help='Output Channels 1')
-parser.add_argument("--oc2", type=int, default=16, help='Output Channels 2')
-parser.add_argument("--oc3", type=int, default=32, help='Output Channels 2')
+parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
+parser.add_argument("--k2", type=int, default=7, help='Kernel Size 2')
+parser.add_argument("--k3", type=int, default=7, help='Kernel Size 2')
+parser.add_argument("--oc1", type=int, default=64, help='Output Channels 1')
+parser.add_argument("--oc2", type=int, default=128, help='Output Channels 2')
+parser.add_argument("--oc3", type=int, default=128, help='Output Channels 2')
 parser.add_argument("--conv-bias", type=bool, default=True, help='Bias for conv layers')
 parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classifier')
 parser.add_argument("--init-gain-conv1", type=float, default=.001, help='Gain for weight init 1 conv')
@@ -65,7 +67,7 @@ args = parser.parse_args()
 
 # training data
 if args.dataset == 'DNMNIST':
-    train_dl, test_dl  = sample_double_mnist_task(
+    train_dl, test_dl  = doublenmnist_dataloaders.sample_double_mnist_task(
                 meta_dataset_type = 'train',
                 N = args.n_train,
                 K = args.train_samples,
@@ -76,7 +78,7 @@ if args.dataset == 'DNMNIST':
                 ds=args.downsampling,
                 num_workers=4)
 elif args.dataset == 'ASL-DVS':
-    train_dl, test_dl  = sample_dvsasl_task(
+    train_dl, test_dl  = dvsasl_dataloaders.sample_dvsasl_task(
                 meta_dataset_type = 'train',
                 N = args.n_train,
                 K = args.train_samples,
@@ -96,6 +98,21 @@ elif args.dataset == 'DDVSGesture':
                 batch_size=args.batch_size,
                 batch_size_test=args.batch_size,
                 ds=args.downsampling,
+                num_workers=4)
+elif args.dataset == 'DVSGesture':
+    train_dl, test_dl  = dvs_gestures.create_dataloader(
+                root = 'data/dvsgesture/dvs_gestures_build.hdf5',
+                work_dir = 'data/dvsgesture/',
+                batch_size = 72 ,
+                chunk_size_train = 500,
+                chunk_size_test = 1800,
+                ds = 4,
+                dt = 1000,
+                transform_train = None,
+                transform_test = None,
+                target_transform_train = None,
+                target_transform_test = None,
+                n_events_attention=None,
                 num_workers=4)
 else:
     raise Exception("Invalid dataset")
