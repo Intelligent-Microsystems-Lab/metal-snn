@@ -1939,3 +1939,35 @@ Epoch 387 : Accuracy 7.833333, Rotate Accuracy 27.642857, Time 101.926979
 Epoch 388 | Batch 0/17 | Loss 526.2590 | Rotate Loss 1513.3555 | Accuracy 6.250000 | Rotate Accuracy 26.7578 | Time 2.4659
 Epoch 388 | Batch 5/17 | Loss 522.9857 | Rotate Loss 1522.3861 | Accuracy 7.552083 | Rotate Accuracy 28.5807 | Time 2.7788
 Epoch 388 | Batch 10/17 | Loss 521.0685 | Rotate Loss 1526.1117 | Accuracy 7.421875 | Rotate Accuracy 28.3913 | Time 2.8177
+Epoch 388 | Batch 15/17 | Loss 519.6367 | Rotate Loss 1531.8859 | Accuracy 7.714844 | Rotate Accuracy 28.2593 | Time 2.7614
+Epoch 388 : Accuracy 7.452381, Rotate Accuracy 27.928571, Time 102.877568
+Epoch 389 | Batch 0/17 | Loss 518.2835 | Rotate Loss 1516.5908 | Accuracy 9.765625 | Rotate Accuracy 30.0781 | Time 2.4844
+Epoch 389 | Batch 5/17 | Loss 518.5482 | Rotate Loss 1538.1929 | Accuracy 8.593750 | Rotate Accuracy 28.8411 | Time 2.7941
+Epoch 389 | Batch 10/17 | Loss 518.4574 | Rotate Loss 1535.1355 | Accuracy 8.274148 | Rotate Accuracy 28.2493 | Time 2.7899
+Epoch 389 | Batch 15/17 | Loss 519.0526 | Rotate Loss 1533.1102 | Accuracy 8.154297 | Rotate Accuracy 28.3325 | Time 2.7966
+Epoch 389 : Accuracy 7.214286, Rotate Accuracy 27.654762, Time 101.500788
+Epoch 390 | Batch 0/17 | Loss 519.0045 | Rotate Loss 1522.2451 | Accuracy 9.375000 | Rotate Accuracy 25.9766 | Time 2.4771
+Epoch 390 | Batch 5/17 | Loss 517.4464 | Rotate Loss 1528.2010 | Accuracy 8.203125 | Rotate Accuracy 27.9948 | Time 2.7369
+Epoch 390 | Batch 10/17 | Loss 519.3926 | Rotate Loss 1529.9765 | Accuracy 7.634943 | Rotate Accuracy 28.4268 | Time 2.8315
+Epoch 390 | Batch 15/17 | Loss 518.9710 | Rotate Loss 1531.9642 | Accuracy 7.812500 | Rotate Accuracy 28.1738 | Time 2.7742
+Epoch 390 : Accuracy 8.071429, Rotate Accuracy 28.119048, Time 102.700414
+Epoch 391 | Batch 0/17 | Loss 518.9085 | Rotate Loss 1520.6064 | Accuracy 7.031250 | Rotate Accuracy 28.5156 | Time 2.4527
+Epoch 391 | Batch 5/17 | Loss 517.0271 | Rotate Loss 1528.1512 | Accuracy 8.007812 | Rotate Accuracy 28.3854 | Time 2.7252
+Epoch 391 | Batch 10/17 | Loss 518.6333 | Rotate Loss 1528.4294 | Accuracy 7.670455 | Rotate Accuracy 28.4979 | Time 2.7310
+Epoch 391 | Batch 15/17 | Loss 519.1676 | Rotate Loss 1533.2701 | Accuracy 7.348633 | Rotate Accuracy 28.2104 | Time 2.7672
+Epoch 391 : Accuracy 8.119048, Rotate Accuracy 27.833333, Time 101.527896
+Epoch 392 | Batch 0/17 | Loss 517.5715 | Rotate Loss 1518.1855 | Accuracy 8.984375 | Rotate Accuracy 27.5391 | Time 2.4255
+Epoch 392 | Batch 5/17 | Loss 520.5482 | Rotate Loss 1530.7222 | Accuracy 6.770833 | Rotate Accuracy 27.7018 | Time 2.7953
+Epoch 392 | Batch 10/17 | Loss 520.6391 | Rotate Loss 1533.7844 | Accuracy 7.066761 | Rotate Accuracy 27.6456 | Time 2.7715
+Epoch 392 | Batch 15/17 | Loss 519.4094 | Rotate Loss 1533.9164 | Accuracy 7.641602 | Rotate Accuracy 27.8809 | Time 2.7748
+Epoch 392 : Accuracy 7.928571, Rotate Accuracy 27.797619, Time 102.069736
+Epoch 393 | Batch 0/17 | Loss 513.1217 | Rotate Loss 1546.3154 | Accuracy 9.765625 | Rotate Accuracy 28.9062 | Time 2.4475
+Epoch 393 | Batch 5/17 | Loss 520.0290 | Rotate Loss 1532.5111 | Accuracy 7.812500 | Rotate Accuracy 28.1576 | Time 2.7270
+Epoch 393 | Batch 10/17 | Loss 519.1783 | Rotate Loss 1533.8114 | Accuracy 7.990057 | Rotate Accuracy 28.1605 | Time 2.7504
+Epoch 393 | Batch 15/17 | Loss 519.0647 | Rotate Loss 1533.5739 | Accuracy 7.592773 | Rotate Accuracy 28.2471 | Time 2.7210
+Epoch 393 : Accuracy 7.928571, Rotate Accuracy 27.857143, Time 102.860901
+Epoch 394 | Batch 0/17 | Loss 514.1836 | Rotate Loss 1518.9102 | Accuracy 7.031250 | Rotate Accuracy 31.0547 | Time 2.4775
+Epoch 394 | Batch 5/17 | Loss 520.7327 | Rotate Loss 1531.8205 | Accuracy 6.835938 | Rotate Accuracy 28.8411 | Time 2.8236
+Epoch 394 | Batch 10/17 | Loss 521.2434 | Rotate Loss 1534.7820 | Accuracy 7.173295 | Rotate Accuracy 28.5866 | Time 2.7530
+Epoch 394 | Batch 15/17 | Loss 519.3462 | Rotate Loss 1533.3625 | Accuracy 7.495117 | Rotate Accuracy 28.1982 | Time 2.8108
+Epoch 394 : Accuracy 7.333333, Rotate Accuracy 27.857143, Time 103.258363
