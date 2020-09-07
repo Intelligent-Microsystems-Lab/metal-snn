@@ -118,7 +118,7 @@ aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output
 
 
 loss_fn = torch.nn.MSELoss(reduction = 'mean')
-opt = torch.optim.SGD([
+opt = torch.optim.Adam([
                 {'params': backbone.parameters()},
                 {'params': classifier.parameters()},
                 {'params': aux_classifier.parameters()}
