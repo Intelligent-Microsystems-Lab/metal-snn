@@ -153,6 +153,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
     def update_taus(self):
+        import pdb; pdb.set_trace()
         self.beta = torch.clamp(self.beta, max = 1-1e-10)
         self.tau_syn = 1. / (1. - self.gamma)
 
