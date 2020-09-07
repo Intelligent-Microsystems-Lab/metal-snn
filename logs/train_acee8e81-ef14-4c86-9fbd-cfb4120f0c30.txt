@@ -2,3 +2,4 @@ Namespace(batch_size=128, burnin=10, conv_bias=True, dataset='ASL-DVS', delta_t=
 acee8e81-ef14-4c86-9fbd-cfb4120f0c30
 Start Training Backbone
 Epoch 1 | Batch 0/17 | Loss 552.4348 | Rotate Loss 1666.3906 | Accuracy 9.765625 | Rotate Accuracy 21.0938 | Time 2.5066
+Epoch 1 | Batch 5/17 | Loss 557.6422 | Rotate Loss 1659.8867 | Accuracy 7.747396 | Rotate Accuracy 23.5677 | Time 2.7960
