@@ -1,0 +1,24 @@
+Loading python/3.7.3
+  Loading requirement: tcl/8.6.8 gcc/8.3.0
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:131: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:135: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:139: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:55: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:59: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:63: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
+Traceback (most recent call last):
+  File "train.py", line 168, in <module>
+    bb_rr  = backbone(x_data)
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/nn/modules/module.py", line 550, in __call__
+    result = self.forward(*input, **kwargs)
+  File "/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py", line 227, in forward
+    x, _       = self.conv_layer1.forward(inputs[:,t,:,:,:])
+  File "/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py", line 171, in forward
+    self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
+RuntimeError: CUDA out of memory. Tried to allocate 28.00 MiB (GPU 0; 11.78 GiB total capacity; 9.89 GiB already allocated; 27.38 MiB free; 10.70 GiB reserved in total by PyTorch)

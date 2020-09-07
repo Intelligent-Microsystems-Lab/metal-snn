@@ -1,0 +1,3 @@
+Namespace(batch_size=128, burnin=10, conv_bias=True, dataset='ASL-DVS', delta_t=1, downsampling=4, epochs=401, fc_bias=True, init_gain_conv1=0.001, init_gain_conv2=0.0001, init_gain_conv3=0.0001, init_gain_fc=0.0005, k1=5, k2=5, k3=5, log_int=5, logfile=True, lr=1e-08, lr_div=100, n_train=14, none_act=0.05, oc1=8, oc2=16, oc3=32, reset=1, save_int=5, target_act=0.95, tau_mem_high=35, tau_mem_low=5, tau_ref_high=2.857142857142857, tau_ref_low=2.857142857142857, tau_syn_high=10, tau_syn_low=5, thr=0.5, train_samples=150)
+41625749-ac9c-4a0a-930f-35aa7ec329f2
+Start Training Backbone
