@@ -196,7 +196,7 @@ class backbone_conv_model(torch.nn.Module):
 
         self.conv_layer2 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc1, out_channels = oc2, kernel_size = k1, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain2, thr = thr, bias = bias, dtype = dtype)
         x_preview, _ = self.conv_layer2.forward(x_preview)
-        x_preview    = self.mpooling(x_preview)
+        #x_preview    = self.mpooling(x_preview)
 
         self.f2_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
 
