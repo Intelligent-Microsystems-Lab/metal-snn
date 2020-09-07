@@ -188,7 +188,6 @@ class backbone_conv_model(torch.nn.Module):
         x_preview = x_preview[:,0,:,:,:]
         self.mpooling = torch.nn.MaxPool2d(2)
 
-        import pdb; pdb.set_trace()
         self.conv_layer1 = LIF_Conv_Layer(x_preview = x_preview, in_channels = in_channels, out_channels = oc1, kernel_size = k1, padding = padding, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain1, thr = thr, bias = bias, dtype = dtype)
         x_preview, _ = self.conv_layer1.forward(x_preview)
         x_preview    = self.mpooling(x_preview)
