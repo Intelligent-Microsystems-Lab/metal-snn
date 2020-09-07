@@ -75,17 +75,18 @@ class LIF_FC_Layer(torch.nn.Module):
         torch.cuda.empty_cache()
     
     def update_taus(self):
-        self.beta = torch.clamp(self.beta, max = 1-1e-10)
+        self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = 1-1e-10), requires_grad = True)
         self.tau_syn = 1. / (1. - self.gamma)
 
-        self.alpha = torch.clamp(self.alpha, max = 1-1e-10)
+        self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = 1-1e-10), requires_grad = True)
         self.tau_mem = 1. / (1. - self.alpha)
 
-        self.gamma = torch.clamp(self.gamma, max = 1-1e-10)
+        self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = 1-1e-10), requires_grad = True)
         self.reset = 1. / (1. - self.gamma)
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
         self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
+        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
 
     def forward(self, input_t):
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
@@ -127,15 +128,15 @@ class LIF_Conv_Layer(torch.nn.Module):
 
         # taus and betas
         self.tau_syn = torch.empty(self.inp_dim, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
-        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = False)
+        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = True)
         self.tau_syn = 1. / (1. - self.beta)
 
         self.tau_mem = torch.empty(self.inp_dim, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
-        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = False)
+        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = True)
         self.tau_mem = 1. / (1. - self.alpha)
 
         self.tau_ref = torch.empty(self.out_dim, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
-        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
+        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = True)
         self.reset = 1. / (1. - self.gamma)
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
@@ -153,18 +154,18 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
     def update_taus(self):
-        import pdb; pdb.set_trace()
-        self.beta = torch.clamp(self.beta, max = 1-1e-10)
+        self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = 1-1e-10), requires_grad = True)
         self.tau_syn = 1. / (1. - self.gamma)
 
-        self.alpha = torch.clamp(self.alpha, max = 1-1e-10)
+        self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = 1-1e-10), requires_grad = True)
         self.tau_mem = 1. / (1. - self.alpha)
 
-        self.gamma = torch.clamp(self.gamma, max = 1-1e-10)
+        self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = 1-1e-10), requires_grad = True)
         self.reset = 1. / (1. - self.gamma)
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
         self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
+        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
     
     def forward(self, input_t):
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
