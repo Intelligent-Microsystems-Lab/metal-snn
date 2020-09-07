@@ -118,7 +118,7 @@ aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output
 
 
 loss_fn = torch.nn.MSELoss(reduction = 'mean')
-opt = torch.optim.Adam([
+opt = torch.optim.SGD([
                 {'params': backbone.parameters()},
                 {'params': classifier.parameters()},
                 {'params': aux_classifier.parameters()}
@@ -178,13 +178,18 @@ for e in range(args.epochs):
         aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
         aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
 
-
         # BPTT
         loss = .5 * class_loss + .5 * aux_loss
         loss.backward()
         opt.step()
         opt.zero_grad()
 
+        # update taus
+        backbone.update_taus() 
+        classifier.update_taus()
+        aux_classifier.update_taus()
+
+        # stats
         avg_loss = avg_loss + class_loss.data.item()
         avg_rloss = avg_rloss + aux_loss.data.item()
         avg_s1 = avg_s1 + np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length)
