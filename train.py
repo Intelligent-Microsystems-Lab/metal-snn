@@ -18,11 +18,11 @@ dtype = torch.float32
 ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
+parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
 parser.add_argument("--batch-size", type=int, default=128, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-8, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
@@ -43,9 +43,9 @@ parser.add_argument("--oc3", type=int, default=32, help='Output Channels 2')
 parser.add_argument("--conv-bias", type=bool, default=True, help='Bias for conv layers')
 parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classifier')
 parser.add_argument("--init-gain-conv1", type=float, default=.001, help='Gain for weight init 1 conv')
-parser.add_argument("--init-gain-conv2", type=float, default=.0001, help='Gain for weight init 2 conv')
-parser.add_argument("--init-gain-conv3", type=float, default=.0001, help='Gain for weight init 3 conv')
-parser.add_argument("--init-gain-fc", type=float, default=.0005, help='Gain for weight init fc')
+parser.add_argument("--init-gain-conv2", type=float, default=.0002, help='Gain for weight init 2 conv')
+parser.add_argument("--init-gain-conv3", type=float, default=.0002, help='Gain for weight init 3 conv')
+parser.add_argument("--init-gain-fc", type=float, default=.0001, help='Gain for weight init fc')
 
 # neural dynamics
 parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
@@ -56,8 +56,8 @@ parser.add_argument("--tau-mem-high", type=float, default=35, help='Membrane tim
 parser.add_argument("--tau-syn-high", type=float, default=10, help='Synaptic time constant high')
 parser.add_argument("--tau-ref-high", type=float, default=1/.35, help='Refractory time constant high')
 parser.add_argument("--reset", type=float, default=1, help='Refractory time constant')
-parser.add_argument("--thr", type=float, default=.5, help='Firing Threshold')
-parser.add_argument("--target_act", type=float, default=.95, help='Firing Threshold')
+parser.add_argument("--thr", type=float, default=1., help='Firing Threshold')
+parser.add_argument("--target_act", type=float, default=1., help='Firing Threshold')
 parser.add_argument("--none_act", type=float, default=.05, help='Firing Threshold')
 
 args = parser.parse_args()

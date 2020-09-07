@@ -52,15 +52,16 @@ class LIF_FC_Layer(torch.nn.Module):
           
         # taus and betas
         self.tau_syn = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
-        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = False)
+        import pdb; pdb.set_trace()
+        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = True)
         self.tau_syn = 1. / (1. - self.beta)
 
         self.tau_mem = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
-        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = False)
+        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = True)
         self.tau_mem = 1. / (1. - self.alpha)
 
         self.tau_ref = torch.empty(torch.Size((self.out_neurons,)), dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
-        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
+        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = True)
         self.reset = 1. / (1. - self.gamma)
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
@@ -75,7 +76,6 @@ class LIF_FC_Layer(torch.nn.Module):
         torch.cuda.empty_cache()
     
     def update_taus(self):
-        # make sure tau doesnt dip below... so this is false
         self.beta = torch.clamp(self.beta, min = 0)
         self.tau_syn = 1. / (1. - self.gamma)
 
@@ -85,8 +85,8 @@ class LIF_FC_Layer(torch.nn.Module):
         self.gamma = torch.clamp(self.gamma, min = 0)
         self.reset = 1. / (1. - self.gamma)
 
-        self.q_mult = self.tau_syn
-        self.p_mult = self.tau_mem
+        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
+        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
     def forward(self, input_t):
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
@@ -154,7 +154,6 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
     def update_taus(self):
-        # make sure tau doesnt dip below... so this is false
         self.beta = torch.clamp(self.beta, min = 0)
         self.tau_syn = 1. / (1. - self.gamma)
 
@@ -164,8 +163,8 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.gamma = torch.clamp(self.gamma, min = 0)
         self.reset = 1. / (1. - self.gamma)
 
-        self.q_mult = self.tau_syn
-        self.p_mult = self.tau_mem
+        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
+        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
     
     def forward(self, input_t):
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
