@@ -3,3 +3,7 @@ Namespace(batch_size=128, burnin=10, conv_bias=True, dataset='ASL-DVS', delta_t=
 Start Training Backbone
 Epoch 1 | Batch 0/17 | Loss 654.3086 | Rotate Loss 1634.8301 | Accuracy 6.640625 | Rotate Accuracy 25.5859 | Time 2.5294
 Epoch 1 | Batch 5/17 | Loss 639.9030 | Rotate Loss 1643.6816 | Accuracy 7.161458 | Rotate Accuracy 24.2839 | Time 2.8145
+Epoch 1 | Batch 10/17 | Loss 639.2945 | Rotate Loss 1647.2606 | Accuracy 7.315341 | Rotate Accuracy 23.2599 | Time 2.7529
+Epoch 1 | Batch 15/17 | Loss 641.8847 | Rotate Loss 1645.9465 | Accuracy 7.714844 | Rotate Accuracy 23.2910 | Time 2.8429
+Epoch 1 : Accuracy 7.261905, Rotate Accuracy 22.500000, Time 111.049439
+Epoch 2 | Batch 0/17 | Loss 634.7411 | Rotate Loss 1634.9434 | Accuracy 8.203125 | Rotate Accuracy 22.2656 | Time 2.5167

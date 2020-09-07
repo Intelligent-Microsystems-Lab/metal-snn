@@ -3,3 +3,7 @@ abaa539d-edd3-4baa-a6a1-f34fc76948b4
 Start Training Backbone
 Epoch 1 | Batch 0/17 | Loss 631.6245 | Rotate Loss 1634.1553 | Accuracy 5.859375 | Rotate Accuracy 23.8281 | Time 2.4793
 Epoch 1 | Batch 5/17 | Loss 638.8119 | Rotate Loss 1646.2399 | Accuracy 6.770833 | Rotate Accuracy 24.1862 | Time 2.7884
+Epoch 1 | Batch 10/17 | Loss 645.4943 | Rotate Loss 1646.3526 | Accuracy 6.640625 | Rotate Accuracy 23.9879 | Time 2.8387
+Epoch 1 | Batch 15/17 | Loss 643.5829 | Rotate Loss 1644.2121 | Accuracy 7.250977 | Rotate Accuracy 24.2188 | Time 2.7981
+Epoch 1 : Accuracy 6.666667, Rotate Accuracy 23.500000, Time 106.050419
+Epoch 2 | Batch 0/17 | Loss 649.2673 | Rotate Loss 1661.7393 | Accuracy 10.546875 | Rotate Accuracy 21.2891 | Time 2.5104
