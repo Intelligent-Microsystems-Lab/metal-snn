@@ -76,7 +76,7 @@ class LIF_FC_Layer(torch.nn.Module):
     
     def update_taus(self):
         self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = 1-1e-10), requires_grad = True)
-        self.tau_syn = 1. / (1. - self.gamma)
+        self.tau_syn = 1. / (1. - self.beta)
 
         self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = 1-1e-10), requires_grad = True)
         self.tau_mem = 1. / (1. - self.alpha)
@@ -155,7 +155,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
     def update_taus(self):
         self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = 1-1e-10), requires_grad = True)
-        self.tau_syn = 1. / (1. - self.gamma)
+        self.tau_syn = 1. / (1. - self.beta)
 
         self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = 1-1e-10), requires_grad = True)
         self.tau_mem = 1. / (1. - self.alpha)
