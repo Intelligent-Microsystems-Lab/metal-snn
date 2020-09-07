@@ -28,3 +28,17 @@ Traceback (most recent call last):
   File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/nn/modules/conv.py", line 346, in _conv_forward
     self.padding, self.dilation, self.groups)
 RuntimeError: CUDA out of memory. Tried to allocate 28.00 MiB (GPU 0; 10.76 GiB total capacity; 9.41 GiB already allocated; 17.12 MiB free; 9.89 GiB reserved in total by PyTorch)
+Loading python/3.7.3
+  Loading requirement: tcl/8.6.8 gcc/8.3.0
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:131: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:135: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:139: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:55: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:59: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:63: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = False)
