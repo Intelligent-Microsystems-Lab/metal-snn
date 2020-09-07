@@ -52,7 +52,6 @@ class LIF_FC_Layer(torch.nn.Module):
           
         # taus and betas
         self.tau_syn = torch.empty(torch.Size((self.inp_neurons,)), dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
-        import pdb; pdb.set_trace()
         self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = True)
         self.tau_syn = 1. / (1. - self.beta)
 
@@ -76,13 +75,13 @@ class LIF_FC_Layer(torch.nn.Module):
         torch.cuda.empty_cache()
     
     def update_taus(self):
-        self.beta = torch.clamp(self.beta, min = 0)
+        self.beta = torch.clamp(self.beta, max = 1-1e-10)
         self.tau_syn = 1. / (1. - self.gamma)
 
-        self.alpha = torch.clamp(self.alpha, min = 0)
+        self.alpha = torch.clamp(self.alpha, max = 1-1e-10)
         self.tau_mem = 1. / (1. - self.alpha)
 
-        self.gamma = torch.clamp(self.gamma, min = 0)
+        self.gamma = torch.clamp(self.gamma, max = 1-1e-10)
         self.reset = 1. / (1. - self.gamma)
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
@@ -154,13 +153,13 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
     def update_taus(self):
-        self.beta = torch.clamp(self.beta, min = 0)
+        self.beta = torch.clamp(self.beta, max = 1-1e-10)
         self.tau_syn = 1. / (1. - self.gamma)
 
-        self.alpha = torch.clamp(self.alpha, min = 0)
+        self.alpha = torch.clamp(self.alpha, max = 1-1e-10)
         self.tau_mem = 1. / (1. - self.alpha)
 
-        self.gamma = torch.clamp(self.gamma, min = 0)
+        self.gamma = torch.clamp(self.gamma, max = 1-1e-10)
         self.reset = 1. / (1. - self.gamma)
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
