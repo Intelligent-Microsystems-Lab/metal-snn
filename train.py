@@ -21,13 +21,14 @@ ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
-parser.add_argument("--batch-size", type=int, default=128, help='Batch size')
+parser.add_argument("--batch-size", type=int, default=16, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
 parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
+parser.add_argument("--train-tau", type=bool, default=True, help='Train time constants')
 
 # dataset
 parser.add_argument("--dataset", type=str, default="DVSGesture", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
@@ -36,12 +37,12 @@ parser.add_argument("--n-train", type=int, default=11, help='N-way for training 
 parser.add_argument("--downsampling", type=int, default=4, help='downsampling')
 
 #architecture
-parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
-parser.add_argument("--k2", type=int, default=7, help='Kernel Size 2')
-parser.add_argument("--k3", type=int, default=7, help='Kernel Size 2')
-parser.add_argument("--oc1", type=int, default=64, help='Output Channels 1')
-parser.add_argument("--oc2", type=int, default=128, help='Output Channels 2')
-parser.add_argument("--oc3", type=int, default=128, help='Output Channels 2')
+parser.add_argument("--k1", type=int, default=5, help='Kernel Size 1')
+parser.add_argument("--k2", type=int, default=5, help='Kernel Size 2')
+parser.add_argument("--k3", type=int, default=5, help='Kernel Size 2')
+parser.add_argument("--oc1", type=int, default=16, help='Output Channels 1')
+parser.add_argument("--oc2", type=int, default=32, help='Output Channels 2')
+parser.add_argument("--oc3", type=int, default=32, help='Output Channels 2')
 parser.add_argument("--padding", type=int, default=2, help='Conv Padding')
 parser.add_argument("--conv-bias", type=bool, default=True, help='Bias for conv layers')
 parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classifier')
@@ -104,7 +105,7 @@ elif args.dataset == 'DVSGesture':
     train_dl, test_dl  = dvs_gestures.create_dataloader(
                 root = 'data/dvsgesture/dvs_gestures_build.hdf5',
                 work_dir = 'data/dvsgesture/',
-                batch_size = 72 ,
+                batch_size = args.batch_size,
                 chunk_size_train = 500,
                 chunk_size_test = 1800,
                 ds = 4,
@@ -127,11 +128,11 @@ T = x_preview.shape[1]
 max_act = T - args.burnin
  
 # backbone Conv
-backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, oc3 = args.oc3, k1 = args.k1, k2 = args.k2, k3 = args.k3, padding = args.padding, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain1 = args.init_gain_conv1, gain2 = args.init_gain_conv2, gain3 = args.init_gain_conv3, delta_t = delta_t, dtype = dtype).to(device)
+backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, oc3 = args.oc3, k1 = args.k1, k2 = args.k2, k3 = args.k3, padding = args.padding, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain1 = args.init_gain_conv1, gain2 = args.init_gain_conv2, gain3 = args.init_gain_conv3, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
-classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_train, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
+classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_train, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
-aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = 4, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, dtype = dtype).to(device)
+aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = 4, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
 
 
@@ -188,8 +189,8 @@ for e in range(args.epochs):
         aux_rr = aux_classifier(bb_rr)
         
         # class loss
-        y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-        #y_onehot = (y_data[:, ::100, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
+        #y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
+        y_onehot = (y_data[:, ::500, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
         class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
 
         # aux loss
@@ -215,6 +216,7 @@ for e in range(args.epochs):
         avg_s3 = avg_s3 + np.sum(backbone.spike_count3[args.burnin:])/(T * backbone.f_length) 
         avg_s4 = avg_s4 + np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T)
 
+        y_data = y_data[:, ::500, :][:,0,:].argmax(dim=1)   
         correct += (u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum()
         rcorrect += (aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum()
         total += x_data.shape[0]
@@ -243,6 +245,7 @@ for e in range(args.epochs):
             u_rr   = classifier(bb_rr)
             aux_rr = aux_classifier(bb_rr)
             
+            y_data = y_data[:, ::500, :][:,0,:].argmax(dim=1)   
             correct += (u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum()
             rcorrect += (aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum()
             total += x_data.shape[0]
