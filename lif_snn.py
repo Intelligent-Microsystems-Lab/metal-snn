@@ -81,13 +81,13 @@ class LIF_FC_Layer(torch.nn.Module):
         torch.cuda.empty_cache()
     
     def update_taus(self):
-        self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = self.beta_high, min = self.beta_low), requires_grad = self.train_t).to(device(self.P.device))
+        self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = self.beta_high, min = self.beta_low), requires_grad = self.train_t).to(self.P.device)
         self.tau_syn = 1. / (1. - self.beta)
 
-        self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = self.alpha_high, min = self.alpha_low), requires_grad = self.train_t).to(device(self.P.device))
+        self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = self.alpha_high, min = self.alpha_low), requires_grad = self.train_t).to(self.P.device)
         self.tau_mem = 1. / (1. - self.alpha)
 
-        self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(device(self.P.device))
+        self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(self.P.device)
         self.reset = 1. / (1. - self.gamma)
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to(device(self.P.device))
@@ -167,14 +167,13 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
     def update_taus(self):
-        import pdb; pdb.set_trace()
-        self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = self.beta_high, min = self.beta_low), requires_grad = self.train_t).to(device(self.P.device))
+        self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = self.beta_high, min = self.beta_low), requires_grad = self.train_t).to(self.P.device)
         self.tau_syn = 1. / (1. - self.beta)
 
-        self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = self.alpha_high, min = self.alpha_low), requires_grad = self.train_t).to(device(self.P.device))
+        self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = self.alpha_high, min = self.alpha_low), requires_grad = self.train_t).to(self.P.device)
         self.tau_mem = 1. / (1. - self.alpha)
 
-        self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(device(self.P.device))
+        self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(self.P.device)
         self.reset = 1. / (1. - self.gamma)
 
         self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to(device(self.P.device))
