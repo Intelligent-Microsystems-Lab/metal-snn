@@ -240,13 +240,13 @@ class backbone_conv_model(torch.nn.Module):
         for t in range(self.T):
             x, _       = self.conv_layer1.forward(inputs[:,t,:,:,:])
             x          = self.mpooling(x)
-            self.spike_count1[t] += x.view(x.shape[0], -1).sum(dim=1).mean().item()
+            self.spike_count1[t] += int(x.view(x.shape[0], -1).sum(dim=1).mean().item())
             x, _       = self.conv_layer2.forward(x)
             #x          = self.mpooling(x)
-            self.spike_count2[t] += x.view(x.shape[0], -1).sum(dim=1).mean().item()
+            self.spike_count2[t] += int(x.view(x.shape[0], -1).sum(dim=1).mean().item())
             x, _       = self.conv_layer3.forward(x)
             x          = self.mpooling(x)
-            self.spike_count3[t] += x.view(x.shape[0], -1).sum(dim=1).mean().item()
+            self.spike_count3[t] += int(x.view(x.shape[0], -1).sum(dim=1).mean().item())
             s_t[:,t,:] = x.view(-1,self.f_length)
 
         return s_t
@@ -307,6 +307,6 @@ class classifier_model(torch.nn.Module):
         # go through time steps
         for t in range(self.T):
             s_t[:,t,:], _ = self.layer1.forward(inputs[:,t,:])
-            self.spike_count[t] += s_t[:,t,:].view(s_t[:,t,:].shape[0], -1).sum(dim=1).mean().item()
+            self.spike_count[t] += int(s_t[:,t,:].view(s_t[:,t,:].shape[0], -1).sum(dim=1).mean().item())
 
         return s_t

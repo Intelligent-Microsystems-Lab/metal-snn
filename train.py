@@ -28,7 +28,7 @@ parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
-parser.add_argument("--train-tau", type=bool, default=True, help='Train time constants')
+parser.add_argument("--train-tau", type=bool, default=False, help='Train time constants')
 
 # dataset
 parser.add_argument("--dataset", type=str, default="DVSGesture", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
@@ -79,6 +79,9 @@ if args.dataset == 'DNMNIST':
                 batch_size_test=args.batch_size,
                 ds=args.downsampling,
                 num_workers=4)
+    time_steps_train = 100
+    time_steps_test = 100
+    one_hot_opt = True
 elif args.dataset == 'ASL-DVS':
     train_dl, test_dl  = dvsasl_dataloaders.sample_dvsasl_task(
                 meta_dataset_type = 'train',
@@ -89,7 +92,10 @@ elif args.dataset == 'ASL-DVS':
                 batch_size=args.batch_size,
                 batch_size_test=args.batch_size,
                 ds=args.downsampling,
-                num_workers=0)
+                num_workers=4)
+    time_steps_train = 100
+    time_steps_test = 100
+    one_hot_opt = True
 elif args.dataset == 'DDVSGesture':
     train_dl, test_dl  = sample_double_mnist_task(
                 meta_dataset_type = 'train',
@@ -101,6 +107,9 @@ elif args.dataset == 'DDVSGesture':
                 batch_size_test=args.batch_size,
                 ds=args.downsampling,
                 num_workers=4)
+    time_steps_train = 100
+    time_steps_test = 100
+    one_hot_opt = True
 elif args.dataset == 'DVSGesture':
     train_dl, test_dl  = dvs_gestures.create_dataloader(
                 root = 'data/dvsgesture/dvs_gestures_build.hdf5',
@@ -108,7 +117,7 @@ elif args.dataset == 'DVSGesture':
                 batch_size = args.batch_size,
                 chunk_size_train = 500,
                 chunk_size_test = 1800,
-                ds = 4,
+                ds = args.downsampling,
                 dt = 1000,
                 transform_train = None,
                 transform_test = None,
@@ -116,6 +125,9 @@ elif args.dataset == 'DVSGesture':
                 target_transform_test = None,
                 n_events_attention=None,
                 num_workers=4)
+    time_steps_train = 500
+    time_steps_test = 1800
+    one_hot_opt = False
 else:
     raise Exception("Invalid dataset")
 
@@ -178,24 +190,41 @@ for e in range(args.epochs):
 
     for i, (x_data, y_data) in enumerate(train_dl):
         start_time = time.time()
-        x_data = x_data.to(device)
+        x_data = x_data#.to(device)
 
         # create aux task
         x_data, y_data, aux_y  = aux_task_gen(x_data, y_data)
 
+        # to gpu
+        x_data = x_data.to(device)
+        y_data = y_data.to(device)
+        aux_y = aux_y.to(device)
+
         # forwardpass
         bb_rr  = backbone(x_data)
+        del x_data
         u_rr   = classifier(bb_rr)
         aux_rr = aux_classifier(bb_rr)
         
         # class loss
-        #y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-        y_onehot = (y_data[:, ::500, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
+        if one_hot_opt:
+            y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
+        else:
+            y_onehot = (y_data[:, ::time_steps_train, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
         class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
 
         # aux loss
         aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
         aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
+
+
+        if not one_hot_opt
+            y_data = y_data[:, ::time_steps_train, :][:,0,:].argmax(dim=1)   
+        correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
+        rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
+        total += float(y_data.shape[0])
+
+        del u_rr, aux_rr, aux_y_onehot, y_onehot, y_data
 
         # BPTT
         loss = .5 * class_loss + .5 * aux_loss
@@ -209,17 +238,14 @@ for e in range(args.epochs):
         aux_classifier.update_taus()
 
         # stats
-        avg_loss = avg_loss + class_loss.data.item()
-        avg_rloss = avg_rloss + aux_loss.data.item()
-        avg_s1 = avg_s1 + np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length)
-        avg_s2 = avg_s2 + np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f2_length) 
-        avg_s3 = avg_s3 + np.sum(backbone.spike_count3[args.burnin:])/(T * backbone.f_length) 
-        avg_s4 = avg_s4 + np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T)
+        avg_loss = avg_loss + float(class_loss.data.item())
+        avg_rloss = avg_rloss + float(aux_loss.data.item())
+        avg_s1 = avg_s1 + float(np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length))
+        avg_s2 = avg_s2 + float(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f2_length))
+        avg_s3 = avg_s3 + float(np.sum(backbone.spike_count3[args.burnin:])/(T * backbone.f_length)) 
+        avg_s4 = avg_s4 + float(np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T))
 
-        y_data = y_data[:, ::500, :][:,0,:].argmax(dim=1)   
-        correct += (u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum()
-        rcorrect += (aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum()
-        total += x_data.shape[0]
+        
 
         if i % args.log_int == 0:
             if args.logfile:
@@ -227,6 +253,7 @@ for e in range(args.epochs):
                     file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:4f} | Rotate Accuracy {:.4f} | Time {:.4f}\n'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
             else:
                 print('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:.4f} | Rotate Accuracy {:.4f} | Time {:.4f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
+        torch.cuda.empty_cache()
         
 
     # accuracy on test
@@ -235,20 +262,27 @@ for e in range(args.epochs):
         for x_data, y_data in test_dl:
 
             start_time = time.time()
-            x_data = x_data.to(device)
+            x_data = x_data#.to(device)
 
             # create aux task
             x_data, y_data, aux_y  = aux_task_gen(x_data, y_data)
 
+            # to gpu
+            x_data = x_data.to(device)
+            y_data = y_data.to(device)
+            aux_y = aux_y.to(device)
+
             # forwardpass
             bb_rr  = backbone(x_data)
+            del x_data
             u_rr   = classifier(bb_rr)
             aux_rr = aux_classifier(bb_rr)
             
-            y_data = y_data[:, ::500, :][:,0,:].argmax(dim=1)   
-            correct += (u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum()
-            rcorrect += (aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum()
-            total += x_data.shape[0]
+            if not one_hot_opt:
+                y_data = y_data[:, ::time_steps_test, :][:,0,:].argmax(dim=1)   
+            correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
+            rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
+            total += float(x_data.shape[0])
     torch.cuda.empty_cache()
 
     # stats save
