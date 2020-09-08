@@ -54,7 +54,7 @@ class LIF_FC_Layer(torch.nn.Module):
           
         # taus and betas
         if tau_syn_high == tau_syn_high:
-            self.beta = 1 - delta_t / self.tau_syn_high
+            self.beta = 1 - delta_t / tau_syn_high
             self.tau_syn = 1. / (1. - self.beta)
             self.q_mult = self.tau_syn
         else:
@@ -66,7 +66,7 @@ class LIF_FC_Layer(torch.nn.Module):
             self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
 
         if tau_mem_high == tau_mem_low:
-            self.alpha = 1 - delta_t / self.tau_mem_high
+            self.alpha = 1 - delta_t / tau_mem_high
             self.tau_mem = 1. / (1. - self.alpha)
             self.p_mult = self.tau_mem
         else:
@@ -78,7 +78,7 @@ class LIF_FC_Layer(torch.nn.Module):
             self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
         if tau_ref_high == tau_ref_low:
-            self.gamma = 1 - delta_t / self.tau_ref_high
+            self.gamma = 1 - delta_t / tau_ref_high
             self.reset = 1. / (1. - self.gamma)
             self.r_mult = self.reset
         else:
@@ -152,7 +152,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
         # taus and betas
         if tau_syn_high == tau_syn_high:
-            self.beta = 1 - delta_t / self.tau_syn_high
+            self.beta = 1 - delta_t / tau_syn_high
             self.tau_syn = 1. / (1. - self.beta)
             self.q_mult = self.tau_syn
         else:
@@ -164,7 +164,7 @@ class LIF_Conv_Layer(torch.nn.Module):
             self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
 
         if tau_mem_high == tau_mem_low:
-            self.alpha = 1 - delta_t / self.tau_mem_high
+            self.alpha = 1 - delta_t / tau_mem_high
             self.tau_mem = 1. / (1. - self.alpha)
             self.p_mult = self.tau_mem
         else:
@@ -176,7 +176,7 @@ class LIF_Conv_Layer(torch.nn.Module):
             self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
         if tau_ref_high == tau_ref_low:
-            self.gamma = 1 - delta_t / self.tau_ref_high
+            self.gamma = 1 - delta_t / tau_ref_high
             self.reset = 1. / (1. - self.gamma)
             self.r_mult = self.reset
         else:
