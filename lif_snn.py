@@ -90,9 +90,9 @@ class LIF_FC_Layer(torch.nn.Module):
         self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(self.P.device)
         self.reset = 1. / (1. - self.gamma)
 
-        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to(device(self.P.device))
-        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False).to(device(self.P.device))
-        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to(device(self.P.device))
+        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to((self.P.device))
+        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False).to((self.P.device))
+        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to((self.P.device))
 
     def forward(self, input_t):
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
@@ -176,9 +176,9 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(self.P.device)
         self.reset = 1. / (1. - self.gamma)
 
-        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to(device(self.P.device))
-        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False).to(device(self.P.device))
-        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to(device(self.P.device))
+        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to((self.P.device))
+        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False).to((self.P.device))
+        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to((self.P.device))
     
     def forward(self, input_t):
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
