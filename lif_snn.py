@@ -37,6 +37,7 @@ class LIF_FC_Layer(torch.nn.Module):
         self.inp_neurons = input_neurons      
         self.out_neurons = output_neurons
         self.thr = thr
+        self.train_t = train_t
 
         self.init =  np.sqrt(6 / (self.inp_neurons)) * gain
                 
