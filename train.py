@@ -21,7 +21,7 @@ ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
-parser.add_argument("--batch-size", type=int, default=38, help='Batch size')
+parser.add_argument("--batch-size", type=int, default=11, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
 parser.add_argument("--lr", type=float, default=1.0e-9, help='Learning Rate')
@@ -61,7 +61,7 @@ parser.add_argument("--tau-mem-high", type=float, default=20, help='Membrane tim
 parser.add_argument("--tau-syn-high", type=float, default=7.5, help='Synaptic time constant high')
 parser.add_argument("--tau-ref-high", type=float, default=1/.35, help='Refractory time constant high')
 parser.add_argument("--reset", type=float, default=1, help='Refractory time constant')
-parser.add_argument("--thr", type=float, default=1., help='Firing Threshold')
+parser.add_argument("--thr", type=float, default=.1, help='Firing Threshold')
 parser.add_argument("--target_act", type=float, default=1., help='Firing Threshold')
 parser.add_argument("--none_act", type=float, default=.05, help='Firing Threshold')
 

@@ -145,8 +145,8 @@ class LIF_Conv_Layer(torch.nn.Module):
         else:
             self.bias = None
 
-        self.inp_dim = x_preview.shape[1:]
-        self.out_dim = self.conv_fwd(x_preview).shape[1:]
+        self.inp_dim = int(x_preview.shape[1:])
+        self.out_dim = int(self.conv_fwd(x_preview).shape[1:])
           
         self.state_init(x_preview.shape[0], x_preview.device)
 
@@ -228,7 +228,7 @@ class backbone_conv_model(torch.nn.Module):
         super(backbone_conv_model, self).__init__()
         self.dtype  = dtype
 
-        self.T = x_preview.shape[1]
+        self.T = int(x_preview.shape[1])
         x_preview = x_preview[:,0,:,:,:]
         self.mpooling = torch.nn.MaxPool2d(2)
 
@@ -249,6 +249,7 @@ class backbone_conv_model(torch.nn.Module):
         x_preview    = self.mpooling(x_preview)
 
         self.f_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
+        del x_preview
 
     def update_taus(self):
         self.conv_layer1.update_taus()
