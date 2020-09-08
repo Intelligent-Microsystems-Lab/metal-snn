@@ -53,19 +53,19 @@ class LIF_FC_Layer(torch.nn.Module):
         # taus and betas
         self.beta_high = 1 - delta_t / tau_syn_high
         self.beta_low = 1 - delta_t / tau_syn_low
-        self.tau_syn = torch.empty(self.input_neurons, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
+        self.tau_syn = torch.empty(input_neurons, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
         self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = train_t)
         self.tau_syn = 1. / (1. - self.beta)
 
         self.alpha_high = 1 - delta_t / tau_mem_high
         self.alpha_low = 1 - delta_t / tau_mem_low
-        self.tau_mem = torch.empty(self.input_neurons, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
+        self.tau_mem = torch.empty(input_neurons, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
         self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = train_t)
         self.tau_mem = 1. / (1. - self.alpha)
 
         self.gamma_high = 1 - delta_t / tau_ref_high
         self.gamma_low = 1 - delta_t / tau_ref_low
-        self.tau_ref = torch.empty(self.output_neurons, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
+        self.tau_ref = torch.empty(output_neurons, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
         self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = train_t)
         self.reset = 1. / (1. - self.gamma)
 
