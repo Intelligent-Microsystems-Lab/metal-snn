@@ -145,8 +145,8 @@ class LIF_Conv_Layer(torch.nn.Module):
         else:
             self.bias = None
 
-        self.inp_dim = int(x_preview.shape[1:])
-        self.out_dim = int(self.conv_fwd(x_preview).shape[1:])
+        self.inp_dim = [int(x) for x in x_preview.shape[1:]]
+        self.out_dim = [int(x) for x in self.conv_fwd(x_preview).shape[1:]]
           
         self.state_init(x_preview.shape[0], x_preview.device)
 
