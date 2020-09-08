@@ -39,8 +39,9 @@ class LIF_FC_Layer(torch.nn.Module):
         self.thr = thr
         self.train_t = train_t
 
-        self.init =  np.sqrt(6 / (self.inp_neurons)) * gain
-                
+        #self.init =  np.sqrt(6 / (self.inp_neurons)) * gain
+        self.init = gain
+
         self.weights = torch.nn.Parameter(torch.empty((self.inp_neurons, self.out_neurons), dtype = dtype, requires_grad = True))
         torch.nn.init.uniform_(self.weights, a = -self.init, b = self.init)
         #torch.nn.init.xavier_normal_(self.weights, gain = gain)
@@ -52,27 +53,41 @@ class LIF_FC_Layer(torch.nn.Module):
             self.bias = None
           
         # taus and betas
-        self.beta_high = 1 - delta_t / tau_syn_high
-        self.beta_low = 1 - delta_t / tau_syn_low
-        self.tau_syn = torch.empty(input_neurons, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
-        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = train_t)
-        self.tau_syn = 1. / (1. - self.beta)
+        if tau_syn_high == tau_syn_high:
+            self.beta = 1 - delta_t / self.tau_syn_high
+            self.tau_syn = 1. / (1. - self.beta)
+            self.q_mult = self.tau_syn
+        else:
+            self.beta_high = 1 - delta_t / tau_syn_high
+            self.beta_low = 1 - delta_t / tau_syn_low
+            self.tau_syn = torch.empty(input_neurons, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
+            self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = train_t)
+            self.tau_syn = 1. / (1. - self.beta)
+            self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
 
-        self.alpha_high = 1 - delta_t / tau_mem_high
-        self.alpha_low = 1 - delta_t / tau_mem_low
-        self.tau_mem = torch.empty(input_neurons, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
-        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = train_t)
-        self.tau_mem = 1. / (1. - self.alpha)
+        if tau_mem_high == tau_mem_low:
+            self.alpha = 1 - delta_t / self.tau_mem_high
+            self.tau_mem = 1. / (1. - self.alpha)
+            self.p_mult = self.tau_mem
+        else:
+            self.alpha_high = 1 - delta_t / tau_mem_high
+            self.alpha_low = 1 - delta_t / tau_mem_low
+            self.tau_mem = torch.empty(input_neurons, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
+            self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = train_t)
+            self.tau_mem = 1. / (1. - self.alpha)
+            self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
-        self.gamma_high = 1 - delta_t / tau_ref_high
-        self.gamma_low = 1 - delta_t / tau_ref_low
-        self.tau_ref = torch.empty(output_neurons, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
-        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = train_t)
-        self.reset = 1. / (1. - self.gamma)
-
-        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
-        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
-        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
+        if tau_ref_high == tau_ref_low:
+            self.gamma = 1 - delta_t / self.tau_ref_high
+            self.reset = 1. / (1. - self.gamma)
+            self.r_mult = self.reset
+        else:
+            self.gamma_high = 1 - delta_t / tau_ref_high
+            self.gamma_low = 1 - delta_t / tau_ref_low
+            self.tau_ref = torch.empty(output_neurons, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
+            self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = train_t)
+            self.reset = 1. / (1. - self.gamma)
+            self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
         
     def state_init(self, batch_size, device):
         self.P = torch.zeros((batch_size,) + (self.inp_neurons,), dtype = self.dtype, device = device)
@@ -118,8 +133,9 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.thr = thr
         self.train_t = train_t
 
-        self.init =  np.sqrt(6 / ((kernel_size**2) * out_channels )) * gain
-        
+        #self.init =  np.sqrt(6 / ((kernel_size**2) * out_channels )) * gain
+        self.init = gain
+
         self.conv_fwd = torch.nn.Conv2d(in_channels = self.in_channels, out_channels = self.out_channels, kernel_size = self.kernel_size, bias = self.bias, padding = padding)
 
         torch.nn.init.uniform_(self.conv_fwd.weight, a = -self.init, b = self.init)
@@ -135,27 +151,41 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.state_init(x_preview.shape[0], x_preview.device)
 
         # taus and betas
-        self.beta_high = 1 - delta_t / tau_syn_high
-        self.beta_low = 1 - delta_t / tau_syn_low
-        self.tau_syn = torch.empty(self.inp_dim, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
-        self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = train_t)
-        self.tau_syn = 1. / (1. - self.beta)
+        if tau_syn_high == tau_syn_high:
+            self.beta = 1 - delta_t / self.tau_syn_high
+            self.tau_syn = 1. / (1. - self.beta)
+            self.q_mult = self.tau_syn
+        else:
+            self.beta_high = 1 - delta_t / tau_syn_high
+            self.beta_low = 1 - delta_t / tau_syn_low
+            self.tau_syn = torch.empty(input_neurons, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
+            self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = train_t)
+            self.tau_syn = 1. / (1. - self.beta)
+            self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
 
-        self.alpha_high = 1 - delta_t / tau_mem_high
-        self.alpha_low = 1 - delta_t / tau_mem_low
-        self.tau_mem = torch.empty(self.inp_dim, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
-        self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = train_t)
-        self.tau_mem = 1. / (1. - self.alpha)
+        if tau_mem_high == tau_mem_low:
+            self.alpha = 1 - delta_t / self.tau_mem_high
+            self.tau_mem = 1. / (1. - self.alpha)
+            self.p_mult = self.tau_mem
+        else:
+            self.alpha_high = 1 - delta_t / tau_mem_high
+            self.alpha_low = 1 - delta_t / tau_mem_low
+            self.tau_mem = torch.empty(input_neurons, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
+            self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = train_t)
+            self.tau_mem = 1. / (1. - self.alpha)
+            self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
-        self.gamma_high = 1 - delta_t / tau_ref_high
-        self.gamma_low = 1 - delta_t / tau_ref_low
-        self.tau_ref = torch.empty(self.out_dim, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
-        self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = train_t)
-        self.reset = 1. / (1. - self.gamma)
-
-        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
-        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
-        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
+        if tau_ref_high == tau_ref_low:
+            self.gamma = 1 - delta_t / self.tau_ref_high
+            self.reset = 1. / (1. - self.gamma)
+            self.r_mult = self.reset
+        else:
+            self.gamma_high = 1 - delta_t / tau_ref_high
+            self.gamma_low = 1 - delta_t / tau_ref_low
+            self.tau_ref = torch.empty(output_neurons, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
+            self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = train_t)
+            self.reset = 1. / (1. - self.gamma)
+            self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
         
 
         
