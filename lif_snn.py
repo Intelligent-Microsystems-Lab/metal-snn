@@ -167,6 +167,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
     def update_taus(self):
+        import pdb; pdb.set_trace()
         self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = self.beta_high, min = self.beta_low), requires_grad = self.train_t).to(device(self.P.device))
         self.tau_syn = 1. / (1. - self.beta)
 
