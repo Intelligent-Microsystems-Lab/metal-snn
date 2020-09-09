@@ -20,11 +20,11 @@ dtype = torch.float32
 ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
+parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
 parser.add_argument("--batch-size", type=int, default=32, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-10, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-12, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
@@ -46,11 +46,11 @@ parser.add_argument("--oc3", type=int, default=64, help='Output Channels 2')
 parser.add_argument("--padding", type=int, default=2, help='Conv Padding')
 parser.add_argument("--conv-bias", type=bool, default=True, help='Bias for conv layers')
 parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classifier')
-parser.add_argument("--init-gain-conv1", type=float, default=.0001, help='Gain for weight init 1 conv')
-parser.add_argument("--init-gain-conv2", type=float, default=.0001, help='Gain for weight init 2 conv')
-parser.add_argument("--init-gain-conv3", type=float, default=.0001, help='Gain for weight init 3 conv')
-parser.add_argument("--init-gain-fc", type=float, default=.0001, help='Gain for weight init fc')
-parser.add_argument("--init-gain-aux", type=float, default=.01, help='Gain for weight init fc')
+parser.add_argument("--init-gain-conv1", type=float, default=1e-09, help='Gain for weight init 1 conv')
+parser.add_argument("--init-gain-conv2", type=float, default=1e-09, help='Gain for weight init 2 conv')
+parser.add_argument("--init-gain-conv3", type=float, default=1e-09, help='Gain for weight init 3 conv')
+parser.add_argument("--init-gain-fc", type=float, default=1e-09, help='Gain for weight init fc')
+parser.add_argument("--init-gain-aux", type=float, default=1e-09, help='Gain for weight init fc')
 
 # neural dynamics
 parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
@@ -61,7 +61,7 @@ parser.add_argument("--tau-mem-high", type=float, default=20, help='Membrane tim
 parser.add_argument("--tau-syn-high", type=float, default=7.5, help='Synaptic time constant high')
 parser.add_argument("--tau-ref-high", type=float, default=1/.35, help='Refractory time constant high')
 parser.add_argument("--reset", type=float, default=1, help='Refractory time constant')
-parser.add_argument("--thr", type=float, default=.1, help='Firing Threshold')
+parser.add_argument("--thr", type=float, default=.0, help='Firing Threshold')
 parser.add_argument("--target_act", type=float, default=1., help='Firing Threshold')
 parser.add_argument("--none_act", type=float, default=.05, help='Firing Threshold')
 
@@ -149,8 +149,9 @@ aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output
 
 
 
-loss_fn = torch.nn.MSELoss(reduction = 'mean')
-#loss_fn = torch.nn.CrossEntropyLoss()
+#loss_fn = torch.nn.MSELoss(reduction = 'mean')
+loss_fn = torch.nn.NLLLoss()
+softmax_pass = torch.nn.LogSoftmax(dim=1)
 opt = torch.optim.Adam([
                 {'params': backbone.parameters()},
                 {'params': classifier.parameters()},
@@ -208,17 +209,21 @@ for e in range(args.epochs):
         u_rr   = classifier(bb_rr)
         aux_rr = aux_classifier(bb_rr)
         
+        # check outputs -> e.g. are there odd spike patterns
+
         # class loss
-        if one_hot_opt:
-            y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-        else:
-            y_onehot = (y_data[:, ::time_steps_train, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
-        class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
+        # if one_hot_opt:
+        #     y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
+        # else:
+        #     y_onehot = (y_data[:, ::time_steps_train, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
+        # class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
+        class_loss = loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_data)
+
 
         # aux loss
-        aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-        aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
-
+        #aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
+        #aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
+        aux_loss = loss_fn( softmax_pass(aux_rr[:,args.burnin:,:].sum(dim = 1)), aux_y)
 
 
         if not one_hot_opt:
@@ -227,7 +232,7 @@ for e in range(args.epochs):
         rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
         total += float(y_data.shape[0])
 
-        del u_rr, aux_rr, aux_y_onehot, y_onehot, y_data
+        del u_rr, aux_rr, y_data, aux_y
 
         # BPTT
         loss = .5 * class_loss + .5 * aux_loss
