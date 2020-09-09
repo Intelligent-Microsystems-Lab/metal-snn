@@ -233,3 +233,17 @@ Epoch 17 | Batch 20/63 | Loss 6.5026 | Rotate Loss 4.2610 | Accuracy 4.836310 | 
 Epoch 17 | Batch 25/63 | Loss 6.4934 | Rotate Loss 4.2810 | Accuracy 5.108173 | Rotate Accuracy 15.1743 | Time 10.2151
 Epoch 17 | Batch 30/63 | Loss 6.4180 | Rotate Loss 4.3302 | Accuracy 4.788306 | Rotate Accuracy 15.1210 | Time 10.3329
 Epoch 17 | Batch 35/63 | Loss 6.3923 | Rotate Loss 4.2928 | Accuracy 4.730903 | Rotate Accuracy 15.4297 | Time 10.3705
+Epoch 17 | Batch 40/63 | Loss 6.3623 | Rotate Loss 4.3068 | Accuracy 4.992378 | Rotate Accuracy 15.6250 | Time 10.2231
+Epoch 17 | Batch 45/63 | Loss 6.3808 | Rotate Loss 4.3085 | Accuracy 4.959239 | Rotate Accuracy 15.7609 | Time 10.3330
+Epoch 17 | Batch 50/63 | Loss 6.3781 | Rotate Loss 4.3067 | Accuracy 5.238971 | Rotate Accuracy 15.7169 | Time 10.3030
+Epoch 17 | Batch 55/63 | Loss 6.3861 | Rotate Loss 4.2736 | Accuracy 5.189732 | Rotate Accuracy 15.8901 | Time 10.3032
+Epoch 17 | Batch 60/63 | Loss 6.4340 | Rotate Loss 4.2997 | Accuracy 5.122951 | Rotate Accuracy 15.5994 | Time 10.2986
+Epoch 17 : Accuracy 5.050000, Rotate Accuracy 14.837500, Time 1005.297440
+Epoch 18 | Batch 0/63 | Loss 6.3470 | Rotate Loss 4.2842 | Accuracy 9.375000 | Rotate Accuracy 16.4062 | Time 10.4593
+Epoch 18 | Batch 5/63 | Loss 6.4039 | Rotate Loss 4.0974 | Accuracy 8.333333 | Rotate Accuracy 16.4062 | Time 10.3061
+Epoch 18 | Batch 10/63 | Loss 6.4557 | Rotate Loss 4.2413 | Accuracy 5.681818 | Rotate Accuracy 15.7670 | Time 10.3187
+Epoch 18 | Batch 15/63 | Loss 6.4355 | Rotate Loss 4.3050 | Accuracy 4.882812 | Rotate Accuracy 14.9414 | Time 10.2251
+Epoch 18 | Batch 20/63 | Loss 6.4953 | Rotate Loss 4.2873 | Accuracy 5.059524 | Rotate Accuracy 14.6949 | Time 10.2858
+Epoch 18 | Batch 25/63 | Loss 6.4892 | Rotate Loss 4.3402 | Accuracy 5.108173 | Rotate Accuracy 14.5132 | Time 10.2999
+Epoch 18 | Batch 30/63 | Loss 6.4725 | Rotate Loss 4.3604 | Accuracy 5.241935 | Rotate Accuracy 14.3649 | Time 10.5234
+Epoch 18 | Batch 35/63 | Loss 6.5230 | Rotate Loss 4.3146 | Accuracy 5.208333 | Rotate Accuracy 14.9306 | Time 10.6380

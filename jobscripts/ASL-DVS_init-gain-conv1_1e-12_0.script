@@ -1,0 +1,11 @@
+#!/bin/csh 
+#$ -M cschaef6@nd.edu 
+#$ -m abe
+#$ -q gpu@qa-rtx6k-041.crc.nd.edu
+#$ -l gpu_card=1
+#$ -N ASL-DVS_init-gain-conv1_1e-12_0
+#$ -o ./logs/output_ASL-DVS_ASL-DVS_init-gain-conv1_1e-12_0.txt
+#$ -e ./logs/error_ASL-DVS_ASL-DVS_init-gain-conv1_1e-12_0.txt
+module load python
+setenv OMP_NUM_THREADS $NSLOTS
+python train.py --init-gain-conv1 1e-12

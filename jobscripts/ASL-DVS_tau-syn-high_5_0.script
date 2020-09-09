@@ -1,0 +1,11 @@
+#!/bin/csh 
+#$ -M cschaef6@nd.edu 
+#$ -m abe
+#$ -q gpu@qa-rtx6k-040.crc.nd.edu
+#$ -l gpu_card=1
+#$ -N ASL-DVS_tau-syn-high_5_0
+#$ -o ./logs/output_ASL-DVS_ASL-DVS_tau-syn-high_5_0.txt
+#$ -e ./logs/error_ASL-DVS_ASL-DVS_tau-syn-high_5_0.txt
+module load python
+setenv OMP_NUM_THREADS $NSLOTS
+python train.py --tau-syn-high 5
