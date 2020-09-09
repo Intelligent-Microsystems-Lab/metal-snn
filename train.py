@@ -21,36 +21,36 @@ ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
-parser.add_argument("--batch-size", type=int, default=18, help='Batch size')
+parser.add_argument("--batch-size", type=int, default=32, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-9, help='Learning Rate')
+parser.add_argument("--lr", type=float, default=1.0e-10, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 parser.add_argument("--train-tau", type=bool, default=False, help='Train time constants')
 
 # dataset
-parser.add_argument("--dataset", type=str, default="DVSGesture", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
-parser.add_argument("--train-samples", type=int, default=150, help='Number of samples per classes')
-parser.add_argument("--n-train", type=int, default=11, help='N-way for training technically I guess more')
-parser.add_argument("--downsampling", type=int, default=4, help='downsampling')
+parser.add_argument("--dataset", type=str, default="DNMNIST", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
+parser.add_argument("--train-samples", type=int, default=100, help='Number of samples per classes')
+parser.add_argument("--n-train", type=int, default=20, help='N-way for training technically I guess more')
+parser.add_argument("--downsampling", type=int, default=2, help='downsampling')
 
 #architecture
 parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
 parser.add_argument("--k2", type=int, default=7, help='Kernel Size 2')
 parser.add_argument("--k3", type=int, default=7, help='Kernel Size 2')
-parser.add_argument("--oc1", type=int, default=64, help='Output Channels 1')
-parser.add_argument("--oc2", type=int, default=128, help='Output Channels 2')
-parser.add_argument("--oc3", type=int, default=128, help='Output Channels 2')
+parser.add_argument("--oc1", type=int, default=32, help='Output Channels 1')
+parser.add_argument("--oc2", type=int, default=64, help='Output Channels 2')
+parser.add_argument("--oc3", type=int, default=64, help='Output Channels 2')
 parser.add_argument("--padding", type=int, default=2, help='Conv Padding')
 parser.add_argument("--conv-bias", type=bool, default=True, help='Bias for conv layers')
 parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classifier')
-parser.add_argument("--init-gain-conv1", type=float, default=.001, help='Gain for weight init 1 conv')
-parser.add_argument("--init-gain-conv2", type=float, default=.001, help='Gain for weight init 2 conv')
-parser.add_argument("--init-gain-conv3", type=float, default=.001, help='Gain for weight init 3 conv')
-parser.add_argument("--init-gain-fc", type=float, default=.001, help='Gain for weight init fc')
-parser.add_argument("--init-gain-aux", type=float, default=.001, help='Gain for weight init fc')
+parser.add_argument("--init-gain-conv1", type=float, default=.0001, help='Gain for weight init 1 conv')
+parser.add_argument("--init-gain-conv2", type=float, default=.0001, help='Gain for weight init 2 conv')
+parser.add_argument("--init-gain-conv3", type=float, default=.0001, help='Gain for weight init 3 conv')
+parser.add_argument("--init-gain-fc", type=float, default=.0001, help='Gain for weight init fc')
+parser.add_argument("--init-gain-aux", type=float, default=.01, help='Gain for weight init fc')
 
 # neural dynamics
 parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
@@ -70,7 +70,7 @@ args = parser.parse_args()
 
 # training data
 if args.dataset == 'DNMNIST':
-    train_dl, test_dl  = doublenmnist_dataloaders.sample_double_mnist_task(
+    train_dl, test_dl  = dmnist.sample_double_mnist_task(
                 meta_dataset_type = 'train',
                 N = args.n_train,
                 K = args.train_samples,
@@ -80,8 +80,8 @@ if args.dataset == 'DNMNIST':
                 batch_size_test=args.batch_size,
                 ds=args.downsampling,
                 num_workers=4)
-    time_steps_train = 100
-    time_steps_test = 100
+    time_steps_train = 300
+    time_steps_test = 300
     one_hot_opt = True
 elif args.dataset == 'ASL-DVS':
     train_dl, test_dl  = dvsasl_dataloaders.sample_dvsasl_task(
@@ -150,6 +150,7 @@ aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output
 
 
 loss_fn = torch.nn.MSELoss(reduction = 'mean')
+#loss_fn = torch.nn.CrossEntropyLoss()
 opt = torch.optim.Adam([
                 {'params': backbone.parameters()},
                 {'params': classifier.parameters()},
@@ -217,6 +218,8 @@ for e in range(args.epochs):
         # aux loss
         aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
         aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
+
+
 
         if not one_hot_opt:
             y_data = y_data[:, ::time_steps_train, :][:,0,:].argmax(dim=1)   
