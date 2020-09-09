@@ -67,6 +67,12 @@ parser.add_argument("--none_act", type=float, default=.05, help='Firing Threshol
 
 args = parser.parse_args()
 
+args.tau_mem_low = args.tau_mem_high
+args.tau_syn_low = args.tau_syn_high
+args.tau_ref_low = args.tau_ref_high
+
+args.init_gain_conv2 = args.init_gain_conv3 = args.init_gain_fc = args.init_gain_aux = args.init_gain_conv1  
+
 
 # training data
 if args.dataset == 'DNMNIST':
