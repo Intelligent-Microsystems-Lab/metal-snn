@@ -1932,3 +1932,9 @@ Epoch 138 | Batch 45/63 | Loss 60.4406 | Rotate Loss 16.7605 | Accuracy 17.08559
 Epoch 138 | Batch 50/63 | Loss 60.4777 | Rotate Loss 17.1293 | Accuracy 17.095588 | Rotate Accuracy 49.8468 | Time 9.3191
 Epoch 138 | Batch 55/63 | Loss 60.2468 | Rotate Loss 16.9775 | Accuracy 17.327009 | Rotate Accuracy 49.8326 | Time 9.5170
 Epoch 138 | Batch 60/63 | Loss 60.6030 | Rotate Loss 17.1202 | Accuracy 16.905738 | Rotate Accuracy 49.7951 | Time 9.4017
+Epoch 138 : Accuracy 15.300000, Rotate Accuracy 49.562500, Time 916.539199
+Epoch 139 | Batch 0/63 | Loss 42.0127 | Rotate Loss 18.5954 | Accuracy 25.000000 | Rotate Accuracy 48.4375 | Time 9.4625
+Epoch 139 | Batch 5/63 | Loss 53.9512 | Rotate Loss 17.3293 | Accuracy 17.447917 | Rotate Accuracy 49.6094 | Time 9.3859
+Epoch 139 | Batch 10/63 | Loss 58.1637 | Rotate Loss 16.6177 | Accuracy 17.187500 | Rotate Accuracy 49.5739 | Time 9.2859
+Epoch 139 | Batch 15/63 | Loss 59.9618 | Rotate Loss 16.2962 | Accuracy 17.187500 | Rotate Accuracy 49.5605 | Time 9.2367
+Epoch 139 | Batch 20/63 | Loss 59.9592 | Rotate Loss 16.3520 | Accuracy 17.038690 | Rotate Accuracy 49.6652 | Time 9.2821
