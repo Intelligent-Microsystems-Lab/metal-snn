@@ -84,3 +84,7 @@ Epoch 6 | Batch 45/63 | Loss 97.5808 | Rotate Loss 37.5078 | Accuracy 5.536685 |
 Epoch 6 | Batch 50/63 | Loss 97.8175 | Rotate Loss 37.4755 | Accuracy 5.545343 | Rotate Accuracy 48.4528 | Time 9.3225
 Epoch 6 | Batch 55/63 | Loss 98.4729 | Rotate Loss 36.9889 | Accuracy 5.496652 | Rotate Accuracy 48.4794 | Time 9.4412
 Epoch 6 | Batch 60/63 | Loss 98.1764 | Rotate Loss 36.7894 | Accuracy 5.558402 | Rotate Accuracy 48.5015 | Time 9.3404
+Epoch 6 : Accuracy 5.725000, Rotate Accuracy 48.950000, Time 917.819397
+Epoch 7 | Batch 0/63 | Loss 81.3395 | Rotate Loss 44.3195 | Accuracy 3.125000 | Rotate Accuracy 49.2188 | Time 9.4976
+Epoch 7 | Batch 5/63 | Loss 83.7680 | Rotate Loss 39.9682 | Accuracy 5.208333 | Rotate Accuracy 48.3073 | Time 9.3996
+Epoch 7 | Batch 10/63 | Loss 82.5652 | Rotate Loss 40.2785 | Accuracy 4.971591 | Rotate Accuracy 48.1534 | Time 9.4692
