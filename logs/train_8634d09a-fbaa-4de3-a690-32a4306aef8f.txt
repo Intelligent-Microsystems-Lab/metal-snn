@@ -3,3 +3,14 @@ Namespace(batch_size=32, burnin=10, conv_bias=True, dataset='DNMNIST', delta_t=1
 Start Training Backbone
 Epoch 1 | Batch 0/63 | Loss 57.2693 | Rotate Loss 13.2853 | Accuracy 1.562500 | Rotate Accuracy 24.2188 | Time 10.7137
 Epoch 1 | Batch 5/63 | Loss 58.3415 | Rotate Loss 11.2816 | Accuracy 3.906250 | Rotate Accuracy 20.3125 | Time 10.6425
+Epoch 1 | Batch 10/63 | Loss 57.8120 | Rotate Loss 11.5059 | Accuracy 3.977273 | Rotate Accuracy 19.4602 | Time 10.5947
+Epoch 1 | Batch 15/63 | Loss 57.2519 | Rotate Loss 11.4557 | Accuracy 4.101562 | Rotate Accuracy 19.6289 | Time 10.6809
+Epoch 1 | Batch 20/63 | Loss 57.9083 | Rotate Loss 11.4793 | Accuracy 4.836310 | Rotate Accuracy 19.6057 | Time 10.5600
+Epoch 1 | Batch 25/63 | Loss 58.3884 | Rotate Loss 11.5488 | Accuracy 4.687500 | Rotate Accuracy 19.5913 | Time 10.6283
+Epoch 1 | Batch 30/63 | Loss 57.9832 | Rotate Loss 11.5735 | Accuracy 5.141129 | Rotate Accuracy 19.4304 | Time 10.5615
+Epoch 1 | Batch 35/63 | Loss 57.8854 | Rotate Loss 11.6346 | Accuracy 5.295139 | Rotate Accuracy 19.5964 | Time 10.6331
+Epoch 1 | Batch 40/63 | Loss 57.7749 | Rotate Loss 11.6673 | Accuracy 5.297256 | Rotate Accuracy 19.5122 | Time 10.7256
+Epoch 1 | Batch 45/63 | Loss 58.4119 | Rotate Loss 11.5936 | Accuracy 5.095109 | Rotate Accuracy 19.4463 | Time 10.5828
+Epoch 1 | Batch 50/63 | Loss 58.8547 | Rotate Loss 11.4792 | Accuracy 4.840686 | Rotate Accuracy 19.4393 | Time 10.5476
+Epoch 1 | Batch 55/63 | Loss 58.9732 | Rotate Loss 11.4855 | Accuracy 4.966518 | Rotate Accuracy 19.4057 | Time 10.5165
+Epoch 1 | Batch 60/63 | Loss 58.9979 | Rotate Loss 11.4006 | Accuracy 4.841189 | Rotate Accuracy 19.4288 | Time 10.4647

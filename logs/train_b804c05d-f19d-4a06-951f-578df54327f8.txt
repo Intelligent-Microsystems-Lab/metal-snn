@@ -3,3 +3,14 @@ b804c05d-f19d-4a06-951f-578df54327f8
 Start Training Backbone
 Epoch 1 | Batch 0/63 | Loss 7.2072 | Rotate Loss 3.3831 | Accuracy 4.687500 | Rotate Accuracy 25.7812 | Time 10.4060
 Epoch 1 | Batch 5/63 | Loss 8.1997 | Rotate Loss 4.1976 | Accuracy 3.645833 | Rotate Accuracy 24.7396 | Time 10.4533
+Epoch 1 | Batch 10/63 | Loss 6.6835 | Rotate Loss 3.6914 | Accuracy 5.113636 | Rotate Accuracy 24.8580 | Time 10.3935
+Epoch 1 | Batch 15/63 | Loss 6.1850 | Rotate Loss 3.2620 | Accuracy 5.273438 | Rotate Accuracy 24.9023 | Time 10.4571
+Epoch 1 | Batch 20/63 | Loss 6.1364 | Rotate Loss 3.3384 | Accuracy 5.505952 | Rotate Accuracy 25.0744 | Time 10.5634
+Epoch 1 | Batch 25/63 | Loss 5.9809 | Rotate Loss 3.2663 | Accuracy 5.889423 | Rotate Accuracy 24.5793 | Time 10.4511
+Epoch 1 | Batch 30/63 | Loss 5.9777 | Rotate Loss 3.2378 | Accuracy 5.796371 | Rotate Accuracy 24.8740 | Time 10.4550
+Epoch 1 | Batch 35/63 | Loss 5.8902 | Rotate Loss 3.2186 | Accuracy 5.859375 | Rotate Accuracy 24.8915 | Time 10.2890
+Epoch 1 | Batch 40/63 | Loss 5.8932 | Rotate Loss 3.3321 | Accuracy 5.830793 | Rotate Accuracy 24.8857 | Time 10.6257
+Epoch 1 | Batch 45/63 | Loss 5.9496 | Rotate Loss 3.3596 | Accuracy 5.740489 | Rotate Accuracy 24.9151 | Time 10.2231
+Epoch 1 | Batch 50/63 | Loss 5.9581 | Rotate Loss 3.3214 | Accuracy 5.912990 | Rotate Accuracy 25.0153 | Time 10.5246
+Epoch 1 | Batch 55/63 | Loss 6.1438 | Rotate Loss 3.4584 | Accuracy 5.970982 | Rotate Accuracy 25.1953 | Time 10.4432
+Epoch 1 | Batch 60/63 | Loss 6.2590 | Rotate Loss 3.6406 | Accuracy 5.891393 | Rotate Accuracy 25.1793 | Time 10.5769
