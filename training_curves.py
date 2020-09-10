@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 
-def plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, act3_hist, act4_hist, model_uuid):
+def plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, act3_hist, act4_hist, actA_hist, model_uuid):
     plt.clf()
     fig, axes = plt.subplots(nrows=3, ncols=1) 
     axes[0].plot(clal_hist, label = "Classification Loss", color = 'tab:blue')
@@ -22,7 +22,8 @@ def plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, 
     axes[2].plot(act1_hist, label = "Conv1 Spikes")
     axes[2].plot(act2_hist, label = "Conv2 Spikes")
     axes[2].plot(act3_hist, label = "Conv3 Spikes")
-    axes[2].plot(act4_hist, label = "FC Spikes")
+    axes[2].plot(actA_hist, label = "FC Aux Spikes")
+    axes[2].plot(act4_hist, label = "FC Cla Spikes")
     axes[2].set_xlabel("Epochs")
     axes[2].set_ylabel("# Spikes")
     axes[2].legend()

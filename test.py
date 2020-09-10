@@ -115,7 +115,8 @@ for i in range(args.iter_test):
             y_data = y_data.to(device)
 
             # forwardpass
-            bb_rr  = backbone(x_data)
+            with torch.no_grad():
+                bb_rr  = backbone(x_data)
             u_rr   = classifier_nk(bb_rr)
             
             # class loss

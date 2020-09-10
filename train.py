@@ -56,10 +56,10 @@ parser.add_argument("--init-gain-aux", type=float, default=1e-09, help='Gain for
 parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
 parser.add_argument("--tau-mem-low", type=float, default=20, help='Membrane time constant low')
 parser.add_argument("--tau-syn-low", type=float, default=7.5, help='Synaptic time constant low')
-parser.add_argument("--tau-ref-low", type=float, default=1, help='Refractory time constant low')
+parser.add_argument("--tau-ref-low", type=float, default=2, help='Refractory time constant low')
 parser.add_argument("--tau-mem-high", type=float, default=20, help='Membrane time constant high')
 parser.add_argument("--tau-syn-high", type=float, default=7.5, help='Synaptic time constant high')
-parser.add_argument("--tau-ref-high", type=float, default=1, help='Refractory time constant high')
+parser.add_argument("--tau-ref-high", type=float, default=2, help='Refractory time constant high')
 parser.add_argument("--reset", type=float, default=1, help='Refractory time constant')
 parser.add_argument("--thr", type=float, default=.0, help='Firing Threshold')
 parser.add_argument("--target_act", type=float, default=1., help='Firing Threshold')
@@ -320,7 +320,7 @@ for e in range(args.epochs):
     else:
         print("Epoch {:d} : Accuracy {:f}, Rotate Accuracy {:f}, Time {:f}".format(e+1,(float(correct)*100)/total,(float(rcorrect)*100)/total, time.time() - e_time))
         print("{:.4f} {:.4f} {:.4f} {:.4f} {:.4f}".format(act1_hist[-1], act2_hist[-1], act3_hist[-1], act4_hist[-1], actA_hist[-1]))
-    plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, act3_hist, act4_hist, model_uuid)
+    plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, act3_hist, act4_hist, actA_hist, model_uuid)
 
     # model save
     if e % args.save_int == 0:

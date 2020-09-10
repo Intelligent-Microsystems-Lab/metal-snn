@@ -54,39 +54,39 @@ class LIF_FC_Layer(torch.nn.Module):
           
         # taus and betas
         if tau_syn_high == tau_syn_high:
-            self.beta = 1 - delta_t / tau_syn_high
-            self.tau_syn = 1. / (1. - self.beta)
-            self.q_mult = self.tau_syn
+            self.beta = torch.nn.Parameter(1 - delta_t / tau_syn_high, requires_grad = False)
+            self.tau_syn = torch.nn.Parameter(1. / (1. - self.beta), requires_grad = False)
+            self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
         else:
             self.beta_high = 1 - delta_t / tau_syn_high
             self.beta_low = 1 - delta_t / tau_syn_low
             self.tau_syn = torch.empty(input_neurons, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
             self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = train_t)
-            self.tau_syn = 1. / (1. - self.beta)
+            self.tau_syn = torch.nn.Parameter(1. / (1. - self.beta), requires_grad = False)
             self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
 
         if tau_mem_high == tau_mem_low:
-            self.alpha = 1 - delta_t / tau_mem_high
-            self.tau_mem = 1. / (1. - self.alpha)
-            self.p_mult = self.tau_mem
+            self.alpha = torch.nn.Parameter(1 - delta_t / tau_mem_high, requires_grad = False)
+            self.tau_mem = torch.nn.Parameter(1. / (1. - self.alpha), requires_grad = False)
+            self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
         else:
             self.alpha_high = 1 - delta_t / tau_mem_high
             self.alpha_low = 1 - delta_t / tau_mem_low
             self.tau_mem = torch.empty(input_neurons, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
             self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = train_t)
-            self.tau_mem = 1. / (1. - self.alpha)
+            self.tau_mem = torch.nn.Parameter(1. / (1. - self.alpha), requires_grad = False)
             self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
         if tau_ref_high == tau_ref_low:
-            self.gamma = 1 - delta_t / tau_ref_high
-            self.reset = 1. / (1. - self.gamma)
-            self.r_mult = self.reset
+            self.gamma = torch.nn.Parameter(1 - delta_t / tau_ref_high, requires_grad = False)
+            self.reset = torch.nn.Parameter(1. / (1. - self.gamma), requires_grad = False)
+            self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
         else:
             self.gamma_high = 1 - delta_t / tau_ref_high
             self.gamma_low = 1 - delta_t / tau_ref_low
             self.tau_ref = torch.empty(output_neurons, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
             self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = train_t)
-            self.reset = 1. / (1. - self.gamma)
+            self.reset = torch.nn.Parameter(1. / (1. - self.gamma), requires_grad = False)
             self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
         
     def state_init(self, batch_size, device):
@@ -96,19 +96,20 @@ class LIF_FC_Layer(torch.nn.Module):
         self.S = torch.zeros((batch_size,) + (self.out_neurons,), dtype = self.dtype, device = device) 
         torch.cuda.empty_cache()
     
-    def update_taus(self):
-        self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = self.beta_high, min = self.beta_low), requires_grad = self.train_t).to(self.P.device)
-        self.tau_syn = 1. / (1. - self.beta)
+    # retired - until time constant learning reintroduce
+    # def update_taus(self):
+    #     self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = self.beta_high, min = self.beta_low), requires_grad = self.train_t).to(self.P.device)
+    #     self.tau_syn = 1. / (1. - self.beta)
 
-        self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = self.alpha_high, min = self.alpha_low), requires_grad = self.train_t).to(self.P.device)
-        self.tau_mem = 1. / (1. - self.alpha)
+    #     self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = self.alpha_high, min = self.alpha_low), requires_grad = self.train_t).to(self.P.device)
+    #     self.tau_mem = 1. / (1. - self.alpha)
 
-        self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(self.P.device)
-        self.reset = 1. / (1. - self.gamma)
+    #     self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(self.P.device)
+    #     self.reset = 1. / (1. - self.gamma)
 
-        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to((self.P.device))
-        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False).to((self.P.device))
-        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to((self.P.device))
+    #     self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to((self.P.device))
+    #     self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False).to((self.P.device))
+    #     self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to((self.P.device))
 
     def forward(self, input_t):
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
@@ -152,39 +153,39 @@ class LIF_Conv_Layer(torch.nn.Module):
 
         # taus and betas
         if tau_syn_high == tau_syn_high:
-            self.beta = 1 - delta_t / tau_syn_high
-            self.tau_syn = 1. / (1. - self.beta)
-            self.q_mult = self.tau_syn
+            self.beta = torch.nn.Parameter(1 - delta_t / tau_syn_high, requires_grad = False)
+            self.tau_syn = torch.nn.Parameter(1. / (1. - self.beta), requires_grad = False)
+            self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
         else:
             self.beta_high = 1 - delta_t / tau_syn_high
             self.beta_low = 1 - delta_t / tau_syn_low
             self.tau_syn = torch.empty(input_neurons, dtype = dtype).uniform_(tau_syn_low, tau_syn_high)
             self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_syn), requires_grad = train_t)
-            self.tau_syn = 1. / (1. - self.beta)
+            self.tau_syn = torch.nn.Parameter(1. / (1. - self.beta), requires_grad = False)
             self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
 
         if tau_mem_high == tau_mem_low:
-            self.alpha = 1 - delta_t / tau_mem_high
-            self.tau_mem = 1. / (1. - self.alpha)
-            self.p_mult = self.tau_mem
+            self.alpha = torch.nn.Parameter(1 - delta_t / tau_mem_high, requires_grad = False)
+            self.tau_mem = torch.nn.Parameter(1. / (1. - self.alpha), requires_grad = False)
+            self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
         else:
             self.alpha_high = 1 - delta_t / tau_mem_high
             self.alpha_low = 1 - delta_t / tau_mem_low
             self.tau_mem = torch.empty(input_neurons, dtype = dtype).uniform_(tau_mem_low, tau_mem_high)
             self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_mem), requires_grad = train_t)
-            self.tau_mem = 1. / (1. - self.alpha)
+            self.tau_mem = torch.nn.Parameter(1. / (1. - self.alpha), requires_grad = False)
             self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
         if tau_ref_high == tau_ref_low:
-            self.gamma = 1 - delta_t / tau_ref_high
-            self.reset = 1. / (1. - self.gamma)
-            self.r_mult = self.reset
+            self.gamma = torch.nn.Parameter(1 - delta_t / tau_ref_high, requires_grad = False)
+            self.reset = torch.nn.Parameter(1. / (1. - self.gamma), requires_grad = False)
+            self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
         else:
             self.gamma_high = 1 - delta_t / tau_ref_high
             self.gamma_low = 1 - delta_t / tau_ref_low
             self.tau_ref = torch.empty(output_neurons, dtype = dtype).uniform_(tau_ref_low, tau_ref_high)
             self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / self.tau_ref), requires_grad = train_t)
-            self.reset = 1. / (1. - self.gamma)
+            self.reset = torch.nn.Parameter(1. / (1. - self.gamma), requires_grad = False)
             self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
         
 
@@ -196,20 +197,20 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.S = torch.zeros((batch_size,) + tuple(self.out_dim), dtype = self.dtype, device = device)
         torch.cuda.empty_cache()
 
+    # retired - until time constant learning reintroduce
+    # def update_taus(self):
+    #     self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = self.beta_high, min = self.beta_low), requires_grad = self.train_t).to(self.P.device)
+    #     self.tau_syn = 1. / (1. - self.beta)
 
-    def update_taus(self):
-        self.beta = torch.nn.Parameter(torch.clamp(self.beta, max = self.beta_high, min = self.beta_low), requires_grad = self.train_t).to(self.P.device)
-        self.tau_syn = 1. / (1. - self.beta)
+    #     self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = self.alpha_high, min = self.alpha_low), requires_grad = self.train_t).to(self.P.device)
+    #     self.tau_mem = 1. / (1. - self.alpha)
 
-        self.alpha = torch.nn.Parameter(torch.clamp(self.alpha, max = self.alpha_high, min = self.alpha_low), requires_grad = self.train_t).to(self.P.device)
-        self.tau_mem = 1. / (1. - self.alpha)
+    #     self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(self.P.device)
+    #     self.reset = 1. / (1. - self.gamma)
 
-        self.gamma = torch.nn.Parameter(torch.clamp(self.gamma, max = self.gamma_high, min = self.gamma_low), requires_grad = self.train_t).to(self.P.device)
-        self.reset = 1. / (1. - self.gamma)
-
-        self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to((self.P.device))
-        self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False).to((self.P.device))
-        self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to((self.P.device))
+    #     self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False).to((self.P.device))
+    #     self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False).to((self.P.device))
+    #     self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to((self.P.device))
     
     def forward(self, input_t):
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
