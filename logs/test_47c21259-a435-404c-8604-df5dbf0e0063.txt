@@ -1,0 +1,17 @@
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 145 over 5 classes with 5 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 145 over 5 classes with 5 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 145 over 5 classes with 5 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 145 over 5 classes with 5 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 145 over 5 classes with 5 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 145 over 5 classes with 5 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 145 over 5 classes with 5 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 145 over 5 classes with 5 examples
+0 steps reached and the mean acc is 22 , 20.2 , 21.4 time 1.23981
