@@ -54,9 +54,9 @@ class LIF_FC_Layer(torch.nn.Module):
           
         # taus and betas
         if tau_syn_high == tau_syn_high:
-            self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_syn_high), requires_grad = False)
-            self.tau_syn = torch.nn.Parameter(torch.tensor(1. / (1. - self.beta)), requires_grad = False)
-            self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
+            self.beta = torch.tensor(1 - delta_t / tau_syn_high)
+            self.tau_syn = torch.tensor(1. / (1. - self.beta))
+            self.q_mult = self.tau_syn
         else:
             self.beta_high = 1 - delta_t / tau_syn_high
             self.beta_low = 1 - delta_t / tau_syn_low
@@ -66,9 +66,9 @@ class LIF_FC_Layer(torch.nn.Module):
             self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
 
         if tau_mem_high == tau_mem_low:
-            self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_mem_high), requires_grad = False)
-            self.tau_mem = torch.nn.Parameter(torch.tensor(1. / (1. - self.alpha)), requires_grad = False)
-            self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
+            self.alpha = torch.tensor(1 - delta_t / tau_mem_high)
+            self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+            self.p_mult = self.tau_mem
         else:
             self.alpha_high = 1 - delta_t / tau_mem_high
             self.alpha_low = 1 - delta_t / tau_mem_low
@@ -78,9 +78,9 @@ class LIF_FC_Layer(torch.nn.Module):
             self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
         if tau_ref_high == tau_ref_low:
-            self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_ref_high), requires_grad = False)
-            self.reset = torch.nn.Parameter(torch.tensor(1. / (1. - self.gamma)), requires_grad = False)
-            self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
+            self.gamma = torch.tensor(1 - delta_t / tau_ref_high)
+            self.reset = torch.tensor(1. / (1. - self.gamma))
+            self.r_mult = self.reset
         else:
             self.gamma_high = 1 - delta_t / tau_ref_high
             self.gamma_low = 1 - delta_t / tau_ref_low
@@ -150,12 +150,12 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.out_dim = [int(x) for x in self.conv_fwd(x_preview).shape[1:]]
           
         self.state_init(x_preview.shape[0], x_preview.device)
-
+        
         # taus and betas
         if tau_syn_high == tau_syn_high:
-            self.beta = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_syn_high), requires_grad = False)
-            self.tau_syn = torch.nn.Parameter(torch.tensor(1. / (1. - self.beta)), requires_grad = False)
-            self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
+            self.beta = torch.tensor(1 - delta_t / tau_syn_high)
+            self.tau_syn = torch.tensor(1. / (1. - self.beta))
+            self.q_mult = self.tau_syn
         else:
             self.beta_high = 1 - delta_t / tau_syn_high
             self.beta_low = 1 - delta_t / tau_syn_low
@@ -165,9 +165,9 @@ class LIF_Conv_Layer(torch.nn.Module):
             self.q_mult = torch.nn.Parameter(self.tau_syn, requires_grad = False)
 
         if tau_mem_high == tau_mem_low:
-            self.alpha = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_mem_high), requires_grad = False)
-            self.tau_mem = torch.nn.Parameter(torch.tensor(1. / (1. - self.alpha)), requires_grad = False)
-            self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
+            self.alpha = torch.tensor(1 - delta_t / tau_mem_high)
+            self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+            self.p_mult = self.tau_mem
         else:
             self.alpha_high = 1 - delta_t / tau_mem_high
             self.alpha_low = 1 - delta_t / tau_mem_low
@@ -177,9 +177,9 @@ class LIF_Conv_Layer(torch.nn.Module):
             self.p_mult = torch.nn.Parameter(self.tau_mem, requires_grad = False)
 
         if tau_ref_high == tau_ref_low:
-            self.gamma = torch.nn.Parameter(torch.tensor(1 - delta_t / tau_ref_high), requires_grad = False)
-            self.reset = torch.nn.Parameter(torch.tensor(1. / (1. - self.gamma)), requires_grad = False)
-            self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False)
+            self.gamma = torch.tensor(1 - delta_t / tau_ref_high)
+            self.reset = torch.tensor(1. / (1. - self.gamma))
+            self.r_mult = self.reset
         else:
             self.gamma_high = 1 - delta_t / tau_ref_high
             self.gamma_low = 1 - delta_t / tau_ref_low
