@@ -150,7 +150,7 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.out_dim = [int(x) for x in self.conv_fwd(x_preview).shape[1:]]
           
         self.state_init(x_preview.shape[0], x_preview.device)
-        
+
         # taus and betas
         if tau_syn_high == tau_syn_high:
             self.beta = torch.tensor(1 - delta_t / tau_syn_high)
@@ -213,6 +213,7 @@ class LIF_Conv_Layer(torch.nn.Module):
     #     self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to((self.P.device))
     
     def forward(self, input_t):
+        import pdb; pdb.set_trace()
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
 
         U = self.conv_fwd(self.P) - self.R

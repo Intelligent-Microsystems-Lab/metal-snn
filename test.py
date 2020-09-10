@@ -1,4 +1,5 @@
 import argparse, time, uuid
+from tqdm import tqdm
 
 import torch
 import numpy as np
@@ -170,7 +171,7 @@ for i in range(args.iter_test):
     start_time = time.time()
 
     # new task
-    support_ds, query_ds = sample_double_mnist_task(
+    support_ds, query_ds = dmnist.sample_double_mnist_task(
                 meta_dataset_type = 'test',
                 N = args.n_way,
                 K = args.k_shot,
@@ -187,7 +188,7 @@ for i in range(args.iter_test):
     loss_fn = torch.nn.NLLLoss()
     softmax_pass = torch.nn.LogSoftmax(dim=1)
     opt = torch.optim.Adam([
-                {'params': classifier.parameters()}
+                {'params': classifier_nk.parameters()}
             ], lr = args.lr)
 
     for e in tqdm(range(args.epochs), disable = args.progressbar_off):
