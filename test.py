@@ -25,7 +25,7 @@ parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
 parser.add_argument("--train-tau", type=bool, default=False, help='Train time constants')
 
-parser.add_argument("--checkpoint", type=str, default='Baseline', help='UUID for checkpoint to be tested')
+parser.add_argument("--checkpoint", type=str, default='47c21259-a435-404c-8604-df5dbf0e0063', help='UUID for checkpoint to be tested')
 parser.add_argument("--iter-test", type=int, default=25, help='Test Iter')
 parser.add_argument("--lr", type=float, default=1.0e-10, help='Learning Rate')
 parser.add_argument("--epochs", type=int, default=151, help='Training Epochs') 
@@ -155,11 +155,10 @@ acc_point_e = (args.epochs-1)/3
 backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, oc3 = args.oc3, k1 = args.k1, k2 = args.k2, k3 = args.k3, padding = args.padding, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain1 = args.init_gain_conv1, gain2 = args.init_gain_conv2, gain3 = args.init_gain_conv3, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
 # load backbone
-#checkpoint_dict = torch.load('./checkpoints/'+ args.checkpoint +'.pkl')
-#backbone.load_state_dict(checkpoint_dict['backbone'])
-#e = checkpoint_dict['epoch']
-#del checkpoint_dict
-e = 0
+checkpoint_dict = torch.load('./checkpoints/'+ args.checkpoint +'.pkl')
+backbone.load_state_dict(checkpoint_dict['backbone'])
+e = checkpoint_dict['epoch']
+del checkpoint_dict
 
 if args.logfile:
     with open("logs/test_"+model_uuid+".txt", "a") as file_object:
@@ -186,13 +185,10 @@ for i in range(args.iter_test):
     # new classifier
     classifier_nk = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_way, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, reset = args.reset, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
-    backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, oc3 = args.oc3, k1 = args.k1, k2 = args.k2, k3 = args.k3, padding = args.padding, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain1 = args.init_gain_conv1, gain2 = args.init_gain_conv2, gain3 = args.init_gain_conv3, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
-
     loss_fn = torch.nn.NLLLoss()
     softmax_pass = torch.nn.LogSoftmax(dim=1)
     opt = torch.optim.Adam([
-                {'params': classifier_nk.parameters()},
-                {'params': backbone.parameters()}
+                {'params': classifier_nk.parameters()}
             ], lr = args.lr)
 
     for e in tqdm(range(args.epochs), disable = args.progressbar_off):
@@ -202,8 +198,8 @@ for i in range(args.iter_test):
             y_data = y_data.to(device)
 
             # forwardpass
-            #with torch.no_grad():
-            bb_rr  = backbone(x_data)
+            with torch.no_grad():
+                bb_rr  = backbone(x_data)
             u_rr   = classifier_nk(bb_rr)
             
             # class loss
