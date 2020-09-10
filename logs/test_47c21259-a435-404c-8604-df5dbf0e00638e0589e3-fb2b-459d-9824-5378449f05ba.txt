@@ -3,3 +3,4 @@ Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 150 over 5 classe
 0 steps reached and the mean acc is 28.8 , 26.2 , 24.8 time 0.976688
 1 steps reached and the mean acc is 25.6 , 24.5 , 24.3 time 1.06171
 2 steps reached and the mean acc is 24.6667 , 24.6667 , 22.6 time 0.972817
+3 steps reached and the mean acc is 24.85 , 24.7 , 22.25 time 0.991606
