@@ -168,3 +168,4 @@ Epoch 12 | Batch 45/63 | Loss 86.4745 | Rotate Loss 35.3170 | Accuracy 6.216033 
 Epoch 12 | Batch 50/63 | Loss 86.7575 | Rotate Loss 35.1980 | Accuracy 6.188725 | Rotate Accuracy 49.3873 | Time 9.3755
 Epoch 12 | Batch 55/63 | Loss 87.5744 | Rotate Loss 35.4870 | Accuracy 6.361607 | Rotate Accuracy 49.3722 | Time 9.3461
 Epoch 12 | Batch 60/63 | Loss 87.2777 | Rotate Loss 35.5179 | Accuracy 6.326844 | Rotate Accuracy 49.3724 | Time 9.2941
+Epoch 12 : Accuracy 6.925000, Rotate Accuracy 48.925000, Time 918.150499

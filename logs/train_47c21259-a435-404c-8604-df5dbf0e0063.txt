@@ -2002,3 +2002,6 @@ Epoch 143 | Batch 45/63 | Loss 62.6955 | Rotate Loss 15.8584 | Accuracy 15.48913
 Epoch 143 | Batch 50/63 | Loss 61.6468 | Rotate Loss 15.9687 | Accuracy 15.962010 | Rotate Accuracy 49.8775 | Time 9.2244
 Epoch 143 | Batch 55/63 | Loss 61.5262 | Rotate Loss 15.9829 | Accuracy 15.931920 | Rotate Accuracy 49.8605 | Time 9.2323
 Epoch 143 | Batch 60/63 | Loss 61.8880 | Rotate Loss 16.0519 | Accuracy 15.753074 | Rotate Accuracy 49.8719 | Time 9.2244
+Epoch 143 : Accuracy 17.475000, Rotate Accuracy 49.850000, Time 908.398521
+Epoch 144 | Batch 0/63 | Loss 55.5726 | Rotate Loss 18.9631 | Accuracy 17.187500 | Rotate Accuracy 50.0000 | Time 9.4663
+Epoch 144 | Batch 5/63 | Loss 65.2026 | Rotate Loss 17.1323 | Accuracy 13.281250 | Rotate Accuracy 49.7396 | Time 9.3037
