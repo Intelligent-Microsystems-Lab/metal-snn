@@ -118,3 +118,5 @@ Epoch 9 | Batch 35/63 | Loss 4.5276 | Rotate Loss 1.4722 | Accuracy 7.552083 | R
 Epoch 9 | Batch 40/63 | Loss 4.6061 | Rotate Loss 1.4975 | Accuracy 7.431402 | Rotate Accuracy 44.2454 | Time 10.5053
 Epoch 9 | Batch 45/63 | Loss 4.6512 | Rotate Loss 1.4920 | Accuracy 7.574728 | Rotate Accuracy 44.4293 | Time 10.3997
 Epoch 9 | Batch 50/63 | Loss 4.6440 | Rotate Loss 1.4646 | Accuracy 7.444853 | Rotate Accuracy 44.5925 | Time 10.5679
+Epoch 9 | Batch 55/63 | Loss 4.6385 | Rotate Loss 1.4296 | Accuracy 7.366071 | Rotate Accuracy 44.9358 | Time 10.4984
+Epoch 9 | Batch 60/63 | Loss 4.6510 | Rotate Loss 1.3966 | Accuracy 7.453893 | Rotate Accuracy 45.1844 | Time 10.5798
