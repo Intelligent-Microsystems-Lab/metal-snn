@@ -1,2 +1,3 @@
 
 Evaluating model Baseline at epoch 0 over 5 classes with 1 examples
+0 steps reached and the mean acc is 20 , 21.8 , 18.8 time 1.21464
