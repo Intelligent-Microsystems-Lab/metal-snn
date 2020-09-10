@@ -26,9 +26,9 @@ parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
 parser.add_argument("--train-tau", type=bool, default=False, help='Train time constants')
 
 parser.add_argument("--checkpoint", type=str, default='47c21259-a435-404c-8604-df5dbf0e0063', help='UUID for checkpoint to be tested')
-parser.add_argument("--iter-test", type=int, default=2, help='Test Iter')
-parser.add_argument("--lr", type=float, default=1.0e-7, help='Learning Rate')
-parser.add_argument("--epochs", type=int, default=10, help='Training Epochs') 
+parser.add_argument("--iter-test", type=int, default=25, help='Test Iter')
+parser.add_argument("--lr", type=float, default=1.0e-10, help='Learning Rate')
+parser.add_argument("--epochs", type=int, default=151, help='Training Epochs') 
 parser.add_argument("--batch-size-test", type=int, default=4, help='Batch size')
 parser.add_argument("--batch-size-test-test", type=int, default=128, help='Batch size test test')
 parser.add_argument("--progressbar-off", type=float, default=False, help='False: progressbar activated')
@@ -44,10 +44,10 @@ parser.add_argument("--downsampling", type=int, default=2, help='downsampling')
 #architecture
 parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
 parser.add_argument("--k2", type=int, default=7, help='Kernel Size 2')
-parser.add_argument("--k3", type=int, default=7, help='Kernel Size 2')
+parser.add_argument("--k3", type=int, default=7, help='Kernel Size 3')
 parser.add_argument("--oc1", type=int, default=32, help='Output Channels 1')
 parser.add_argument("--oc2", type=int, default=64, help='Output Channels 2')
-parser.add_argument("--oc3", type=int, default=64, help='Output Channels 2')
+parser.add_argument("--oc3", type=int, default=64, help='Output Channels 3')
 parser.add_argument("--padding", type=int, default=2, help='Conv Padding')
 parser.add_argument("--conv-bias", type=bool, default=True, help='Bias for conv layers')
 parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classifier')
@@ -210,7 +210,7 @@ for i in range(args.iter_test):
             opt.step()
             opt.zero_grad()
 
-        del x_data, y_data, y_onehot, bb_rr, u_rr, class_loss
+        del x_data, y_data, bb_rr, u_rr, class_loss
         torch.cuda.empty_cache()
 
         # test data at 100, 200, 300
@@ -229,9 +229,12 @@ for i in range(args.iter_test):
                     test_acc.append((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float())
                     del x_data, y_data, bb_rr, u_rr
                     torch.cuda.empty_cache()
-            acc_all[int(e/acc_point_e)-1] = torch.cat(test_acc).mean().item()*100
-    with open("logs/test_"+model_uuid+".txt", "a") as file_object:
-        file_object.write("%d steps reached and the mean acc is %g , %g , %g time %g\n"%(i, np.mean(np.array(acc_all[0])),np.mean(np.array(acc_all[1])),np.mean(np.array(acc_all[2])), time.time() - start_time))
+            acc_all[int(e/acc_point_e)-1].append(torch.cat(test_acc).mean().item()*100)
+    if args.logfile:
+        with open("logs/test_"+model_uuid+".txt", "a") as file_object:
+            file_object.write("%d steps reached and the mean acc is %g , %g , %g time %g\n"%(i, np.mean(np.array(acc_all[0])),np.mean(np.array(acc_all[1])),np.mean(np.array(acc_all[2])), time.time() - start_time))
+    else:
+        print("%d steps reached and the mean acc is %g , %g , %g time %g\n"%(i, np.mean(np.array(acc_all[0])),np.mean(np.array(acc_all[1])),np.mean(np.array(acc_all[2])), time.time() - start_time))
 
 
 acc_mean1 = np.mean(acc_all[0])
@@ -240,8 +243,13 @@ acc_mean3 = np.mean(acc_all[2])
 acc_std1  = np.std(acc_all[0])
 acc_std2  = np.std(acc_all[1])
 acc_std3  = np.std(acc_all[2])
-with open("logs/test_"+model_uuid+".txt", "a") as file_object:
-    file_object.write('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 1*acc_point_e, acc_mean1, 1.96* acc_std1/np.sqrt(args.iter_test)))
-    file_object.write('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 1*acc_point_e, acc_mean2, 1.96* acc_std2/np.sqrt(args.iter_test)))
-    file_object.write('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 1*acc_point_e, acc_mean3, 1.96* acc_std3/np.sqrt(args.iter_test)))
+if args.logfile:
+    with open("logs/test_"+model_uuid+".txt", "a") as file_object:
+        file_object.write('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 1*acc_point_e, acc_mean1, 1.96* acc_std1/np.sqrt(args.iter_test)))
+        file_object.write('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 2*acc_point_e, acc_mean2, 1.96* acc_std2/np.sqrt(args.iter_test)))
+        file_object.write('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 3*acc_point_e, acc_mean3, 1.96* acc_std3/np.sqrt(args.iter_test)))
+else:
+    print('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 1*acc_point_e, acc_mean1, 1.96* acc_std1/np.sqrt(args.iter_test)))
+    print('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 2*acc_point_e, acc_mean2, 1.96* acc_std2/np.sqrt(args.iter_test)))
+    print('%d Test Acc at %de= %4.2f%% +- %4.2f%%\n' %(args.iter_test, 3*acc_point_e, acc_mean3, 1.96* acc_std3/np.sqrt(args.iter_test)))
 
