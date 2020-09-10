@@ -213,7 +213,6 @@ class LIF_Conv_Layer(torch.nn.Module):
     #     self.r_mult = torch.nn.Parameter(self.reset, requires_grad = False).to((self.P.device))
     
     def forward(self, input_t):
-        import pdb; pdb.set_trace()
         self.P, self.R, self.Q = self.alpha * self.P + self.p_mult * self.Q, self.gamma * self.R, self.beta * self.Q + self.q_mult * input_t
 
         U = self.conv_fwd(self.P) - self.R

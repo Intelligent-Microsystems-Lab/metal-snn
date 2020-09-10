@@ -179,7 +179,7 @@ for i in range(args.iter_test):
                 root='data.nosync/nmnist/n_mnist.hdf5',
                 batch_size = args.batch_size_test,
                 batch_size_test = args.batch_size_test_test,
-                ds=args.delta_t,
+                ds=args.downsampling,
                 num_workers=4)
 
     # new classifier
