@@ -1,0 +1,1 @@
+0 steps reached and the mean acc is 24.2 , 24.8 , 27 time 1.00484
