@@ -18,3 +18,14 @@ Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 145 over 5 classe
 2 Test Acc at 3e= 23.40% +- 0.00%
 2 Test Acc at 3e= 24.00% +- 0.00%
 2 Test Acc at 3e= 23.20% +- 0.00%
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 150 over 5 classes with 1 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 150 over 5 classes with 5 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 0 over 5 classes with 5 examples
+
+Evaluating model 47c21259-a435-404c-8604-df5dbf0e0063 at epoch 0 over 5 classes with 1 examples
+0 steps reached and the mean acc is 24.4 , 27.4 , 26.4 time 1.41705
+0 steps reached and the mean acc is 17.2 , 21 , 21.6 time 1.23833
+1 steps reached and the mean acc is 23.4 , 23.5 , 23.6 time 1.23528
