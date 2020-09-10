@@ -1830,3 +1830,7 @@ Epoch 131 | Batch 25/63 | Loss 60.8040 | Rotate Loss 17.3473 | Accuracy 18.14903
 Epoch 131 | Batch 30/63 | Loss 61.1292 | Rotate Loss 17.3749 | Accuracy 17.540323 | Rotate Accuracy 49.8740 | Time 9.3030
 Epoch 131 | Batch 35/63 | Loss 61.0135 | Rotate Loss 17.4038 | Accuracy 18.055556 | Rotate Accuracy 49.8698 | Time 9.9003
 Epoch 131 | Batch 40/63 | Loss 61.6173 | Rotate Loss 17.2598 | Accuracy 17.721037 | Rotate Accuracy 49.8857 | Time 9.5555
+Epoch 131 | Batch 45/63 | Loss 61.4451 | Rotate Loss 17.3051 | Accuracy 17.391304 | Rotate Accuracy 49.8641 | Time 9.2051
+Epoch 131 | Batch 50/63 | Loss 61.3113 | Rotate Loss 17.3758 | Accuracy 17.432598 | Rotate Accuracy 49.8468 | Time 9.2047
+Epoch 131 | Batch 55/63 | Loss 61.4838 | Rotate Loss 17.2271 | Accuracy 17.299107 | Rotate Accuracy 49.8326 | Time 9.3619
+Epoch 131 | Batch 60/63 | Loss 61.9153 | Rotate Loss 17.3190 | Accuracy 17.085041 | Rotate Accuracy 49.8463 | Time 9.2828
