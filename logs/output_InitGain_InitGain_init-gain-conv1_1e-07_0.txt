@@ -10,3 +10,17 @@ Traceback (most recent call last):
   File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/nn/parameter.py", line 26, in __new__
     return torch.Tensor._make_subclass(cls, data, requires_grad)
 TypeError: _make_subclass(): argument 'data' (position 2) must be Tensor, not float
+Loading python/3.7.3
+  Loading requirement: tcl/8.6.8 gcc/8.3.0
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:157: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.nn.Parameter(torch.tensor(1. / (1. - self.beta)), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:169: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.nn.Parameter(torch.tensor(1. / (1. - self.alpha)), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:181: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.nn.Parameter(torch.tensor(1. / (1. - self.gamma)), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:58: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.nn.Parameter(torch.tensor(1. / (1. - self.beta)), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:70: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.nn.Parameter(torch.tensor(1. / (1. - self.alpha)), requires_grad = False)
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:82: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.nn.Parameter(torch.tensor(1. / (1. - self.gamma)), requires_grad = False)
