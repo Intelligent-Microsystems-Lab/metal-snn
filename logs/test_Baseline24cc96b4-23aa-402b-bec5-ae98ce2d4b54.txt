@@ -1,3 +1,19 @@
 
 Evaluating model Baseline at epoch 0 over 5 classes with 1 examples
 0 steps reached and the mean acc is 20 , 21.8 , 18.8 time 1.21464
+1 steps reached and the mean acc is 19.8 , 21.8 , 21.2 time 1.23678
+2 steps reached and the mean acc is 20.2667 , 20.8667 , 20.5333 time 1.24742
+3 steps reached and the mean acc is 19.9 , 21.15 , 22.55 time 1.23747
+4 steps reached and the mean acc is 19.88 , 20.96 , 21.92 time 1.23119
+5 steps reached and the mean acc is 20.2333 , 20.6667 , 21.5 time 1.23226
+6 steps reached and the mean acc is 20.8571 , 20.6857 , 21.2286 time 1.2349
+7 steps reached and the mean acc is 20.95 , 21.175 , 20.85 time 1.2467
+8 steps reached and the mean acc is 20.8444 , 21.0444 , 20.7556 time 1.22551
+9 steps reached and the mean acc is 20.8 , 21.14 , 21.16 time 1.23592
+10 steps reached and the mean acc is 21.2909 , 21.7818 , 21.8182 time 1.22946
+11 steps reached and the mean acc is 21.6167 , 21.9 , 22.0667 time 1.23099
+12 steps reached and the mean acc is 21.6615 , 21.8 , 21.9385 time 1.22847
+13 steps reached and the mean acc is 21.7 , 21.6 , 22.0857 time 1.22064
+14 steps reached and the mean acc is 21.5467 , 21.6267 , 21.9467 time 1.24888
+15 steps reached and the mean acc is 21.425 , 21.65 , 21.9 time 1.21433
+16 steps reached and the mean acc is 21.5059 , 21.8353 , 22 time 1.21749
