@@ -1,3 +1,16 @@
 Namespace(batch_size=32, burnin=10, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-09, init_gain_conv1=1e-09, init_gain_conv2=1e-09, init_gain_conv3=1e-09, init_gain_fc=1e-09, k1=7, k2=7, k3=7, log_int=5, logfile=True, lr=1e-14, lr_div=100, n_train=20, none_act=0.05, oc1=32, oc2=64, oc3=64, padding=2, reset=1, save_int=5, target_act=1.0, tau_mem_high=20, tau_mem_low=20, tau_ref_high=2, tau_ref_low=2, tau_syn_high=7.5, tau_syn_low=7.5, thr=0.0, train_samples=100, train_tau=False)
 51875d5a-366e-495e-812c-b4d54900c309
 Start Training Backbone
+Epoch 1 | Batch 0/63 | Loss 10.2832 | Rotate Loss 5.4421 | Accuracy 4.687500 | Rotate Accuracy 20.3125 | Time 10.5950
+Epoch 1 | Batch 5/63 | Loss 11.1246 | Rotate Loss 5.5157 | Accuracy 5.468750 | Rotate Accuracy 23.1771 | Time 10.3854
+Epoch 1 | Batch 10/63 | Loss 11.3288 | Rotate Loss 5.5908 | Accuracy 4.687500 | Rotate Accuracy 23.5795 | Time 10.4798
+Epoch 1 | Batch 15/63 | Loss 11.2528 | Rotate Loss 5.6754 | Accuracy 4.003906 | Rotate Accuracy 22.9492 | Time 10.3826
+Epoch 1 | Batch 20/63 | Loss 11.2032 | Rotate Loss 5.3667 | Accuracy 4.761905 | Rotate Accuracy 22.6562 | Time 10.4475
+Epoch 1 | Batch 25/63 | Loss 11.2187 | Rotate Loss 5.1551 | Accuracy 4.987981 | Rotate Accuracy 22.5060 | Time 10.6331
+Epoch 1 | Batch 30/63 | Loss 11.2064 | Rotate Loss 4.9945 | Accuracy 4.536290 | Rotate Accuracy 22.1270 | Time 10.5331
+Epoch 1 | Batch 35/63 | Loss 11.2113 | Rotate Loss 4.9379 | Accuracy 4.470486 | Rotate Accuracy 21.8316 | Time 10.5558
+Epoch 1 | Batch 40/63 | Loss 11.1624 | Rotate Loss 4.9137 | Accuracy 4.535061 | Rotate Accuracy 21.5511 | Time 10.5985
+Epoch 1 | Batch 45/63 | Loss 11.0587 | Rotate Loss 4.8712 | Accuracy 4.585598 | Rotate Accuracy 21.5353 | Time 10.4385
+Epoch 1 | Batch 50/63 | Loss 10.9921 | Rotate Loss 4.8211 | Accuracy 4.901961 | Rotate Accuracy 21.5533 | Time 10.6371
+Epoch 1 | Batch 55/63 | Loss 11.0012 | Rotate Loss 4.7810 | Accuracy 4.910714 | Rotate Accuracy 21.7076 | Time 10.5228
+Epoch 1 | Batch 60/63 | Loss 11.0592 | Rotate Loss 4.7788 | Accuracy 4.943648 | Rotate Accuracy 21.7725 | Time 10.6988
