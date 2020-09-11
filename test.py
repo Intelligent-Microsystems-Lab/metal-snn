@@ -31,7 +31,7 @@ parser.add_argument("--lr", type=float, default=1.0e-10, help='Learning Rate')
 parser.add_argument("--epochs", type=int, default=151, help='Training Epochs') 
 parser.add_argument("--batch-size-test", type=int, default=4, help='Batch size')
 parser.add_argument("--batch-size-test-test", type=int, default=128, help='Batch size test test')
-parser.add_argument("--progressbar-off", type=float, default=False, help='False: progressbar activated')
+parser.add_argument("--progressbar-off", type=float, default=True, help='False: progressbar activated')
 parser.add_argument("--test-samples", type=int, default=100, help='Number of samples per classes')
 
 parser.add_argument("--n-way", type=int, default=5, help='N-way')
