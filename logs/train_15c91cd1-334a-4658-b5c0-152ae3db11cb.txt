@@ -2,3 +2,8 @@ Namespace(batch_size=138, burnin=10, conv_bias=True, dataset='DNMNIST', delta_t=
 15c91cd1-334a-4658-b5c0-152ae3db11cb
 Start Training Backbone
 Epoch 1 | Batch 0/47 | Loss 10.6080 | Rotate Loss 5.0063 | Accuracy 0.724638 | Rotate Accuracy 31.1594 | Time 19.2969
+Epoch 1 | Batch 5/47 | Loss 12.9573 | Rotate Loss 10.8298 | Accuracy 1.811594 | Rotate Accuracy 27.1739 | Time 18.2159
+Epoch 1 | Batch 10/47 | Loss 9.4762 | Rotate Loss 7.8948 | Accuracy 1.910408 | Rotate Accuracy 25.9552 | Time 18.7765
+Epoch 1 | Batch 15/47 | Loss 7.9749 | Rotate Loss 6.9168 | Accuracy 1.721014 | Rotate Accuracy 25.4076 | Time 18.7344
+Epoch 1 | Batch 20/47 | Loss 7.1511 | Rotate Loss 6.1417 | Accuracy 1.656315 | Rotate Accuracy 25.1553 | Time 19.4053
+Epoch 1 | Batch 25/47 | Loss 6.6925 | Rotate Loss 5.6386 | Accuracy 1.616499 | Rotate Accuracy 24.8328 | Time 19.6301
