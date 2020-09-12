@@ -20,7 +20,7 @@ def aux_task_gen(x_data, y_data):
     for i in range(1, 4):
         x_data[ytemp <= i] = x_data[ytemp <= i].transpose(3,4).flip(1)
 
-    return x_data, y_data, ytemp
+    return x_data, y_data, torch.tensor(ytemp)
 
 class SmoothStep(torch.autograd.Function):
     '''
