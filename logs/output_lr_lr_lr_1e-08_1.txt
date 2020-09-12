@@ -12,3 +12,30 @@ Loading python/3.7.3
   self.tau_mem = torch.tensor(1. / (1. - self.alpha))
 /afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:82: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
   self.reset = torch.tensor(1. / (1. - self.gamma))
+Loading python/3.7.3
+  Loading requirement: tcl/8.6.8 gcc/8.3.0
+Namespace(batch_size=138, burnin=10, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-10, init_gain_conv1=1e-10, init_gain_conv2=1e-10, init_gain_conv3=1e-10, init_gain_fc=1e-10, k1=7, k2=7, k3=7, log_int=5, logfile=False, lr=1e-08, lr_div=100, n_train=64, oc1=32, oc2=64, oc3=64, padding=2, save_int=5, tau_mem_high=20, tau_mem_low=20, tau_ref_high=2, tau_ref_low=2, tau_syn_high=7.5, tau_syn_low=7.5, thr=0.0, train_samples=100, train_tau=False)
+7bf0c32d-906e-403f-b543-c1df4ce20d71
+Start Training Backbone
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:166: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.tensor(1. / (1. - self.beta))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:178: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:190: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.tensor(1. / (1. - self.gamma))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:68: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.tensor(1. / (1. - self.beta))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:80: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:92: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.tensor(1. / (1. - self.gamma))
+Epoch 1 | Batch 0/47 | Loss 10.2707 | Rotate Loss 4.5789 | Accuracy 0.7246 | Rotate Accuracy 26.0870 | Time 18.9976
+Epoch 1 | Batch 5/47 | Loss 13.9862 | Rotate Loss 9.2124 | Accuracy 1.4493 | Rotate Accuracy 25.6039 | Time 18.7853
+Epoch 1 | Batch 10/47 | Loss 10.0919 | Rotate Loss 6.3185 | Accuracy 1.6469 | Rotate Accuracy 24.4401 | Time 19.2390
+Epoch 1 | Batch 15/47 | Loss 8.4759 | Rotate Loss 4.8101 | Accuracy 1.4493 | Rotate Accuracy 23.7319 | Time 19.3222
+Epoch 1 | Batch 20/47 | Loss 7.5569 | Rotate Loss 4.0272 | Accuracy 1.4493 | Rotate Accuracy 23.7405 | Time 19.3454
+Epoch 1 | Batch 25/47 | Loss 7.0099 | Rotate Loss 3.5296 | Accuracy 1.4771 | Rotate Accuracy 24.1081 | Time 19.3894
+Epoch 1 | Batch 30/47 | Loss 6.6846 | Rotate Loss 3.1906 | Accuracy 1.5895 | Rotate Accuracy 24.2637 | Time 19.0400
+Epoch 1 | Batch 35/47 | Loss 6.3699 | Rotate Loss 2.9464 | Accuracy 1.6103 | Rotate Accuracy 24.5169 | Time 18.6163
+Epoch 1 | Batch 40/47 | Loss 6.1672 | Rotate Loss 2.7597 | Accuracy 1.6083 | Rotate Accuracy 24.7791 | Time 18.5160
+Epoch 1 | Batch 45/47 | Loss 5.9956 | Rotate Loss 2.6149 | Accuracy 1.6856 | Rotate Accuracy 25.0000 | Time 19.5487
