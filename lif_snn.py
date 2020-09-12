@@ -1,16 +1,26 @@
 import torch
 import numpy as np
 
+# quadruple the size
+# def aux_task_gen(x_data, y_data):
+#     xtemp = [x_data] 
+#     ytemp = [y_data, y_data, y_data, y_data]
+#     aux_ytemp = [ torch.tensor([0]*x_data.shape[0]) ]
+
+#     for i in range(1, 4):
+#         xtemp.append(xtemp[-1].transpose(3,4).flip(1))
+#         aux_ytemp.append(torch.tensor([i]*x_data.shape[0]))
+
+#     return torch.cat(xtemp).to(x_data.device), torch.cat(ytemp).to(x_data.device), torch.cat(aux_ytemp).to(x_data.device)
+
+# apply random turns
 def aux_task_gen(x_data, y_data):
-    xtemp = [x_data] 
-    ytemp = [y_data, y_data, y_data, y_data]
-    aux_ytemp = [ torch.tensor([0]*x_data.shape[0]) ]
+    ytemp = np.random.choice(4, x_data.shape[0])
 
     for i in range(1, 4):
-        xtemp.append(xtemp[-1].transpose(3,4).flip(1))
-        aux_ytemp.append(torch.tensor([i]*x_data.shape[0]))
+        x_data[ytemp <= i] = x_data[ytemp <= i].transpose(3,4).flip(1)
 
-    return torch.cat(xtemp).to(x_data.device), torch.cat(ytemp).to(x_data.device), torch.cat(aux_ytemp).to(x_data.device)
+    return x_data, y_data, ytemp
 
 class SmoothStep(torch.autograd.Function):
     '''
