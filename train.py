@@ -20,8 +20,8 @@ dtype = torch.float32
 ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
-parser.add_argument("--batch-size", type=int, default=32, help='Batch size')
+parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
+parser.add_argument("--batch-size", type=int, default=138, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
 parser.add_argument("--lr", type=float, default=1.0e-12, help='Learning Rate')
@@ -60,10 +60,7 @@ parser.add_argument("--tau-ref-low", type=float, default=2, help='Refractory tim
 parser.add_argument("--tau-mem-high", type=float, default=20, help='Membrane time constant high')
 parser.add_argument("--tau-syn-high", type=float, default=7.5, help='Synaptic time constant high')
 parser.add_argument("--tau-ref-high", type=float, default=2, help='Refractory time constant high')
-parser.add_argument("--reset", type=float, default=1, help='Refractory time constant')
 parser.add_argument("--thr", type=float, default=.0, help='Firing Threshold')
-parser.add_argument("--target_act", type=float, default=1., help='Firing Threshold')
-parser.add_argument("--none_act", type=float, default=.05, help='Firing Threshold')
 
 args = parser.parse_args()
 
@@ -114,8 +111,8 @@ elif args.dataset == 'DDVSGesture':
                 batch_size_test=args.batch_size,
                 ds=args.downsampling,
                 num_workers=4)
-    time_steps_train = 100
-    time_steps_test = 100
+    time_steps_train = 500
+    time_steps_test = 1800
     one_hot_opt = True
 elif args.dataset == 'DVSGesture':
     train_dl, test_dl  = dvs_gestures.create_dataloader(
@@ -212,6 +209,7 @@ for e in range(args.epochs):
         # forwardpass
         bb_rr  = backbone(x_data)
         del x_data
+        torch.cuda.empty_cache()
         u_rr   = classifier(bb_rr)
         aux_rr = aux_classifier(bb_rr)
         
@@ -239,6 +237,7 @@ for e in range(args.epochs):
         total += float(y_data.shape[0])
 
         del u_rr, aux_rr, y_data, aux_y
+        torch.cuda.empty_cache()
 
         # BPTT
         loss = .5 * class_loss + .5 * aux_loss

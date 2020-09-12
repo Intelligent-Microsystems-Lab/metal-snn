@@ -41,7 +41,7 @@ class SmoothStep(torch.autograd.Function):
 
 
 class LIF_FC_Layer(torch.nn.Module):
-    def __init__(self, input_neurons, output_neurons, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, bias, reset, thr, gain, train_t, dtype):
+    def __init__(self, input_neurons, output_neurons, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, bias, thr, gain, train_t, dtype):
         super(LIF_FC_Layer, self).__init__()   
         self.dtype = dtype
         self.inp_neurons = input_neurons      
@@ -132,7 +132,7 @@ class LIF_FC_Layer(torch.nn.Module):
 
 
 class LIF_Conv_Layer(torch.nn.Module):
-    def __init__(self, x_preview, in_channels, out_channels, kernel_size, padding, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, bias, thr, reset, gain, train_t, dtype):
+    def __init__(self, x_preview, in_channels, out_channels, kernel_size, padding, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, bias, thr, gain, train_t, dtype):
         super(LIF_Conv_Layer, self).__init__()   
         self.dtype = dtype
         
@@ -140,7 +140,6 @@ class LIF_Conv_Layer(torch.nn.Module):
         self.out_channels = out_channels
         self.kernel_size = kernel_size
         self.bias = bias
-        self.reset = reset
         self.thr = thr
         self.train_t = train_t
 
@@ -235,7 +234,7 @@ class LIF_Conv_Layer(torch.nn.Module):
 
 
 class backbone_conv_model(torch.nn.Module):
-    def __init__(self, x_preview, in_channels, oc1, oc2, oc3, k1, k2, k3, padding, bias, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, reset, thr, gain1, gain2, gain3, train_t, dtype): 
+    def __init__(self, x_preview, in_channels, oc1, oc2, oc3, k1, k2, k3, padding, bias, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, delta_t, thr, gain1, gain2, gain3, train_t, dtype): 
         super(backbone_conv_model, self).__init__()
         self.dtype  = dtype
 
@@ -243,19 +242,19 @@ class backbone_conv_model(torch.nn.Module):
         x_preview = x_preview[:,0,:,:,:]
         self.mpooling = torch.nn.MaxPool2d(2)
 
-        self.conv_layer1 = LIF_Conv_Layer(x_preview = x_preview, in_channels = in_channels, out_channels = oc1, kernel_size = k1, padding = padding, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain1, thr = thr, bias = bias, train_t = train_t, dtype = dtype)
+        self.conv_layer1 = LIF_Conv_Layer(x_preview = x_preview, in_channels = in_channels, out_channels = oc1, kernel_size = k1, padding = padding, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, gain = gain1, thr = thr, bias = bias, train_t = train_t, dtype = dtype)
         x_preview, _ = self.conv_layer1.forward(x_preview)
         x_preview    = self.mpooling(x_preview)
 
         self.f1_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
 
-        self.conv_layer2 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc1, out_channels = oc2, kernel_size = k1, padding = padding, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain2, thr = thr, bias = bias, train_t = train_t, dtype = dtype)
+        self.conv_layer2 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc1, out_channels = oc2, kernel_size = k1, padding = padding, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, gain = gain2, thr = thr, bias = bias, train_t = train_t, dtype = dtype)
         x_preview, _ = self.conv_layer2.forward(x_preview)
         #x_preview    = self.mpooling(x_preview)
 
         self.f2_length = x_preview.shape[1] * x_preview.shape[2] * x_preview.shape[3] 
 
-        self.conv_layer3 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc2, out_channels = oc3, kernel_size = k3, padding = padding, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, reset = reset, gain = gain3, thr = thr, bias = bias, train_t = train_t, dtype = dtype)
+        self.conv_layer3 = LIF_Conv_Layer(x_preview = x_preview, in_channels = oc2, out_channels = oc3, kernel_size = k3, padding = padding, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, gain = gain3, thr = thr, bias = bias, train_t = train_t, dtype = dtype)
         x_preview, _ = self.conv_layer3.forward(x_preview)
         x_preview    = self.mpooling(x_preview)
 
@@ -328,14 +327,14 @@ class backbone_conv_model(torch.nn.Module):
 
 # classifier
 class classifier_model(torch.nn.Module):
-    def __init__(self, T, inp_neurons, output_classes, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, bias, reset, thr, gain, delta_t, train_t, dtype): 
+    def __init__(self, T, inp_neurons, output_classes, tau_syn_low, tau_mem_low, tau_ref_low, tau_syn_high, tau_mem_high, tau_ref_high, bias, thr, gain, delta_t, train_t, dtype): 
         super(classifier_model, self).__init__()
         self.dtype  = dtype
 
         self.output_classes = output_classes
         self.T = T
 
-        self.layer1 = LIF_FC_Layer(input_neurons = inp_neurons, output_neurons = output_classes, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, thr = thr, reset = reset, gain = gain, bias = bias, train_t = train_t, dtype = dtype)
+        self.layer1 = LIF_FC_Layer(input_neurons = inp_neurons, output_neurons = output_classes, tau_syn_low = tau_syn_low, tau_mem_low = tau_mem_low, tau_ref_low = tau_ref_low, tau_syn_high = tau_syn_high, tau_mem_high = tau_mem_high, tau_ref_high = tau_ref_high, delta_t = delta_t, thr = thr, gain = gain, bias = bias, train_t = train_t, dtype = dtype)
 
     def update_taus(self):
         self.layer1.update_taus()
