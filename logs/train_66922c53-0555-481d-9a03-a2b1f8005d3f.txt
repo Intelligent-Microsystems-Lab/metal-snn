@@ -1,0 +1,4 @@
+Namespace(batch_size=138, burnin=10, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-12, init_gain_conv1=1e-12, init_gain_conv2=1e-12, init_gain_conv3=1e-12, init_gain_fc=1e-12, k1=7, k2=7, k3=7, log_int=5, logfile=True, lr=1e-12, lr_div=100, n_train=64, oc1=32, oc2=64, oc3=64, padding=2, save_int=5, tau_mem_high=20, tau_mem_low=20, tau_ref_high=2, tau_ref_low=2, tau_syn_high=7.5, tau_syn_low=7.5, thr=0.0, train_samples=100, train_tau=False)
+66922c53-0555-481d-9a03-a2b1f8005d3f
+Start Training Backbone
+Epoch 1 | Batch 0/47 | Loss 7.6718 | Rotate Loss 3.6514 | Accuracy 2.898551 | Rotate Accuracy 19.5652 | Time 19.5202

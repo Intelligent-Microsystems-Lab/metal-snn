@@ -39,3 +39,17 @@ Epoch 1 | Batch 30/47 | Loss 6.3003 | Rotate Loss 2.9352 | Accuracy 1.7064 | Rot
 Epoch 1 | Batch 35/47 | Loss 6.1086 | Rotate Loss 2.7226 | Accuracy 1.7311 | Rotate Accuracy 25.3422 | Time 17.8038
 Epoch 1 | Batch 40/47 | Loss 5.9558 | Rotate Loss 2.5665 | Accuracy 1.7144 | Rotate Accuracy 25.5037 | Time 17.9142
 Epoch 1 | Batch 45/47 | Loss 5.8284 | Rotate Loss 2.4382 | Accuracy 1.7328 | Rotate Accuracy 25.3938 | Time 18.2056
+Loading python/3.7.3
+  Loading requirement: tcl/8.6.8 gcc/8.3.0
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:166: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.tensor(1. / (1. - self.beta))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:178: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:190: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.tensor(1. / (1. - self.gamma))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:68: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.tensor(1. / (1. - self.beta))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:80: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:92: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.tensor(1. / (1. - self.gamma))
