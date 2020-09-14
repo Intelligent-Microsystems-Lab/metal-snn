@@ -11,3 +11,14 @@ Epoch 1 | Batch 30/47 | Loss 6.4788 | Rotate Loss 2.2284 | Accuracy 1.566152 | R
 Epoch 1 | Batch 35/47 | Loss 6.5059 | Rotate Loss 2.1856 | Accuracy 1.549919 | Rotate Accuracy 35.5676 | Time 19.7187
 Epoch 1 | Batch 40/47 | Loss 6.5305 | Rotate Loss 2.1133 | Accuracy 1.555320 | Rotate Accuracy 37.2923 | Time 18.8826
 Epoch 1 | Batch 45/47 | Loss 6.5259 | Rotate Loss 2.0491 | Accuracy 1.528040 | Rotate Accuracy 37.8544 | Time 18.9366
+Epoch 1 : Accuracy 1.546875, Rotate Accuracy 45.031250, Time 1517.115920
+Epoch 2 | Batch 0/47 | Loss 6.6523 | Rotate Loss 1.9623 | Accuracy 1.449275 | Rotate Accuracy 40.5797 | Time 19.6058
+Epoch 2 | Batch 5/47 | Loss 6.3891 | Rotate Loss 1.7387 | Accuracy 2.173913 | Rotate Accuracy 42.0290 | Time 19.2222
+Epoch 2 | Batch 10/47 | Loss 6.5116 | Rotate Loss 1.6635 | Accuracy 2.437418 | Rotate Accuracy 42.0949 | Time 19.4635
+Epoch 2 | Batch 15/47 | Loss 6.4537 | Rotate Loss 1.4714 | Accuracy 2.038043 | Rotate Accuracy 42.8895 | Time 19.6002
+Epoch 2 | Batch 20/47 | Loss 6.3330 | Rotate Loss 1.3528 | Accuracy 1.794341 | Rotate Accuracy 44.8585 | Time 19.2444
+Epoch 2 | Batch 25/47 | Loss 6.2388 | Rotate Loss 1.2947 | Accuracy 1.672241 | Rotate Accuracy 45.1505 | Time 19.3141
+Epoch 2 | Batch 30/47 | Loss 6.1863 | Rotate Loss 1.2520 | Accuracy 1.683029 | Rotate Accuracy 45.7691 | Time 18.9691
+Epoch 2 | Batch 35/47 | Loss 6.1459 | Rotate Loss 1.2183 | Accuracy 1.690821 | Rotate Accuracy 46.1957 | Time 18.5258
+Epoch 2 | Batch 40/47 | Loss 6.1102 | Rotate Loss 1.2065 | Accuracy 1.661364 | Rotate Accuracy 46.6242 | Time 18.5857
+Epoch 2 | Batch 45/47 | Loss 6.0988 | Rotate Loss 1.2381 | Accuracy 1.622558 | Rotate Accuracy 46.6761 | Time 19.0501
