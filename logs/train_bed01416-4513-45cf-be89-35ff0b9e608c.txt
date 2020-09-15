@@ -277,3 +277,5 @@ Epoch 25 | Batch 40/47 | Loss 4.0655 | Rotate Loss 0.9941 | Accuracy 4.524567 | 
 Epoch 25 | Batch 45/47 | Loss 4.0476 | Rotate Loss 0.9881 | Accuracy 4.552615 | Rotate Accuracy 48.9130 | Time 18.4574
 Epoch 25 : Accuracy 5.718750, Rotate Accuracy 49.750000, Time 1499.778402
 Epoch 26 | Batch 0/47 | Loss 3.9726 | Rotate Loss 0.8319 | Accuracy 5.797101 | Rotate Accuracy 49.2754 | Time 19.2875
+Epoch 26 | Batch 5/47 | Loss 3.9458 | Rotate Loss 0.8687 | Accuracy 5.555556 | Rotate Accuracy 52.6570 | Time 18.3510
+Epoch 26 | Batch 10/47 | Loss 3.8885 | Rotate Loss 0.8812 | Accuracy 5.731225 | Rotate Accuracy 51.1199 | Time 19.8772
