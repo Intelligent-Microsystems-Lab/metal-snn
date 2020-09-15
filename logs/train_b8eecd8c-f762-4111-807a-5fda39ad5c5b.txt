@@ -102,3 +102,5 @@ Epoch 8 | Batch 30/58 | Loss 5.6428 | Rotate Loss 0.6948 | Accuracy 2.454418 | R
 Epoch 8 | Batch 35/58 | Loss 5.5846 | Rotate Loss 0.6685 | Accuracy 2.516103 | Rotate Accuracy 72.1618 | Time 18.6011
 Epoch 8 | Batch 40/58 | Loss 5.5726 | Rotate Loss 0.6456 | Accuracy 2.439024 | Rotate Accuracy 72.1103 | Time 19.4359
 Epoch 8 | Batch 45/58 | Loss 5.5480 | Rotate Loss 0.6331 | Accuracy 2.504726 | Rotate Accuracy 72.4638 | Time 18.8107
+Epoch 8 | Batch 50/58 | Loss 5.5282 | Rotate Loss 0.6212 | Accuracy 2.557545 | Rotate Accuracy 72.3501 | Time 18.6727
+Epoch 8 | Batch 55/58 | Loss 5.5303 | Rotate Loss 0.6116 | Accuracy 2.497412 | Rotate Accuracy 72.1791 | Time 19.3793
