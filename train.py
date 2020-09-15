@@ -55,10 +55,10 @@ parser.add_argument("--init-gain-aux", type=float, default=1e-10, help='Gain for
 # neural dynamics
 parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
 parser.add_argument("--tau-mem-low", type=float, default=20, help='Membrane time constant low')
-parser.add_argument("--tau-syn-low", type=float, default=7.5, help='Synaptic time constant low')
+parser.add_argument("--tau-syn-low", type=float, default=10, help='Synaptic time constant low')
 parser.add_argument("--tau-ref-low", type=float, default=2.5, help='Refractory time constant low')
 parser.add_argument("--tau-mem-high", type=float, default=20, help='Membrane time constant high')
-parser.add_argument("--tau-syn-high", type=float, default=7.5, help='Synaptic time constant high')
+parser.add_argument("--tau-syn-high", type=float, default=10, help='Synaptic time constant high')
 parser.add_argument("--tau-ref-high", type=float, default=2.5, help='Refractory time constant high')
 parser.add_argument("--thr", type=float, default=.0, help='Firing Threshold')
 
