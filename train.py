@@ -21,6 +21,7 @@ ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
+parser.add_argument("--self-supervision", type=bool, default=True, help='Logfile on')
 parser.add_argument("--batch-size", type=int, default=138, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
 parser.add_argument("--burnin", type=int, default=30, help='Burnin Phase in ms')
@@ -196,36 +197,45 @@ for e in range(args.epochs):
         start_time = time.time()
         x_data = x_data#.to(device)
 
-        # create aux task
-        x_data, y_data, aux_y  = aux_task_gen(x_data, y_data)
+        if args.self_supervision:
+            # create aux task
+            x_data, y_data, aux_y  = aux_task_gen(x_data, y_data)
+            aux_y = aux_y.to(device)
 
         # to gpu
         x_data = x_data.to(device)
         y_data = y_data.to(device)
-        aux_y = aux_y.to(device)
+        
 
         # forwardpass
         bb_rr  = backbone(x_data)
         del x_data
         torch.cuda.empty_cache()
         u_rr   = classifier(bb_rr)
-        aux_rr = aux_classifier(bb_rr)
 
         # class loss
         class_loss = loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_data)
 
-        # aux loss
-        aux_loss = loss_fn( softmax_pass(aux_rr[:,args.burnin:,:].sum(dim = 1)), aux_y)
+        if args.self_supervision:
+            aux_rr = aux_classifier(bb_rr)
+
+            # aux loss
+            aux_loss = loss_fn( softmax_pass(aux_rr[:,args.burnin:,:].sum(dim = 1)), aux_y)
+            rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
+
+            del aux_rr, aux_y
 
         correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
-        rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
         total += float(y_data.shape[0])
 
-        del u_rr, aux_rr, y_data, aux_y
+        del u_rr, y_data
         torch.cuda.empty_cache()
 
         # BPTT
-        loss = .5 * class_loss + .5 * aux_loss
+        if args.self_supervision:
+            loss = .5 * class_loss + .5 * aux_loss
+        else:
+            loss = class_loss 
         loss.backward()
         opt.step()
         opt.zero_grad()
@@ -238,13 +248,13 @@ for e in range(args.epochs):
 
         # stats
         avg_loss = avg_loss + float(class_loss.data.item())
-        avg_rloss = avg_rloss + float(aux_loss.data.item())
         avg_s1 = avg_s1 + float(np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length))
         avg_s2 = avg_s2 + float(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f2_length))
         avg_s3 = avg_s3 + float(np.sum(backbone.spike_count3[args.burnin:])/(T * backbone.f_length)) 
         avg_s4 = avg_s4 + float(np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T))
-        avg_A = avg_A + float(np.sum(aux_classifier.spike_count[args.burnin:])/(args.n_train*T))
-
+        if args.self_supervision:
+            avg_A = avg_A + float(np.sum(aux_classifier.spike_count[args.burnin:])/(args.n_train*T))
+            avg_rloss = avg_rloss + float(aux_loss.data.item())
         
         if i % args.log_int == 0:
             if args.logfile:
@@ -263,22 +273,24 @@ for e in range(args.epochs):
             start_time = time.time()
             x_data = x_data#.to(device)
 
-            # create aux task
-            x_data, y_data, aux_y  = aux_task_gen(x_data, y_data)
+            if args.self_supervision:
+                # create aux task
+                x_data, y_data, aux_y  = aux_task_gen(x_data, y_data)
+                aux_y = aux_y.to(device)
 
             # to gpu
             x_data = x_data.to(device)
             y_data = y_data.to(device)
-            aux_y = aux_y.to(device)
 
             # forwardpass
             bb_rr  = backbone(x_data)
             del x_data
             u_rr   = classifier(bb_rr)
-            aux_rr = aux_classifier(bb_rr)
+            if args.self_supervision:
+                aux_rr = aux_classifier(bb_rr)
+                rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
             
             correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
-            rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
             total += float(y_data.shape[0])
     torch.cuda.empty_cache()
 

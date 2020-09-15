@@ -72,11 +72,8 @@ parser.add_argument("--none_act", type=float, default=.05, help='Firing Threshol
 
 args = parser.parse_args()
 
-args.tau_mem_low = args.tau_mem_high
-args.tau_syn_low = args.tau_syn_high
-args.tau_ref_low = args.tau_ref_high
+checkpoint_dict = torch.load('./checkpoints/'+ args.checkpoint +'.pkl')
 
-args.init_gain_conv2 = args.init_gain_conv3 = args.init_gain_fc = args.init_gain_aux = args.init_gain_conv1  
 
 
 # training data
@@ -155,7 +152,6 @@ acc_point_e = (args.epochs-1)/3
 backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, oc3 = args.oc3, k1 = args.k1, k2 = args.k2, k3 = args.k3, padding = args.padding, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, reset = args.reset, gain1 = args.init_gain_conv1, gain2 = args.init_gain_conv2, gain3 = args.init_gain_conv3, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
 # load backbone
-checkpoint_dict = torch.load('./checkpoints/'+ args.checkpoint +'.pkl')
 backbone.load_state_dict(checkpoint_dict['backbone'])
 e = checkpoint_dict['epoch']
 del checkpoint_dict
