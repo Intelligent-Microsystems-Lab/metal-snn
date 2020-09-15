@@ -23,7 +23,7 @@ parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.A
 parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
 parser.add_argument("--batch-size", type=int, default=138, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
-parser.add_argument("--burnin", type=int, default=10, help='Burnin Phase in ms')
+parser.add_argument("--burnin", type=int, default=30, help='Burnin Phase in ms')
 parser.add_argument("--lr", type=float, default=1.0e-12, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
@@ -32,7 +32,7 @@ parser.add_argument("--train-tau", type=bool, default=False, help='Train time co
 
 # dataset
 parser.add_argument("--dataset", type=str, default="DNMNIST", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
-parser.add_argument("--train-samples", type=int, default=100, help='Number of samples per classes')
+parser.add_argument("--train-samples", type=int, default=125, help='Number of samples per classes')
 parser.add_argument("--n-train", type=int, default=64, help='N-way for training technically I guess more')
 parser.add_argument("--downsampling", type=int, default=2, help='downsampling')
 
@@ -54,10 +54,10 @@ parser.add_argument("--init-gain-aux", type=float, default=1e-10, help='Gain for
 
 # neural dynamics
 parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
-parser.add_argument("--tau-mem-low", type=float, default=20, help='Membrane time constant low')
+parser.add_argument("--tau-mem-low", type=float, default=35, help='Membrane time constant low')
 parser.add_argument("--tau-syn-low", type=float, default=10, help='Synaptic time constant low')
 parser.add_argument("--tau-ref-low", type=float, default=2.5, help='Refractory time constant low')
-parser.add_argument("--tau-mem-high", type=float, default=20, help='Membrane time constant high')
+parser.add_argument("--tau-mem-high", type=float, default=35, help='Membrane time constant high')
 parser.add_argument("--tau-syn-high", type=float, default=10, help='Synaptic time constant high')
 parser.add_argument("--tau-ref-high", type=float, default=2.5, help='Refractory time constant high')
 parser.add_argument("--thr", type=float, default=.0, help='Firing Threshold')
@@ -151,15 +151,13 @@ classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_cla
 aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = 4, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, thr = args.thr, gain = args.init_gain_aux, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
 
-
-#loss_fn = torch.nn.MSELoss(reduction = 'mean')
 loss_fn = torch.nn.NLLLoss()
 softmax_pass = torch.nn.LogSoftmax(dim=1)
 opt = torch.optim.Adam([
                 {'params': backbone.parameters()},
                 {'params': classifier.parameters()},
                 {'params': aux_classifier.parameters()}
-            ], lr = args.lr) #SGD before
+            ], lr = args.lr)
 
 
 acc_hist = []
@@ -212,26 +210,13 @@ for e in range(args.epochs):
         torch.cuda.empty_cache()
         u_rr   = classifier(bb_rr)
         aux_rr = aux_classifier(bb_rr)
-        
-        # check outputs -> e.g. are there odd spike patterns
 
         # class loss
-        # if one_hot_opt:
-        #     y_onehot = torch.zeros((u_rr.shape[0], u_rr.shape[2]), device = device).scatter_(1,  y_data.long().unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-        # else:
-        #     y_onehot = (y_data[:, ::time_steps_train, :][:,0,:]* ((max_act*args.target_act) - (max_act*args.none_act))) + (max_act*args.none_act)
-        # class_loss = loss_fn(u_rr[:,args.burnin:,:].sum(dim = 1), y_onehot)
         class_loss = loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_data)
 
-
         # aux loss
-        #aux_y_onehot = torch.zeros((aux_rr.shape[0], aux_rr.shape[2]), device = device).scatter_(1,  aux_y.unsqueeze(dim = 1), (max_act*args.target_act) - (max_act*args.none_act)) + (max_act*args.none_act)
-        #aux_loss = loss_fn(aux_rr[:,args.burnin:,:].sum(dim = 1), aux_y_onehot)
         aux_loss = loss_fn( softmax_pass(aux_rr[:,args.burnin:,:].sum(dim = 1)), aux_y)
 
-
-        if not one_hot_opt:
-            y_data = y_data[:, ::time_steps_train, :][:,0,:].argmax(dim=1)   
         correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
         rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
         total += float(y_data.shape[0])
@@ -261,7 +246,6 @@ for e in range(args.epochs):
         avg_A = avg_A + float(np.sum(aux_classifier.spike_count[args.burnin:])/(args.n_train*T))
 
         
-
         if i % args.log_int == 0:
             if args.logfile:
                 with open("logs/train_"+model_uuid+".txt", "a") as file_object:
@@ -293,8 +277,6 @@ for e in range(args.epochs):
             u_rr   = classifier(bb_rr)
             aux_rr = aux_classifier(bb_rr)
             
-            if not one_hot_opt:
-                y_data = y_data[:, ::time_steps_test, :][:,0,:].argmax(dim=1)   
             correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
             rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
             total += float(y_data.shape[0])

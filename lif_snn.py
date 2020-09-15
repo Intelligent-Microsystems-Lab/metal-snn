@@ -18,7 +18,8 @@ def aux_task_gen(x_data, y_data):
     ytemp = np.random.choice(4, x_data.shape[0])
 
     for i in range(1, 4):
-        x_data[ytemp <= i] = x_data[ytemp <= i].transpose(3,4).flip(1)
+        #x_data[ytemp <= i] = x_data[ytemp <= i].transpose(3,4).flip(1)
+        x_data[ytemp <= i] = torch.rot90(x_data[ytemp <= i], 1, (3,4))
 
     return x_data, y_data, torch.tensor(ytemp)
 
