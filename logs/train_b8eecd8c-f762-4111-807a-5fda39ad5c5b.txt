@@ -1,0 +1,15 @@
+Namespace(batch_size=138, burnin=30, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-10, init_gain_conv1=1e-10, init_gain_conv2=1e-10, init_gain_conv3=1e-10, init_gain_fc=1e-10, k1=7, k2=7, k3=7, log_int=5, logfile=True, lr=1e-12, lr_div=100, n_train=64, oc1=32, oc2=64, oc3=64, padding=2, save_int=5, tau_mem_high=35.0, tau_mem_low=35.0, tau_ref_high=2.5, tau_ref_low=2.5, tau_syn_high=10, tau_syn_low=10, thr=0.0, train_samples=125, train_tau=False)
+b8eecd8c-f762-4111-807a-5fda39ad5c5b
+Start Training Backbone
+Epoch 1 | Batch 0/58 | Loss 7.9321 | Rotate Loss 1.5939 | Accuracy 2.173913 | Rotate Accuracy 24.6377 | Time 19.3577
+Epoch 1 | Batch 5/58 | Loss 7.7494 | Rotate Loss 3.0673 | Accuracy 2.173913 | Rotate Accuracy 33.4541 | Time 19.0419
+Epoch 1 | Batch 10/58 | Loss 7.4340 | Rotate Loss 2.5748 | Accuracy 1.844532 | Rotate Accuracy 36.7589 | Time 18.8509
+Epoch 1 | Batch 15/58 | Loss 7.2440 | Rotate Loss 2.3640 | Accuracy 2.083333 | Rotate Accuracy 42.2101 | Time 19.0252
+Epoch 1 | Batch 20/58 | Loss 7.0699 | Rotate Loss 2.0944 | Accuracy 1.863354 | Rotate Accuracy 44.4099 | Time 18.9141
+Epoch 1 | Batch 25/58 | Loss 6.9376 | Rotate Loss 1.8827 | Accuracy 1.811594 | Rotate Accuracy 46.2375 | Time 19.8049
+Epoch 1 | Batch 30/58 | Loss 6.9720 | Rotate Loss 1.7754 | Accuracy 1.799906 | Rotate Accuracy 47.4287 | Time 18.6869
+Epoch 1 | Batch 35/58 | Loss 6.9193 | Rotate Loss 1.7050 | Accuracy 1.851852 | Rotate Accuracy 48.1481 | Time 19.3953
+Epoch 1 | Batch 40/58 | Loss 6.8929 | Rotate Loss 1.6476 | Accuracy 1.785083 | Rotate Accuracy 49.0633 | Time 19.7222
+Epoch 1 | Batch 45/58 | Loss 6.8358 | Rotate Loss 1.5774 | Accuracy 1.701323 | Rotate Accuracy 50.1418 | Time 18.7476
+Epoch 1 | Batch 50/58 | Loss 6.8454 | Rotate Loss 1.5431 | Accuracy 1.605570 | Rotate Accuracy 50.7388 | Time 18.4758
+Epoch 1 | Batch 55/58 | Loss 6.8106 | Rotate Loss 1.5184 | Accuracy 1.591615 | Rotate Accuracy 51.4105 | Time 18.3471
