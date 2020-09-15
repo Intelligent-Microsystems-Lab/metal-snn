@@ -261,3 +261,17 @@ Epoch 24 | Batch 15/47 | Loss 4.7111 | Rotate Loss 1.1056 | Accuracy 3.713768 | 
 Epoch 24 | Batch 20/47 | Loss 4.7507 | Rotate Loss 1.1339 | Accuracy 3.623188 | Rotate Accuracy 47.8951 | Time 19.1799
 Epoch 24 | Batch 25/47 | Loss 4.7675 | Rotate Loss 1.1322 | Accuracy 3.511706 | Rotate Accuracy 47.9097 | Time 18.6765
 Epoch 24 | Batch 30/47 | Loss 4.7727 | Rotate Loss 1.1117 | Accuracy 3.389434 | Rotate Accuracy 47.8495 | Time 18.6503
+Epoch 24 | Batch 35/47 | Loss 4.7780 | Rotate Loss 1.0904 | Accuracy 3.421900 | Rotate Accuracy 48.0072 | Time 19.4974
+Epoch 24 | Batch 40/47 | Loss 4.7708 | Rotate Loss 1.0777 | Accuracy 3.287381 | Rotate Accuracy 48.2149 | Time 18.6415
+Epoch 24 | Batch 45/47 | Loss 4.7566 | Rotate Loss 1.0648 | Accuracy 3.213611 | Rotate Accuracy 47.9679 | Time 19.2816
+Epoch 24 : Accuracy 3.703125, Rotate Accuracy 48.250000, Time 1533.896773
+Epoch 25 | Batch 0/47 | Loss 4.5202 | Rotate Loss 1.0098 | Accuracy 4.347826 | Rotate Accuracy 47.1014 | Time 19.5156
+Epoch 25 | Batch 5/47 | Loss 4.5867 | Rotate Loss 0.9940 | Accuracy 4.106280 | Rotate Accuracy 47.2222 | Time 19.5023
+Epoch 25 | Batch 10/47 | Loss 4.5414 | Rotate Loss 0.9663 | Accuracy 4.150198 | Rotate Accuracy 48.6825 | Time 18.8808
+Epoch 25 | Batch 15/47 | Loss 4.5634 | Rotate Loss 0.9532 | Accuracy 3.985507 | Rotate Accuracy 49.6377 | Time 19.0560
+Epoch 25 | Batch 20/47 | Loss 4.5427 | Rotate Loss 0.9516 | Accuracy 3.968254 | Rotate Accuracy 49.4479 | Time 19.2638
+Epoch 25 | Batch 25/47 | Loss 4.5531 | Rotate Loss 0.9433 | Accuracy 3.762542 | Rotate Accuracy 49.5541 | Time 19.1822
+Epoch 25 | Batch 30/47 | Loss 4.5547 | Rotate Loss 0.9447 | Accuracy 3.856942 | Rotate Accuracy 49.5559 | Time 19.0728
+Epoch 25 | Batch 35/47 | Loss 4.5575 | Rotate Loss 0.9359 | Accuracy 3.703704 | Rotate Accuracy 49.9597 | Time 18.9966
+Epoch 25 | Batch 40/47 | Loss 4.5503 | Rotate Loss 0.9363 | Accuracy 3.640862 | Rotate Accuracy 49.7172 | Time 18.9759
+Epoch 25 | Batch 45/47 | Loss 4.5527 | Rotate Loss 0.9362 | Accuracy 3.560176 | Rotate Accuracy 49.7322 | Time 19.0962
