@@ -268,7 +268,7 @@ class backbone_conv_model(torch.nn.Module):
         self.conv_layer3.update_taus()
 
 
-    def state_init_net():
+    def state_init_net(self):
         self.conv_layer1.state_init(inputs.shape[0], inputs.device)
         self.conv_layer2.state_init(inputs.shape[0], inputs.device)
         self.conv_layer3.state_init(inputs.shape[0], inputs.device)
