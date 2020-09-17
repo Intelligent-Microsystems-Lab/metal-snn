@@ -1,0 +1,15 @@
+Namespace(alpha=2, batch_size=138, burnin=30, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-10, init_gain_conv1=1e-10, init_gain_conv2=1e-10, init_gain_conv3=1e-10, init_gain_fc=1e-10, k1=7, k2=7, k3=7, log_int=5, logfile=True, lr=1e-12, lr_div=20, n_train=64, oc1=32, oc2=64, oc3=64, padding=2, save_int=5, self_supervision=True, tau_mem_high=35, tau_mem_low=35, tau_ref_high=2.5, tau_ref_low=2.5, tau_syn_high=10, tau_syn_low=10, thr=0.0, train_samples=125, train_tau=False)
+Namespace(alpha=2, batch_size=138, burnin=30, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-10, init_gain_conv1=1e-10, init_gain_conv2=1e-10, init_gain_conv3=1e-10, init_gain_fc=1e-10, k1=7, k2=7, k3=7, log_int=5, logfile=True, lr=1e-12, lr_div=20, n_train=64, oc1=32, oc2=64, oc3=64, padding=2, save_int=5, self_supervision=True, tau_mem_high=35, tau_mem_low=35, tau_ref_high=2.5, tau_ref_low=2.5, tau_syn_high=10, tau_syn_low=10, thr=0.0, train_samples=125, train_tau=False)
+Start Manifold Training Backbone
+27a2897d-67b3-4d00-a197-85d8996148fd
+Epoch 1 | Batch 0/58 | Loss 13.3734 | Rotate Loss 1.5584 | Accuracy 2.898551/0.937516 | Rotate Accuracy 28.2609 | Time 14.2625
+Epoch 1 | Batch 5/58 | Loss 13.1776 | Rotate Loss 2.6117 | Accuracy 2.053140/1.566467 | Rotate Accuracy 26.9324 | Time 14.1294
+Epoch 1 | Batch 10/58 | Loss 12.5309 | Rotate Loss 2.5111 | Accuracy 1.646904/1.535426 | Rotate Accuracy 31.6864 | Time 14.1804
+Epoch 1 | Batch 15/58 | Loss 12.2480 | Rotate Loss 2.6930 | Accuracy 1.811594/1.677014 | Rotate Accuracy 33.7862 | Time 14.1616
+Epoch 1 | Batch 20/58 | Loss 12.2666 | Rotate Loss 2.5051 | Accuracy 1.690821/1.540029 | Rotate Accuracy 35.7833 | Time 14.2507
+Epoch 1 | Batch 25/58 | Loss 12.3004 | Rotate Loss 2.4215 | Accuracy 1.644370/1.565078 | Rotate Accuracy 35.9532 | Time 14.1270
+Epoch 1 | Batch 30/58 | Loss 12.2401 | Rotate Loss 2.3543 | Accuracy 1.706405/1.577553 | Rotate Accuracy 37.9617 | Time 14.2758
+Epoch 1 | Batch 35/58 | Loss 12.1409 | Rotate Loss 2.3230 | Accuracy 1.751208/1.581119 | Rotate Accuracy 38.7681 | Time 14.1159
+Epoch 1 | Batch 40/58 | Loss 12.2061 | Rotate Loss 2.4075 | Accuracy 1.767409/1.528476 | Rotate Accuracy 38.8300 | Time 14.2727
+Epoch 1 | Batch 45/58 | Loss 12.0790 | Rotate Loss 2.3093 | Accuracy 1.717076/1.529348 | Rotate Accuracy 39.3037 | Time 14.0769
+Epoch 1 | Batch 50/58 | Loss 12.0290 | Rotate Loss 2.3381 | Accuracy 1.591361/1.518010 | Rotate Accuracy 40.1961 | Time 14.1467

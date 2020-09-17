@@ -1,0 +1,32 @@
+Loading python/3.7.3
+  Loading requirement: tcl/8.6.8 gcc/8.3.0
+Namespace(alpha=2, batch_size=138, burnin=30, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-10, init_gain_conv1=1e-10, init_gain_conv2=1e-10, init_gain_conv3=1e-10, init_gain_fc=1e-10, k1=7, k2=7, k3=7, log_int=5, logfile=False, lr=1e-12, lr_div=20, n_train=64, oc1=32, oc2=64, oc3=64, padding=2, save_int=5, self_supervision=True, tau_mem_high=35, tau_mem_low=35, tau_ref_high=2.5, tau_ref_low=2.5, tau_syn_high=10, tau_syn_low=10, thr=0.0, train_samples=125, train_tau=False)
+Namespace(alpha=2, batch_size=138, burnin=30, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-10, init_gain_conv1=1e-10, init_gain_conv2=1e-10, init_gain_conv3=1e-10, init_gain_fc=1e-10, k1=7, k2=7, k3=7, log_int=5, logfile=False, lr=1e-12, lr_div=20, n_train=64, oc1=32, oc2=64, oc3=64, padding=2, save_int=5, self_supervision=True, tau_mem_high=35, tau_mem_low=35, tau_ref_high=2.5, tau_ref_low=2.5, tau_syn_high=10, tau_syn_low=10, thr=0.0, train_samples=125, train_tau=False)
+Start Manifold Backbone Training Backbone
+c347385c-932f-487b-839a-f7958a36dd7a
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:167: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.tensor(1. / (1. - self.beta))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:179: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:191: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.tensor(1. / (1. - self.gamma))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:69: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.tensor(1. / (1. - self.beta))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:81: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:93: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.tensor(1. / (1. - self.gamma))
+Epoch 1 | Batch 0/58 | Loss 13.3069 | Rotate Loss 1.6441 | Accuracy 1.4493/0.9857 | Rotate Accuracy 30.4348 | Time 14.2971
+Epoch 1 | Batch 5/58 | Loss 12.3143 | Rotate Loss 2.4398 | Accuracy 1.4493/1.489 | Rotate Accuracy 29.8309 | Time 14.1227
+Epoch 1 | Batch 10/58 | Loss 11.9372 | Rotate Loss 2.3585 | Accuracy 1.5152/1.43 | Rotate Accuracy 32.1476 | Time 14.2385
+Epoch 1 | Batch 15/58 | Loss 11.8121 | Rotate Loss 2.3994 | Accuracy 1.3134/1.319 | Rotate Accuracy 36.0054 | Time 14.2399
+Epoch 1 | Batch 20/58 | Loss 11.6914 | Rotate Loss 2.3148 | Accuracy 1.4838/1.297 | Rotate Accuracy 38.2333 | Time 14.2043
+Epoch 1 | Batch 25/58 | Loss 11.7288 | Rotate Loss 2.3051 | Accuracy 1.6722/1.265 | Rotate Accuracy 38.4615 | Time 14.1868
+Epoch 1 | Batch 30/58 | Loss 11.7690 | Rotate Loss 2.3115 | Accuracy 1.5895/1.371 | Rotate Accuracy 38.6162 | Time 14.1759
+Epoch 1 | Batch 35/58 | Loss 11.7784 | Rotate Loss 2.2436 | Accuracy 1.5499/1.42 | Rotate Accuracy 39.3519 | Time 14.1261
+Epoch 1 | Batch 40/58 | Loss 11.7660 | Rotate Loss 2.2449 | Accuracy 1.5553/1.392 | Rotate Accuracy 38.9890 | Time 14.2471
+Epoch 1 | Batch 45/58 | Loss 11.9175 | Rotate Loss 2.3784 | Accuracy 1.5753/1.453 | Rotate Accuracy 39.0674 | Time 14.2183
+Epoch 1 | Batch 50/58 | Loss 11.9752 | Rotate Loss 2.5073 | Accuracy 1.5203/1.456 | Rotate Accuracy 38.7042 | Time 14.1152
+Epoch 1 | Batch 55/58 | Loss 11.9806 | Rotate Loss 2.4967 | Accuracy 1.5657/1.489 | Rotate Accuracy 39.9974 | Time 14.1118
+Epoch 1 : Accuracy 1.662500, Rotate Accuracy 50.712500, Time 1611.139997
+0.0566 0.0167 0.0061 0.0137 0.0000
