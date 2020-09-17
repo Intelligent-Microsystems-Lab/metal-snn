@@ -21,7 +21,7 @@ dtype = torch.float32
 ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
+parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
 parser.add_argument("--self-supervision", type=bool, default=True, help='Logfile on')
 parser.add_argument("--batch-size", type=int, default=138, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
@@ -176,13 +176,12 @@ if args.logfile:
     with open("logs/train_"+model_uuid+".txt", "w+") as file_object:
         file_object.write(str(args) + "\n")
         file_object.write(str(args) + "\n")
-        file_object.write("Training based on "+ args.checkpoint + "\n")
         file_object.write("Start Manifold Training Backbone\n")
         file_object.write(model_uuid+ "\n")
 else:
     print(str(args))
     print(str(args))
-    print("Training based on "+ args.checkpoint)
+
     print("Start Manifold Backbone Training Backbone")
     print(model_uuid)
 
@@ -235,7 +234,7 @@ for e in range(args.epochs):
 
         mm_correct += lam * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_a).float().sum()) + (1 - lam) * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_b).float().sum())
 
-        avg_loss = avg_loss + float(loss.mm_loss.item()) 
+        avg_loss = avg_loss + float(mm_loss.item()) 
 
         del s_t, y_a, y_b, u_rr
         torch.cuda.empty_cache()
@@ -255,7 +254,7 @@ for e in range(args.epochs):
         torch.cuda.empty_cache()
 
         if args.self_supervision:
-            aux_rr = aux_classifier(s_t)
+            aux_rr = aux_classifier(bb_rr)
             # aux loss
             aux_loss = loss_fn( softmax_pass(aux_rr[:,args.burnin:,:].sum(dim = 1)), aux_y)
             rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
@@ -271,9 +270,6 @@ for e in range(args.epochs):
         loss.backward()
         opt.step()
 
-        del aux_rr, aux_y, bb_rr, u_rr, mm_loss, loss, class_loss, aux_loss
-        torch.cuda.empty_cache()
-
         correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
         total += float(y_data.shape[0])
 
@@ -287,12 +283,15 @@ for e in range(args.epochs):
             avg_A = avg_A + float(np.sum(aux_classifier.spike_count[args.burnin:])/(args.n_train*T))
             avg_rloss = avg_rloss + float(aux_loss.data.item())
         
+        del aux_rr, aux_y, bb_rr, u_rr, mm_loss, loss, class_loss, aux_loss, y_data
+        torch.cuda.empty_cache()
+
         if i % args.log_int == 0:
             if args.logfile:
                 with open("logs/train_"+model_uuid+".txt", "a") as file_object:
-                    file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:4f} | Rotate Accuracy {:.4f} | Time {:.4f}\n'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
+                    file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:4f}/{:4f} | Rotate Accuracy {:.4f} | Time {:.4f}\n'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(mm_correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
             else:
-                print('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:.4f} | Rotate Accuracy {:.4f} | Time {:.4f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
+                print('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:.4f}/{:.4} | Rotate Accuracy {:.4f} | Time {:.4f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(mm_correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
         
 
     # accuracy on test
@@ -363,6 +362,7 @@ for e in range(args.epochs):
                 'loss_aux'     : auxl_hist,
                 'acc_cla'      : acc_hist,
                 'acc_aux'      : aux_hist,
+                'mm_acc'       : mm_acc_hist,
 
                 's1c'          : act1_hist,
                 's2c'          : act2_hist,
