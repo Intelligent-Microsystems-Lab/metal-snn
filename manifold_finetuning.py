@@ -28,7 +28,7 @@ parser.add_argument("--epochs", type=int, default=401, help='Training Epochs')
 parser.add_argument("--alpha", type=int, default=2, help='Alpha for manifold mixup') 
 parser.add_argument("--burnin", type=int, default=30, help='Burnin Phase in ms')
 parser.add_argument("--lr", type=float, default=1.0e-12, help='Learning Rate')
-parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
+parser.add_argument("--lr-div", type=int, default=20, help='Learning Rate Division')
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 parser.add_argument("--train-tau", type=bool, default=False, help='Train time constants')
@@ -193,6 +193,7 @@ for e in range(args.epochs):
     if e%args.lr_div == 0 and e != 0:
         for param_group in opt.param_groups:
             param_group['lr'] /= 2
+            args.lr_div *= 2
 
     for i, (x_data, y_data) in enumerate(train_dl):
         start_time = time.time()

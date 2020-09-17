@@ -1,6 +1,6 @@
 import os
 
-ident_word = "NoSelfsupervision"
+ident_word = "Manifold"
 
 part1 = "#!/bin/csh \n#$ -M cschaef6@nd.edu \n#$ -m abe\n#$ -q " 
 part11 = "\n#$ -l gpu_card=1\n#$ -N "
@@ -9,7 +9,7 @@ part2 = "\n#$ -o ./logs/output_"+ident_word+"_"
 
 part3 = ".txt\n#$ -e ./logs/error_"+ident_word+"_"
 
-part4 = ".txt\nmodule load python\nsetenv OMP_NUM_THREADS $NSLOTS\npython train.py"
+part4 = ".txt\nmodule load python\nsetenv OMP_NUM_THREADS $NSLOTS\npython manifold_finetuning.py"
 
 
 #sweep_parameters = {'n-train':[15,25],'train-samples':[200]}
@@ -18,9 +18,9 @@ part4 = ".txt\nmodule load python\nsetenv OMP_NUM_THREADS $NSLOTS\npython train.
 
 #sweep_parameters = {'tau-mem-high':[12.5,27.5], 'tau-syn-high':[5,10], 'tau-ref-high':[0.1,0.5,2]}
 sweep_parameters = {'epochs':[401]}
-trials = 3
+trials = 2
 
-avail_q = ['gpu@qa-rtx6k-041.crc.nd.edu', 'gpu@qa-rtx6k-040.crc.nd.edu']
+avail_q = ['gpu@qa-rtx6k-040.crc.nd.edu']
 #avail_q = ['gpu@@joshi']
 q_counter = 0
 
