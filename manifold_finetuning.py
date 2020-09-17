@@ -20,73 +20,111 @@ else:
 dtype = torch.float32
 ms = 1e-3
 
-
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
-parser.add_argument("--checkpoint", type=str, default='0c41322f-6e60-4005-bd53-1a3396e74de5', help='UUID for checkpoint to be tested')
-parser.add_argument("--from-scratch", type=bool, default=True, help='Start fraining from scratch')
+parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
+parser.add_argument("--self-supervision", type=bool, default=True, help='Logfile on')
+parser.add_argument("--batch-size", type=int, default=138, help='Batch size')
+parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
+parser.add_argument("--alpha", type=int, default=2, help='Alpha for manifold mixup') 
+parser.add_argument("--burnin", type=int, default=30, help='Burnin Phase in ms')
 parser.add_argument("--lr", type=float, default=1.0e-12, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=100, help='Learning Rate Division')
-parser.add_argument("--epochs", type=int, default=151, help='Training Epochs') 
-parser.add_argument("--alpha", type=int, default=2, help='Training Epochs') 
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
+parser.add_argument("--train-tau", type=bool, default=False, help='Train time constants')
+
+# dataset
+parser.add_argument("--dataset", type=str, default="DNMNIST", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
+parser.add_argument("--train-samples", type=int, default=125, help='Number of samples per classes')
+parser.add_argument("--n-train", type=int, default=64, help='N-way for training technically I guess more')
+parser.add_argument("--downsampling", type=int, default=2, help='downsampling')
+
+#architecture
+parser.add_argument("--k1", type=int, default=7, help='Kernel Size 1')
+parser.add_argument("--k2", type=int, default=7, help='Kernel Size 2')
+parser.add_argument("--k3", type=int, default=7, help='Kernel Size 2')
+parser.add_argument("--oc1", type=int, default=32, help='Output Channels 1')
+parser.add_argument("--oc2", type=int, default=64, help='Output Channels 2')
+parser.add_argument("--oc3", type=int, default=64, help='Output Channels 2')
+parser.add_argument("--padding", type=int, default=2, help='Conv Padding')
+parser.add_argument("--conv-bias", type=bool, default=True, help='Bias for conv layers')
+parser.add_argument("--fc-bias", type=bool, default=True, help='Bias for classifier')
+parser.add_argument("--init-gain-conv1", type=float, default=1e-10, help='Gain for weight init 1 conv')
+parser.add_argument("--init-gain-conv2", type=float, default=1e-10, help='Gain for weight init 2 conv')
+parser.add_argument("--init-gain-conv3", type=float, default=1e-10, help='Gain for weight init 3 conv')
+parser.add_argument("--init-gain-fc", type=float, default=1e-10, help='Gain for weight init fc')
+parser.add_argument("--init-gain-aux", type=float, default=1e-10, help='Gain for weight init fc')
+
+# neural dynamics
+parser.add_argument("--delta-t", type=int, default=1, help='Time steps')
+parser.add_argument("--tau-mem-low", type=float, default=35, help='Membrane time constant low')
+parser.add_argument("--tau-syn-low", type=float, default=10, help='Synaptic time constant low')
+parser.add_argument("--tau-ref-low", type=float, default=2.5, help='Refractory time constant low')
+parser.add_argument("--tau-mem-high", type=float, default=35, help='Membrane time constant high')
+parser.add_argument("--tau-syn-high", type=float, default=10, help='Synaptic time constant high')
+parser.add_argument("--tau-ref-high", type=float, default=2.5, help='Refractory time constant high')
+parser.add_argument("--thr", type=float, default=.0, help='Firing Threshold')
+
 args = parser.parse_args()
 
-checkpoint_dict = torch.load('./checkpoints/'+ args.checkpoint +'.pkl')
-args_loaded = checkpoint_dict['arguments']
+args.tau_mem_low = args.tau_mem_high
+args.tau_syn_low = args.tau_syn_high
+args.tau_ref_low = args.tau_ref_high
+
+args.init_gain_conv2 = args.init_gain_conv3 = args.init_gain_fc = args.init_gain_aux = args.init_gain_conv1  
+
 
 # training data
-if args_loaded.dataset == 'DNMNIST':
+if args.dataset == 'DNMNIST':
     train_dl, test_dl  = dmnist.sample_double_mnist_task(
                 meta_dataset_type = 'train',
-                N = args_loaded.n_train,
-                K = args_loaded.train_samples,
-                K_test = args_loaded.train_samples,
+                N = args.n_train,
+                K = args.train_samples,
+                K_test = args.train_samples,
                 root='data.nosync/nmnist/n_mnist.hdf5',
-                batch_size=args_loaded.batch_size,
-                batch_size_test=args_loaded.batch_size,
-                ds=args_loaded.downsampling,
+                batch_size=args.batch_size,
+                batch_size_test=args.batch_size,
+                ds=args.downsampling,
                 num_workers=4)
     time_steps_train = 300
     time_steps_test = 300
     one_hot_opt = True
-elif args_loaded.dataset == 'ASL-DVS':
+elif args.dataset == 'ASL-DVS':
     train_dl, test_dl  = dvsasl_dataloaders.sample_dvsasl_task(
                 meta_dataset_type = 'train',
-                N = args_loaded.n_train,
-                K = args_loaded.train_samples,
-                K_test = args_loaded.train_samples,
+                N = args.n_train,
+                K = args.train_samples,
+                K_test = args.train_samples,
                 root='data.nosync/dvsasl/dvsasl.hdf5',
-                batch_size=args_loaded.batch_size,
-                batch_size_test=args_loaded.batch_size,
-                ds=args_loaded.downsampling,
+                batch_size=args.batch_size,
+                batch_size_test=args.batch_size,
+                ds=args.downsampling,
                 num_workers=4)
     time_steps_train = 100
     time_steps_test = 100
     one_hot_opt = True
-elif args_loaded.dataset == 'DDVSGesture':
+elif args.dataset == 'DDVSGesture':
     train_dl, test_dl  = sample_double_mnist_task(
                 meta_dataset_type = 'train',
-                N = args_loaded.n_train,
-                K = args_loaded.train_samples,
-                K_test = args_loaded.train_samples,
+                N = args.n_train,
+                K = args.train_samples,
+                K_test = args.train_samples,
                 root='data.nosync/nmnist/n_mnist.hdf5',
-                batch_size=args_loaded.batch_size,
-                batch_size_test=args_loaded.batch_size,
-                ds=args_loaded.downsampling,
+                batch_size=args.batch_size,
+                batch_size_test=args.batch_size,
+                ds=args.downsampling,
                 num_workers=4)
     time_steps_train = 500
     time_steps_test = 1800
     one_hot_opt = True
-elif args_loaded.dataset == 'DVSGesture':
+elif args.dataset == 'DVSGesture':
     train_dl, test_dl  = dvs_gestures.create_dataloader(
                 root = 'data.nosync/dvsgesture/dvs_gestures_build.hdf5',
                 work_dir = 'data/dvsgesture/',
-                batch_size = args_loaded.batch_size,
+                batch_size = args.batch_size,
                 chunk_size_train = 500,
                 chunk_size_test = 1800,
-                ds = args_loaded.downsampling,
+                ds = args.downsampling,
                 dt = 1000,
                 transform_train = None,
                 transform_test = None,
@@ -103,21 +141,14 @@ else:
 x_preview, y_labels = next(iter(train_dl))
 model_uuid = str(uuid.uuid4())   
 
-delta_t = args_loaded.delta_t*ms
+delta_t = args.delta_t*ms
 T = x_preview.shape[1]
 
-backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args_loaded.oc1, oc2 = args_loaded.oc2, oc3 = args_loaded.oc3, k1 = args_loaded.k1, k2 = args_loaded.k2, k3 = args_loaded.k3, padding = args_loaded.padding, bias = args_loaded.conv_bias, tau_ref_low = args_loaded.tau_ref_low*ms, tau_mem_low = args_loaded.tau_mem_low*ms, tau_syn_low = args_loaded.tau_syn_low*ms, tau_ref_high = args_loaded.tau_ref_high*ms, tau_mem_high = args_loaded.tau_mem_high*ms, tau_syn_high = args_loaded.tau_syn_high*ms, thr = args_loaded.thr, gain1 = args_loaded.init_gain_conv1, gain2 = args_loaded.init_gain_conv2, gain3 = args_loaded.init_gain_conv3, delta_t = delta_t, train_t = args_loaded.train_tau, dtype = dtype).to(device)
+backbone = backbone_conv_model(x_preview = x_preview, in_channels = x_preview.shape[2], oc1 = args.oc1, oc2 = args.oc2, oc3 = args.oc3, k1 = args.k1, k2 = args.k2, k3 = args.k3, padding = args.padding, bias = args.conv_bias, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, thr = args.thr, gain1 = args.init_gain_conv1, gain2 = args.init_gain_conv2, gain3 = args.init_gain_conv3, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
-classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args_loaded.n_train, tau_ref_low = args_loaded.tau_ref_low*ms, tau_mem_low = args_loaded.tau_mem_low*ms, tau_syn_low = args_loaded.tau_syn_low*ms, tau_ref_high = args_loaded.tau_ref_high*ms, tau_mem_high = args_loaded.tau_mem_high*ms, tau_syn_high = args_loaded.tau_syn_high*ms, bias = args_loaded.fc_bias, thr = args_loaded.thr, gain = args_loaded.init_gain_fc, delta_t = delta_t, train_t = args_loaded.train_tau, dtype = dtype).to(device)
+classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = args.n_train, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, thr = args.thr, gain = args.init_gain_fc, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
-aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = 4, tau_ref_low = args_loaded.tau_ref_low*ms, tau_mem_low = args_loaded.tau_mem_low*ms, tau_syn_low = args_loaded.tau_syn_low*ms, tau_ref_high = args_loaded.tau_ref_high*ms, tau_mem_high = args_loaded.tau_mem_high*ms, tau_syn_high = args_loaded.tau_syn_high*ms, bias = args_loaded.fc_bias, thr = args_loaded.thr, gain = args_loaded.init_gain_aux, delta_t = delta_t, train_t = args_loaded.train_tau, dtype = dtype).to(device)
-
-# load backbone
-if not args.from_scratch:
-    backbone.load_state_dict(checkpoint_dict['backbone'])
-    classifier.load_state_dict(checkpoint_dict['classifer'])
-    aux_classifier.load_state_dict(checkpoint_dict['aux_class'])
-del checkpoint_dict
+aux_classifier = classifier_model(T = T, inp_neurons = backbone.f_length, output_classes = 4, tau_ref_low = args.tau_ref_low*ms, tau_mem_low = args.tau_mem_low*ms, tau_syn_low = args.tau_syn_low*ms, tau_ref_high = args.tau_ref_high*ms, tau_mem_high = args.tau_mem_high*ms, tau_syn_high = args.tau_syn_high*ms, bias = args.fc_bias, thr = args.thr, gain = args.init_gain_aux, delta_t = delta_t, train_t = args.train_tau, dtype = dtype).to(device)
 
 
 loss_fn = torch.nn.NLLLoss()
@@ -130,6 +161,7 @@ opt = torch.optim.Adam([
 
 
 acc_hist = []
+mm_acc_hist = []
 aux_hist = []
 clal_hist = []
 auxl_hist = []
@@ -143,20 +175,20 @@ actA_hist = []
 if args.logfile:
     with open("logs/train_"+model_uuid+".txt", "w+") as file_object:
         file_object.write(str(args) + "\n")
-        file_object.write(str(args_loaded) + "\n")
+        file_object.write(str(args) + "\n")
         file_object.write("Training based on "+ args.checkpoint + "\n")
         file_object.write("Start Manifold Training Backbone\n")
         file_object.write(model_uuid+ "\n")
 else:
     print(str(args))
-    print(str(args_loaded))
+    print(str(args))
     print("Training based on "+ args.checkpoint)
     print("Start Manifold Backbone Training Backbone")
     print(model_uuid)
 
 for e in range(args.epochs):
     e_time = time.time()
-    avg_loss = avg_rloss = avg_s1 = avg_s2 = avg_s3 = avg_s4 = avg_A = correct = rcorrect = total = 0
+    avg_loss = avg_rloss = avg_s1 = avg_s2 = avg_s3 = avg_s4 = avg_A = correct = mm_correct = rcorrect = total = 0
 
     # learning rate divide
     if e%args.lr_div == 0 and e != 0:
@@ -165,6 +197,8 @@ for e in range(args.epochs):
 
     for i, (x_data, y_data) in enumerate(train_dl):
         start_time = time.time()
+        opt.zero_grad()
+        x_data = x_data.to(device)
 
         # manifold mixup
         lam = np.random.beta(args.alpha, args.alpha)
@@ -174,10 +208,10 @@ for e in range(args.epochs):
         y_a, y_b = y_data.to(device), y_data[index].to(device)
         
         # forwardpass
-        backbone.state_init_net()
-        s_t = torch.zeros((inputs.shape[0], backbone.T, backbone.f_length), device = inputs.device)
+        backbone.state_init_net(x_data.shape[0], device)
+        s_t = torch.zeros((x_data.shape[0], backbone.T, backbone.f_length), device = device)
         for t in range(backbone.T):
-            x = x_data[:,t,:,:,:].to(device)
+            x = x_data[:,t,:,:,:]
             if layer_mix == 0:
                 x = lam * x + (1 - lam) * x[index,:]
             x, _       = backbone.conv_layer1.forward(x)
@@ -196,63 +230,61 @@ for e in range(args.epochs):
 
         u_rr   = classifier(s_t)
 
-        mm_loss = lam * loss_fn( softmax_pass(u_rr[:,args_loaded.burnin:,:].sum(dim = 1)), y_a) + (1 - lam) * loss_fn( softmax_pass(u_rr[:,args_loaded.burnin:,:].sum(dim = 1)), y_b)
-        #mm_correct = 
+        mm_loss = lam * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_a) + (1 - lam) * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_b)
+        mm_loss.backward()
+
+        mm_correct += lam * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_a).float().sum()) + (1 - lam) * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_b).float().sum())
+
+        avg_loss = avg_loss + float(loss.mm_loss.item()) 
+
+        del s_t, y_a, y_b, u_rr
+        torch.cuda.empty_cache()
 
         # Rotation Training
-        if args_loaded.self_supervision:
+        if args.self_supervision:
             # create aux task
             x_data, y_data, aux_y  = aux_task_gen(x_data, y_data)
             aux_y = aux_y.to(device)
 
         # to gpu
-        x_data = x_data.to(device)
         y_data = y_data.to(device)
         
-        # forwardpass
+        # forward pass
         bb_rr  = backbone(x_data)
         del x_data
         torch.cuda.empty_cache()
-        u_rr   = classifier(bb_rr)
 
-        # class loss
-        class_loss = loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_data)
-
-        if args_loaded.self_supervision:
+        if args.self_supervision:
             aux_rr = aux_classifier(s_t)
-
             # aux loss
-            aux_loss = loss_fn( softmax_pass(aux_rr[:,args_loaded.burnin:,:].sum(dim = 1)), aux_y)
-            rcorrect += float((aux_rr[:,args_loaded.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
+            aux_loss = loss_fn( softmax_pass(aux_rr[:,args.burnin:,:].sum(dim = 1)), aux_y)
+            rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
+
+        u_rr   = classifier(bb_rr)
+        class_loss = loss_fn(softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_data)
+
         # BPTT
-        if args_loaded.self_supervision:
-            loss = mm_loss + .5 * (class_loss + aux_loss)
+        if args.self_supervision:
+            loss = (class_loss + aux_loss)/2
         else:
-            loss = mm_loss + class_loss
+            loss = class_loss
         loss.backward()
         opt.step()
-        opt.zero_grad()
 
-        del s_t, y_a, y_b, aux_rr, aux_y
+        del aux_rr, aux_y, bb_rr, u_rr, mm_loss, loss, class_loss, aux_loss
         torch.cuda.empty_cache()
 
-        correct += lam * float((u_rr[:,args_loaded.burnin:,:].sum(dim = 1).argmax(dim=1) == y_a).float().sum()) + (1 - lam) * float((u_rr[:,args_loaded.burnin:,:].sum(dim = 1).argmax(dim=1) == y_b).float().sum())
+        correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
         total += float(y_data.shape[0])
 
-        # update taus
-        if args_loaded.train_tau:
-            backbone.update_taus() 
-            classifier.update_taus()
-            aux_classifier.update_taus()
-
         # stats
-        avg_loss = avg_loss + float(loss.data.item())
-        avg_s1 = avg_s1 + float(np.sum(backbone.spike_count1[args_loaded.burnin:])/(T * backbone.f1_length))
-        avg_s2 = avg_s2 + float(np.sum(backbone.spike_count2[args_loaded.burnin:])/(T * backbone.f2_length))
-        avg_s3 = avg_s3 + float(np.sum(backbone.spike_count3[args_loaded.burnin:])/(T * backbone.f_length)) 
-        avg_s4 = avg_s4 + float(np.sum(classifier.spike_count[args_loaded.burnin:])/(args_loaded.n_train*T))
-        if args_loaded.self_supervision:
-            avg_A = avg_A + float(np.sum(aux_classifier.spike_count[args_loaded.burnin:])/(args_loaded.n_train*T))
+        avg_loss = avg_loss + float(loss.data.item()) 
+        avg_s1 = avg_s1 + float(np.sum(backbone.spike_count1[args.burnin:])/(T * backbone.f1_length))
+        avg_s2 = avg_s2 + float(np.sum(backbone.spike_count2[args.burnin:])/(T * backbone.f2_length))
+        avg_s3 = avg_s3 + float(np.sum(backbone.spike_count3[args.burnin:])/(T * backbone.f_length)) 
+        avg_s4 = avg_s4 + float(np.sum(classifier.spike_count[args.burnin:])/(args.n_train*T))
+        if args.self_supervision:
+            avg_A = avg_A + float(np.sum(aux_classifier.spike_count[args.burnin:])/(args.n_train*T))
             avg_rloss = avg_rloss + float(aux_loss.data.item())
         
         if i % args.log_int == 0:
@@ -271,7 +303,7 @@ for e in range(args.epochs):
             start_time = time.time()
             x_data = x_data#.to(device)
 
-            if args_loaded.self_supervision:
+            if args.self_supervision:
                 # create aux task
                 x_data, y_data, aux_y  = aux_task_gen(x_data, y_data)
                 aux_y = aux_y.to(device)
@@ -284,15 +316,16 @@ for e in range(args.epochs):
             bb_rr  = backbone(x_data)
             del x_data
             u_rr   = classifier(bb_rr)
-            if args_loaded.self_supervision:
+            if args.self_supervision:
                 aux_rr = aux_classifier(bb_rr)
-                rcorrect += float((aux_rr[:,args_loaded.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
+                rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
             
-            correct += float((u_rr[:,args_loaded.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
+            correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
             total += float(y_data.shape[0])
     torch.cuda.empty_cache()
 
     # stats save
+    mm_acc_hist.append((float(mm_correct)*100)/total)
     acc_hist.append((float(correct)*100)/total)
     aux_hist.append((float(rcorrect)*100)/total)
     clal_hist.append(avg_loss/float(i+1))
