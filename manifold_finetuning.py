@@ -21,7 +21,7 @@ dtype = torch.float32
 ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
+parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
 parser.add_argument("--self-supervision", type=bool, default=True, help='Logfile on')
 parser.add_argument("--batch-size", type=int, default=138, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
@@ -319,9 +319,11 @@ for e in range(args.epochs):
             if args.self_supervision:
                 aux_rr = aux_classifier(bb_rr)
                 rcorrect += float((aux_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == aux_y).float().sum())
+                del aux_y, aux_rr
             
             correct += float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_data).float().sum())
             total += float(y_data.shape[0])
+    del y_data, bb_rr, u_rr
     torch.cuda.empty_cache()
 
     # stats save
@@ -345,9 +347,6 @@ for e in range(args.epochs):
         print("Epoch {:d} : Accuracy {:f}, Rotate Accuracy {:f}, Time {:f}".format(e+1,(float(correct)*100)/total,(float(rcorrect)*100)/total, time.time() - e_time))
         print("{:.4f} {:.4f} {:.4f} {:.4f} {:.4f}".format(act1_hist[-1], act2_hist[-1], act3_hist[-1], act4_hist[-1], actA_hist[-1]))
     plot_curves(acc_hist, aux_hist, clal_hist, auxl_hist, act1_hist, act2_hist, act3_hist, act4_hist, actA_hist, model_uuid)
-
-
-    # sace model which does best on the few shot learning
 
     # model save
     if e % args.save_int == 0:
