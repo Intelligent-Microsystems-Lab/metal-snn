@@ -2846,3 +2846,4 @@ Epoch 219 | Batch 35/58 | Loss 4.3794 | Rotate Loss 0.0000 | Accuracy 2.556361 |
 Epoch 219 | Batch 40/58 | Loss 4.3854 | Rotate Loss 0.0000 | Accuracy 2.562743 | Rotate Accuracy 0.0000 | Time 5.9930
 Epoch 219 | Batch 45/58 | Loss 4.3861 | Rotate Loss 0.0000 | Accuracy 2.457467 | Rotate Accuracy 0.0000 | Time 5.9937
 Epoch 219 | Batch 50/58 | Loss 4.3871 | Rotate Loss 0.0000 | Accuracy 2.458085 | Rotate Accuracy 0.0000 | Time 5.9893
+Epoch 219 | Batch 55/58 | Loss 4.3945 | Rotate Loss 0.0000 | Accuracy 2.406832 | Rotate Accuracy 0.0000 | Time 5.9959

@@ -2782,3 +2782,4 @@ Epoch 214 | Batch 40/58 | Loss 3.4977 | Rotate Loss 0.0000 | Accuracy 9.597031 |
 Epoch 214 | Batch 45/58 | Loss 3.4947 | Rotate Loss 0.0000 | Accuracy 9.562067 | Rotate Accuracy 0.0000 | Time 5.9303
 Epoch 214 | Batch 50/58 | Loss 3.5054 | Rotate Loss 0.0000 | Accuracy 9.477124 | Rotate Accuracy 0.0000 | Time 5.8868
 Epoch 214 | Batch 55/58 | Loss 3.5208 | Rotate Loss 0.0000 | Accuracy 9.394410 | Rotate Accuracy 0.0000 | Time 5.9020
+Epoch 214 : Accuracy 8.537500, Rotate Accuracy 0.000000, Time 474.669299
