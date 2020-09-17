@@ -1,0 +1,66 @@
+Loading python/3.7.3
+  Loading requirement: tcl/8.6.8 gcc/8.3.0
+Namespace(alpha=2, batch_size=138, burnin=30, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-10, init_gain_conv1=1e-10, init_gain_conv2=1e-10, init_gain_conv3=1e-10, init_gain_fc=1e-10, k1=7, k2=7, k3=7, log_int=5, logfile=False, lr=1e-12, lr_div=20, n_train=64, oc1=32, oc2=64, oc3=64, padding=2, save_int=5, self_supervision=True, tau_mem_high=35, tau_mem_low=35, tau_ref_high=2.5, tau_ref_low=2.5, tau_syn_high=10, tau_syn_low=10, thr=0.0, train_samples=125, train_tau=False)
+Namespace(alpha=2, batch_size=138, burnin=30, conv_bias=True, dataset='DNMNIST', delta_t=1, downsampling=2, epochs=401, fc_bias=True, init_gain_aux=1e-10, init_gain_conv1=1e-10, init_gain_conv2=1e-10, init_gain_conv3=1e-10, init_gain_fc=1e-10, k1=7, k2=7, k3=7, log_int=5, logfile=False, lr=1e-12, lr_div=20, n_train=64, oc1=32, oc2=64, oc3=64, padding=2, save_int=5, self_supervision=True, tau_mem_high=35, tau_mem_low=35, tau_ref_high=2.5, tau_ref_low=2.5, tau_syn_high=10, tau_syn_low=10, thr=0.0, train_samples=125, train_tau=False)
+Start Manifold Backbone Training Backbone
+7b0b4f8d-5af9-48f5-858f-c997520677b3
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:167: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.tensor(1. / (1. - self.beta))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:179: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:191: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.tensor(1. / (1. - self.gamma))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:69: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_syn = torch.tensor(1. / (1. - self.beta))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:81: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.tau_mem = torch.tensor(1. / (1. - self.alpha))
+/afs/crc.nd.edu/user/c/cschaef6/metal-snn/lif_snn.py:93: UserWarning: To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
+  self.reset = torch.tensor(1. / (1. - self.gamma))
+Epoch 1 | Batch 0/58 | Loss 14.7180 | Rotate Loss 1.5573 | Accuracy 0.7246/0.3791 | Rotate Accuracy 26.0870 | Time 14.1224
+Epoch 1 | Batch 5/58 | Loss 13.2166 | Rotate Loss 2.3620 | Accuracy 2.1739/1.739 | Rotate Accuracy 26.9324 | Time 14.1850
+Epoch 1 | Batch 10/58 | Loss 12.5633 | Rotate Loss 2.1888 | Accuracy 1.7128/1.717 | Rotate Accuracy 34.2556 | Time 14.1467
+Epoch 1 | Batch 15/58 | Loss 12.1736 | Rotate Loss 2.1264 | Accuracy 1.4946/1.572 | Rotate Accuracy 35.0091 | Time 14.3080
+Epoch 1 | Batch 20/58 | Loss 12.2931 | Rotate Loss 2.4137 | Accuracy 1.5183/1.667 | Rotate Accuracy 35.0587 | Time 14.1544
+Epoch 1 | Batch 25/58 | Loss 12.2313 | Rotate Loss 2.3480 | Accuracy 1.4771/1.695 | Rotate Accuracy 34.5318 | Time 14.1191
+Epoch 1 | Batch 30/58 | Loss 12.1982 | Rotate Loss 2.1936 | Accuracy 1.3791/1.774 | Rotate Accuracy 35.3436 | Time 14.1113
+Epoch 1 | Batch 35/58 | Loss 12.1076 | Rotate Loss 2.0883 | Accuracy 1.4090/1.699 | Rotate Accuracy 36.8760 | Time 14.1845
+Epoch 1 | Batch 40/58 | Loss 11.9956 | Rotate Loss 2.1270 | Accuracy 1.4846/1.691 | Rotate Accuracy 37.4867 | Time 14.4293
+Epoch 1 | Batch 45/58 | Loss 12.0562 | Rotate Loss 2.2078 | Accuracy 1.4650/1.666 | Rotate Accuracy 37.5866 | Time 14.1701
+Epoch 1 | Batch 50/58 | Loss 12.0635 | Rotate Loss 2.1765 | Accuracy 1.4209/1.695 | Rotate Accuracy 37.7380 | Time 14.2103
+Epoch 1 | Batch 55/58 | Loss 12.0450 | Rotate Loss 2.1723 | Accuracy 1.4363/1.703 | Rotate Accuracy 37.9141 | Time 14.1310
+Epoch 1 : Accuracy 1.612500, Rotate Accuracy 49.150000, Time 1601.546896
+0.0564 0.0129 0.0075 0.0134 0.0000
+Traceback (most recent call last):
+  File "manifold_finetuning.py", line 234, in <module>
+    mm_loss.backward()
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/tensor.py", line 198, in backward
+    torch.autograd.backward(self, gradient, retain_graph, create_graph)
+  File "/afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/autograd/__init__.py", line 100, in backward
+    allow_unreachable=True)  # allow_unreachable flag
+RuntimeError: CUDA out of memory. Tried to allocate 254.00 MiB (GPU 0; 22.17 GiB total capacity; 20.57 GiB already allocated; 134.50 MiB free; 21.15 GiB reserved in total by PyTorch) (malloc at /pytorch/c10/cuda/CUDACachingAllocator.cpp:289)
+frame #0: c10::Error::Error(c10::SourceLocation, std::string const&) + 0x46 (0x2b98ce395536 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x1cf1e (0x2b98ce155f1e in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libc10_cuda.so)
+frame #2: <unknown function> + 0x1df9e (0x2b98ce156f9e in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libc10_cuda.so)
+frame #3: at::native::empty_cuda(c10::ArrayRef<long>, c10::TensorOptions const&, c10::optional<c10::MemoryFormat>) + 0x135 (0x2b9894631535 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xf7a66b (0x2b9892c2966b in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cuda.so)
+frame #5: <unknown function> + 0xfc3f57 (0x2b9892c72f57 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cuda.so)
+frame #6: <unknown function> + 0x1075389 (0x2b9883f88389 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #7: <unknown function> + 0x10756c7 (0x2b9883f886c7 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #8: <unknown function> + 0x2d67664 (0x2b9885c7a664 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #9: <unknown function> + 0x10756c7 (0x2b9883f886c7 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #10: <unknown function> + 0xe2165e (0x2b9883d3465e in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #11: at::native::zeros(c10::ArrayRef<long>, c10::TensorOptions const&) + 0x2d (0x2b9883d38f1d in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #12: <unknown function> + 0x1140833 (0x2b9884053833 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #13: <unknown function> + 0x2c59dee (0x2b9885b6cdee in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #14: <unknown function> + 0x1075a79 (0x2b9883f88a79 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #15: <unknown function> + 0x28ce1e2 (0x2b98857e11e2 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #16: torch::autograd::generated::SliceBackward::apply(std::vector<at::Tensor, std::allocator<at::Tensor> >&&) + 0x114 (0x2b98857e7704 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #17: <unknown function> + 0x2d89c05 (0x2b9885c9cc05 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #18: torch::autograd::Engine::evaluate_function(std::shared_ptr<torch::autograd::GraphTask>&, torch::autograd::Node*, torch::autograd::InputBuffer&) + 0x16f3 (0x2b9885c99f03 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #19: torch::autograd::Engine::thread_main(std::shared_ptr<torch::autograd::GraphTask> const&, bool) + 0x3d2 (0x2b9885c9ace2 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #20: torch::autograd::Engine::thread_init(int) + 0x39 (0x2b9885c93359 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_cpu.so)
+frame #21: torch::autograd::python::PythonEngine::thread_init(int) + 0x38 (0x2b9882327998 in /afs/crc.nd.edu/user/c/cschaef6/.local/lib/python3.7/site-packages/torch/lib/libtorch_python.so)
+frame #22: <unknown function> + 0xbadbf (0x2b9881512dbf in /opt/crc/g/gcc/8.3.0/lib64/libstdc++.so.6)
+frame #23: <unknown function> + 0x7ea5 (0x2b9877c1aea5 in /lib64/libpthread.so.0)
+frame #24: clone + 0x6d (0x2b98786368cd in /lib64/libc.so.6)
+
