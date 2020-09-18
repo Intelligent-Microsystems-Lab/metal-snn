@@ -27,11 +27,12 @@ parser.add_argument("--batch-size", type=int, default=138, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
 parser.add_argument("--alpha", type=int, default=2, help='Alpha for manifold mixup') 
 parser.add_argument("--burnin", type=int, default=30, help='Burnin Phase in ms')
-parser.add_argument("--lr", type=float, default=1.0e-12, help='Learning Rate')
-parser.add_argument("--lr-div", type=int, default=20, help='Learning Rate Division')
+parser.add_argument("--lr", type=float, default=.5e-12, help='Learning Rate')
+parser.add_argument("--lr-div", type=int, default=60, help='Learning Rate Division')
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
 parser.add_argument("--train-tau", type=bool, default=False, help='Train time constants')
+parser.add_argument("--spike-reg", type=bool, default=True, help='Train time constants')
 
 # dataset
 parser.add_argument("--dataset", type=str, default="DNMNIST", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
@@ -181,7 +182,6 @@ if args.logfile:
 else:
     print(str(args))
     print(str(args))
-
     print("Start Manifold Backbone Training Backbone")
     print(model_uuid)
 
@@ -193,7 +193,7 @@ for e in range(args.epochs):
     if e%args.lr_div == 0 and e != 0:
         for param_group in opt.param_groups:
             param_group['lr'] /= 2
-            args.lr_div *= 2
+            #args.lr_div *= 2
 
     for i, (x_data, y_data) in enumerate(train_dl):
         start_time = time.time()
@@ -231,6 +231,8 @@ for e in range(args.epochs):
         u_rr   = classifier(s_t)
 
         mm_loss = lam * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_a) + (1 - lam) * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_b)
+        if args.spike_reg:
+            mm_loss += 0.5 * torch.abs(u_rr.sum()/np.prod(u_rr.shape) - .1)
         mm_loss.backward()
 
         mm_correct += lam * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_a).float().sum()) + (1 - lam) * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_b).float().sum())
@@ -268,6 +270,11 @@ for e in range(args.epochs):
             loss = (class_loss + aux_loss)/2
         else:
             loss = class_loss
+
+        if args.spike_reg:
+            loss += 0.5 * torch.abs(u_rr.sum()/np.prod(u_rr.shape) - .1)
+            if args.self_supervision:
+                loss += 0.5 * torch.abs(aux_rr.sum()/np.prod(aux_rr.shape) - .1)
         loss.backward()
         opt.step()
 
