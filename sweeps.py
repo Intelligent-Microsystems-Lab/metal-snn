@@ -20,7 +20,7 @@ part4 = ".txt\nmodule load python\nsetenv OMP_NUM_THREADS $NSLOTS\npython manifo
 sweep_parameters = {'epochs':[401]}
 trials = 3
 
-avail_q = ['gpu@qa-rtx6k-040.crc.nd.edu']
+avail_q = ['gpu@qa-rtx6k-041.crc.nd.edu','gpu@qa-rtx6k-040.crc.nd.edu']
 #avail_q = ['gpu@@joshi']
 q_counter = 0
 
