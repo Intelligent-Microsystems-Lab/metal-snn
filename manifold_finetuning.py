@@ -232,7 +232,7 @@ for e in range(args.epochs):
 
         mm_loss = lam * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_a) + (1 - lam) * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_b)
         if args.spike_reg:
-            mm_loss += 0.5 * torch.abs(u_rr.sum()/np.prod(u_rr.shape) - .1)
+            mm_loss += 0.5 * torch.abs(u_rr.sum()/np.prod(u_rr.shape) - .0015)
         mm_loss.backward()
 
         mm_correct += lam * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_a).float().sum()) + (1 - lam) * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_b).float().sum())
@@ -272,9 +272,9 @@ for e in range(args.epochs):
             loss = class_loss
 
         if args.spike_reg:
-            loss += 0.5 * torch.abs(u_rr.sum()/np.prod(u_rr.shape) - .1)
+            loss += 0.5 * torch.abs(u_rr.sum()/np.prod(u_rr.shape) - .0015)
             if args.self_supervision:
-                loss += 0.5 * torch.abs(aux_rr.sum()/np.prod(aux_rr.shape) - .1)
+                loss += 0.5 * torch.abs(aux_rr.sum()/np.prod(aux_rr.shape) - .025)
         loss.backward()
         opt.step()
 
