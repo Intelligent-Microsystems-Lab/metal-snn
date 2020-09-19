@@ -1963,3 +1963,17 @@ Epoch 151 | Batch 40/58 | Loss 4.2822 | Rotate Loss 0.4686 | Accuracy 2.880877 |
 Epoch 151 | Batch 45/58 | Loss 4.2848 | Rotate Loss 0.4656 | Accuracy 2.914304 | Rotate Accuracy 72.6213 | Time 19.0759
 Epoch 151 | Batch 50/58 | Loss 4.2827 | Rotate Loss 0.4638 | Accuracy 2.898551 | Rotate Accuracy 72.6769 | Time 19.3351
 Epoch 151 | Batch 55/58 | Loss 4.2790 | Rotate Loss 0.4620 | Accuracy 2.989130 | Rotate Accuracy 72.8131 | Time 19.6060
+Epoch 151 : Accuracy 2.862500, Rotate Accuracy 72.000000, Time 1966.274946
+Epoch 152 | Batch 0/58 | Loss 4.2604 | Rotate Loss 0.4456 | Accuracy 2.173913 | Rotate Accuracy 78.2609 | Time 20.1367
+Epoch 152 | Batch 5/58 | Loss 4.2458 | Rotate Loss 0.4676 | Accuracy 2.415459 | Rotate Accuracy 72.4638 | Time 19.6550
+Epoch 152 | Batch 10/58 | Loss 4.2523 | Rotate Loss 0.4875 | Accuracy 2.371542 | Rotate Accuracy 71.8709 | Time 19.6347
+Epoch 152 | Batch 15/58 | Loss 4.2552 | Rotate Loss 0.4827 | Accuracy 2.626812 | Rotate Accuracy 71.7391 | Time 19.9913
+Epoch 152 | Batch 20/58 | Loss 4.2591 | Rotate Loss 0.4801 | Accuracy 2.967564 | Rotate Accuracy 72.0842 | Time 19.6473
+Epoch 152 | Batch 25/58 | Loss 4.2611 | Rotate Loss 0.4798 | Accuracy 2.982163 | Rotate Accuracy 71.5998 | Time 20.0670
+Epoch 152 | Batch 30/58 | Loss 4.2412 | Rotate Loss 0.4740 | Accuracy 3.015428 | Rotate Accuracy 71.9028 | Time 19.5643
+Epoch 152 | Batch 35/58 | Loss 4.2518 | Rotate Loss 0.4678 | Accuracy 2.979066 | Rotate Accuracy 71.9404 | Time 19.8819
+Epoch 152 | Batch 40/58 | Loss 4.2544 | Rotate Loss 0.4686 | Accuracy 2.986921 | Rotate Accuracy 72.0219 | Time 19.8067
+Epoch 152 | Batch 45/58 | Loss 4.2541 | Rotate Loss 0.4681 | Accuracy 2.977316 | Rotate Accuracy 72.0384 | Time 19.6890
+Epoch 152 | Batch 50/58 | Loss 4.2549 | Rotate Loss 0.4687 | Accuracy 2.870134 | Rotate Accuracy 72.1086 | Time 19.4497
+Epoch 152 | Batch 55/58 | Loss 4.2581 | Rotate Loss 0.4686 | Accuracy 2.795031 | Rotate Accuracy 72.1403 | Time 19.2389
+Epoch 152 : Accuracy 3.200000, Rotate Accuracy 71.675000, Time 1968.372424
