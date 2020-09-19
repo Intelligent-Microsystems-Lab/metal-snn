@@ -1,0 +1,11 @@
+#!/bin/csh 
+#$ -M cschaef6@nd.edu 
+#$ -m abe
+#$ -q gpu@qa-rtx6k-041.crc.nd.edu
+#$ -l gpu_card=1
+#$ -N SpikeReg_epochs_401_2
+#$ -o ./logs/output_SpikeReg_SpikeReg_epochs_401_2.txt
+#$ -e ./logs/error_SpikeReg_SpikeReg_epochs_401_2.txt
+module load python
+setenv OMP_NUM_THREADS $NSLOTS
+python manifold_finetuning.py --epochs 401
