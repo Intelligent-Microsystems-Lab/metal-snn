@@ -19,7 +19,7 @@ dtype = torch.float32
 ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
+parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
 parser.add_argument("--self-supervision", type=bool, default=True, help='Logfile on')
 parser.add_argument("--batch-size", type=int, default=128, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
