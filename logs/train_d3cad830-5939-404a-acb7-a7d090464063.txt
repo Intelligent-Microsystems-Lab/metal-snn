@@ -4,3 +4,24 @@ Start Manifold Training Backbone
 d3cad830-5939-404a-acb7-a7d090464063
 Epoch 1 | Batch 0/10 | Loss 14.1333 | Rotate Loss 3.9789 | Accuracy 7.812500/7.812500 | Rotate Accuracy 23.4375 | Time 13.5909
 Epoch 1 | Batch 5/10 | Loss 11.0412 | Rotate Loss 4.4163 | Accuracy 9.505208/10.081632 | Rotate Accuracy 27.3438 | Time 13.4291
+Epoch 1 : Accuracy 8.880000, Rotate Accuracy 28.160000, Time 257.330374
+Epoch 2 | Batch 0/10 | Loss 7.0981 | Rotate Loss 2.8581 | Accuracy 11.718750/10.156250 | Rotate Accuracy 27.3438 | Time 13.5001
+Epoch 2 | Batch 5/10 | Loss 7.3000 | Rotate Loss 3.3927 | Accuracy 9.375000/9.461645 | Rotate Accuracy 24.7396 | Time 13.4139
+Epoch 2 : Accuracy 9.280000, Rotate Accuracy 31.040000, Time 257.718968
+Epoch 3 | Batch 0/10 | Loss 5.8930 | Rotate Loss 2.4590 | Accuracy 10.156250/8.859934 | Rotate Accuracy 29.6875 | Time 13.4613
+Epoch 3 | Batch 5/10 | Loss 6.7967 | Rotate Loss 3.2060 | Accuracy 10.286458/9.659066 | Rotate Accuracy 32.1615 | Time 13.5163
+Epoch 3 : Accuracy 9.840000, Rotate Accuracy 47.440000, Time 254.112655
+Epoch 4 | Batch 0/10 | Loss 5.5135 | Rotate Loss 1.4982 | Accuracy 4.687500/11.796055 | Rotate Accuracy 50.0000 | Time 13.4387
+Epoch 4 | Batch 5/10 | Loss 5.2799 | Rotate Loss 1.2350 | Accuracy 10.807292/10.932289 | Rotate Accuracy 54.4271 | Time 13.4354
+Epoch 4 : Accuracy 10.240000, Rotate Accuracy 53.040000, Time 257.758010
+Epoch 5 | Batch 0/10 | Loss 4.6269 | Rotate Loss 0.8428 | Accuracy 17.187500/13.429679 | Rotate Accuracy 51.5625 | Time 13.4753
+Epoch 5 | Batch 5/10 | Loss 5.0438 | Rotate Loss 1.1114 | Accuracy 10.156250/10.788135 | Rotate Accuracy 52.3438 | Time 13.3680
+Epoch 5 : Accuracy 10.160000, Rotate Accuracy 50.160000, Time 255.578589
+Epoch 6 | Batch 0/10 | Loss 4.9773 | Rotate Loss 1.8667 | Accuracy 11.718750/12.697206 | Rotate Accuracy 49.2188 | Time 13.3732
+Epoch 6 | Batch 5/10 | Loss 4.9966 | Rotate Loss 1.4045 | Accuracy 11.848958/11.391949 | Rotate Accuracy 49.8698 | Time 13.3525
+Epoch 6 : Accuracy 10.000000, Rotate Accuracy 54.960000, Time 255.546606
+Epoch 7 | Batch 0/10 | Loss 4.7739 | Rotate Loss 1.5249 | Accuracy 13.281250/16.332013 | Rotate Accuracy 45.3125 | Time 13.4764
+Epoch 7 | Batch 5/10 | Loss 4.8826 | Rotate Loss 1.0080 | Accuracy 10.286458/12.022654 | Rotate Accuracy 55.8594 | Time 13.5357
+Epoch 7 : Accuracy 11.040000, Rotate Accuracy 56.000000, Time 257.388332
+Epoch 8 | Batch 0/10 | Loss 4.9902 | Rotate Loss 1.2851 | Accuracy 8.593750/10.390892 | Rotate Accuracy 54.6875 | Time 13.6033
+Epoch 8 | Batch 5/10 | Loss 4.7816 | Rotate Loss 1.1269 | Accuracy 9.635417/12.162569 | Rotate Accuracy 56.3802 | Time 13.3718
