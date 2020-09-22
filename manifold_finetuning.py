@@ -3,10 +3,8 @@ from tqdm import tqdm
 
 import torch
 import numpy as np
-import torchneuromorphic.torchneuromorphic.doublenmnist.doublenmnist_dataloaders as dmnist
-import torchneuromorphic.torchneuromorphic.dvs_asl.dvsasl_dataloaders as dvs_asl
-import torchneuromorphic.torchneuromorphic.dvs_gestures.dvsgestures_dataloaders as dvs_gestures
-
+from torchneuromorphic.torchneuromorphic.doublenmnist.doublenmnist_dataloaders import DoubleNMNISTDataset
+from torchneuromorphic.torchneuromorphic.transforms import *
 from training_curves import plot_curves
 
 from lif_snn import backbone_conv_model, classifier_model, aux_task_gen
@@ -21,7 +19,7 @@ dtype = torch.float32
 ms = 1e-3
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-parser.add_argument("--logfile", type=bool, default=True, help='Logfile on')
+parser.add_argument("--logfile", type=bool, default=False, help='Logfile on')
 parser.add_argument("--self-supervision", type=bool, default=True, help='Logfile on')
 parser.add_argument("--batch-size", type=int, default=138, help='Batch size')
 parser.add_argument("--epochs", type=int, default=401, help='Training Epochs') 
@@ -31,13 +29,13 @@ parser.add_argument("--lr", type=float, default=.5e-12, help='Learning Rate')
 parser.add_argument("--lr-div", type=int, default=60, help='Learning Rate Division')
 parser.add_argument("--log-int", type=int, default=5, help='Logging Interval')
 parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Interval')
+parser.add_argument("--manifold", type=bool, default=True, help='Using manifold mixup')
 parser.add_argument("--train-tau", type=bool, default=False, help='Train time constants')
-parser.add_argument("--spike-reg", type=bool, default=True, help='Train time constants')
 
 # dataset
-parser.add_argument("--dataset", type=str, default="DNMNIST", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
+parser.add_argument("--dataset", type=str, default="DNMNIST", help='Options: DNMNIST')
 parser.add_argument("--train-samples", type=int, default=125, help='Number of samples per classes')
-parser.add_argument("--n-train", type=int, default=64, help='N-way for training technically I guess more')
+parser.add_argument("--n-train", type=int, default=10, help='N-way for training technically I guess more')
 parser.add_argument("--downsampling", type=int, default=2, help='downsampling')
 
 #architecture
@@ -74,72 +72,22 @@ args.tau_ref_low = args.tau_ref_high
 
 args.init_gain_conv2 = args.init_gain_conv3 = args.init_gain_fc = args.init_gain_aux = args.init_gain_conv1  
 
-
 # training data
-if args.dataset == 'DNMNIST':
-    train_dl, test_dl  = dmnist.sample_double_mnist_task(
-                meta_dataset_type = 'train',
-                N = args.n_train,
-                K = args.train_samples,
-                K_test = args.train_samples,
-                root='data.nosync/nmnist/n_mnist.hdf5',
-                batch_size=args.batch_size,
-                batch_size_test=args.batch_size,
-                ds=args.downsampling,
-                num_workers=4)
-    time_steps_train = 300
-    time_steps_test = 300
-    one_hot_opt = True
-elif args.dataset == 'ASL-DVS':
-    train_dl, test_dl  = dvsasl_dataloaders.sample_dvsasl_task(
-                meta_dataset_type = 'train',
-                N = args.n_train,
-                K = args.train_samples,
-                K_test = args.train_samples,
-                root='data.nosync/dvsasl/dvsasl.hdf5',
-                batch_size=args.batch_size,
-                batch_size_test=args.batch_size,
-                ds=args.downsampling,
-                num_workers=4)
-    time_steps_train = 100
-    time_steps_test = 100
-    one_hot_opt = True
-elif args.dataset == 'DDVSGesture':
-    train_dl, test_dl  = sample_double_mnist_task(
-                meta_dataset_type = 'train',
-                N = args.n_train,
-                K = args.train_samples,
-                K_test = args.train_samples,
-                root='data.nosync/nmnist/n_mnist.hdf5',
-                batch_size=args.batch_size,
-                batch_size_test=args.batch_size,
-                ds=args.downsampling,
-                num_workers=4)
-    time_steps_train = 500
-    time_steps_test = 1800
-    one_hot_opt = True
-elif args.dataset == 'DVSGesture':
-    train_dl, test_dl  = dvs_gestures.create_dataloader(
-                root = 'data.nosync/dvsgesture/dvs_gestures_build.hdf5',
-                work_dir = 'data/dvsgesture/',
-                batch_size = args.batch_size,
-                chunk_size_train = 500,
-                chunk_size_test = 1800,
-                ds = args.downsampling,
-                dt = 1000,
-                transform_train = None,
-                transform_test = None,
-                target_transform_train = None,
-                target_transform_test = None,
-                n_events_attention=None,
-                num_workers=4)
-    time_steps_train = 500
-    time_steps_test = 1800
-    one_hot_opt = False
-else:
-    raise Exception("Invalid dataset")
+size = [2, 32//args.downsampling, 32//args.downsampling]
+transform = Compose([
+            CropDims(low_crop=[0,0], high_crop=[32,32], dims=[2,3]),
+            Downsample(factor=[1000,1,args.downsampling,args.downsampling]),
+            ToCountFrame(T = 300, size = size),
+            ToTensor()])
 
-x_preview, y_labels = next(iter(train_dl))
+train_data = DoubleNMNISTDataset(root = 'data.nosync/nmnist/n_mnist.hdf5', train = True, labels_u = np.array([1, 12, 27, 34, 45, 56, 63, 8, 19, 20], dtype='int'), transform = transform, target_transform = None, chunk_size = 300, nclasses = args.n_train, samples_per_class = args.train_samples)
+test_data = DoubleNMNISTDataset(root = 'data.nosync/nmnist/n_mnist.hdf5', train = False, labels_u = np.array([1, 12, 27, 34, 45, 56, 63, 8, 19, 20], dtype='int'), transform = transform, target_transform = None, chunk_size = 300, nclasses = args.n_train, samples_per_class = args.train_samples)
+
+train_loader = torch.utils.data.DataLoader(train_data, batch_size=args.batch_size, shuffle=True, num_workers=4)
+test_loader = torch.utils.data.DataLoader(test_data, batch_size=args.batch_size, shuffle=True, num_workers=4)
+
+
+x_preview, y_labels = next(iter(train_loader))
 model_uuid = str(uuid.uuid4())   
 
 delta_t = args.delta_t*ms
@@ -195,52 +143,51 @@ for e in range(args.epochs):
             param_group['lr'] /= 2
             #args.lr_div *= 2
 
-    for i, (x_data, y_data) in enumerate(train_dl):
+    for i, (x_data, y_data) in enumerate(train_loader):
         start_time = time.time()
         opt.zero_grad()
         x_data = x_data.to(device)
 
-        # manifold mixup
-        lam = np.random.beta(args.alpha, args.alpha)
-        layer_mix = np.random.randint(0,3)
-        index = torch.randperm(x_data.shape[0]).to(device)
+        if args.manifold:
+            # manifold mixup
+            lam = np.random.beta(args.alpha, args.alpha)
+            layer_mix = np.random.randint(0,3)
+            index = torch.randperm(x_data.shape[0]).to(device)
 
-        y_a, y_b = y_data.to(device), y_data[index].to(device)
-        
-        # forwardpass
-        backbone.state_init_net(x_data.shape[0], device)
-        s_t = torch.zeros((x_data.shape[0], backbone.T, backbone.f_length), device = device)
-        for t in range(backbone.T):
-            x = x_data[:,t,:,:,:]
-            if layer_mix == 0:
-                x = lam * x + (1 - lam) * x[index,:]
-            x, _       = backbone.conv_layer1.forward(x)
-            x          = backbone.mpooling(x)
-            backbone.spike_count1[t] += int(x.view(x.shape[0], -1).sum(dim=1).mean().item())
-            if layer_mix == 1:
-                x = lam * x + (1 - lam) * x[index,:]
-            x, _       = backbone.conv_layer2.forward(x)
-            backbone.spike_count2[t] += int(x.view(x.shape[0], -1).sum(dim=1).mean().item())
-            if layer_mix == 2:
-                x = lam * x + (1 - lam) * x[index,:]
-            x, _       = backbone.conv_layer3.forward(x)
-            x          = backbone.mpooling(x)
-            backbone.spike_count3[t] += int(x.view(x.shape[0], -1).sum(dim=1).mean().item())
-            s_t[:,t,:] = x.view(-1, backbone.f_length)
+            y_a, y_b = y_data.to(device), y_data[index].to(device)
+            
+            # forwardpass
+            backbone.state_init_net(x_data.shape[0], device)
+            s_t = torch.zeros((x_data.shape[0], backbone.T, backbone.f_length), device = device)
+            for t in range(backbone.T):
+                x = x_data[:,t,:,:,:]
+                if layer_mix == 0:
+                    x = lam * x + (1 - lam) * x[index,:]
+                x, _       = backbone.conv_layer1.forward(x)
+                x          = backbone.mpooling(x)
+                backbone.spike_count1[t] += int(x.view(x.shape[0], -1).sum(dim=1).mean().item())
+                if layer_mix == 1:
+                    x = lam * x + (1 - lam) * x[index,:]
+                x, _       = backbone.conv_layer2.forward(x)
+                backbone.spike_count2[t] += int(x.view(x.shape[0], -1).sum(dim=1).mean().item())
+                if layer_mix == 2:
+                    x = lam * x + (1 - lam) * x[index,:]
+                x, _       = backbone.conv_layer3.forward(x)
+                x          = backbone.mpooling(x)
+                backbone.spike_count3[t] += int(x.view(x.shape[0], -1).sum(dim=1).mean().item())
+                s_t[:,t,:] = x.view(-1, backbone.f_length)
 
-        u_rr   = classifier(s_t)
+            u_rr   = classifier(s_t)
 
-        mm_loss = lam * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_a) + (1 - lam) * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_b)
-        if args.spike_reg:
-            mm_loss += 0.5 * torch.abs(u_rr.sum()/np.prod(u_rr.shape) - .0015)
-        mm_loss.backward()
+            mm_loss = lam * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_a) + (1 - lam) * loss_fn( softmax_pass(u_rr[:,args.burnin:,:].sum(dim = 1)), y_b)
+            mm_loss.backward()
 
-        mm_correct += lam * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_a).float().sum()) + (1 - lam) * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_b).float().sum())
+            mm_correct += lam * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_a).float().sum()) + (1 - lam) * float((u_rr[:,args.burnin:,:].sum(dim = 1).argmax(dim=1) == y_b).float().sum())
 
-        avg_loss = avg_loss + float(mm_loss.item()) 
+            avg_loss = avg_loss + float(mm_loss.item()) 
 
-        del s_t, y_a, y_b, u_rr
-        torch.cuda.empty_cache()
+            del s_t, y_a, y_b, u_rr, mm_loss
+            torch.cuda.empty_cache()
 
         # Rotation Training
         if args.self_supervision:
@@ -271,10 +218,6 @@ for e in range(args.epochs):
         else:
             loss = class_loss
 
-        if args.spike_reg:
-            loss += 0.5 * torch.abs(u_rr.sum()/np.prod(u_rr.shape) - .0015)
-            if args.self_supervision:
-                loss += 0.5 * torch.abs(aux_rr.sum()/np.prod(aux_rr.shape) - .025)
         loss.backward()
         opt.step()
 
@@ -291,24 +234,22 @@ for e in range(args.epochs):
             avg_A = avg_A + float(np.sum(aux_classifier.spike_count[args.burnin:])/(args.n_train*T))
             avg_rloss = avg_rloss + float(aux_loss.data.item())
         
-        del aux_rr, aux_y, bb_rr, u_rr, mm_loss, loss, class_loss, aux_loss, y_data
+        del aux_rr, aux_y, bb_rr, u_rr, loss, class_loss, aux_loss, y_data
         torch.cuda.empty_cache()
 
         if i % args.log_int == 0:
             if args.logfile:
                 with open("logs/train_"+model_uuid+".txt", "a") as file_object:
-                    file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:4f}/{:4f} | Rotate Accuracy {:.4f} | Time {:.4f}\n'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(mm_correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
+                    file_object.write('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:4f}/{:4f} | Rotate Accuracy {:.4f} | Time {:.4f}\n'.format(e+1, i, len(train_loader), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(mm_correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
             else:
-                print('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:.4f}/{:.4} | Rotate Accuracy {:.4f} | Time {:.4f}'.format(e+1, i, len(train_dl), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(mm_correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
+                print('Epoch {:d} | Batch {:d}/{:d} | Loss {:.4f} | Rotate Loss {:.4f} | Accuracy {:.4f}/{:.4} | Rotate Accuracy {:.4f} | Time {:.4f}'.format(e+1, i, len(train_loader), avg_loss/float(i+1), avg_rloss/float(i+1), (float(correct)*100)/total, (float(mm_correct)*100)/total, (float(rcorrect)*100)/total, time.time() - start_time ))
         
 
     # accuracy on test
     with torch.no_grad():
         correct = rcorrect = total = 0
-        for x_data, y_data in test_dl:
-
+        for x_data, y_data in test_loader:
             start_time = time.time()
-            x_data = x_data#.to(device)
 
             if args.self_supervision:
                 # create aux task
@@ -378,3 +319,5 @@ for e in range(args.epochs):
         }
         torch.save(checkpoint_dict, './checkpoints/'+model_uuid+'.pkl')
         del checkpoint_dict
+
+

@@ -41,3 +41,4 @@ for i in range(trials):
 #22698MiB - rtx
 #12066MiB - titanv
 #11019MiB - 2080ti
+

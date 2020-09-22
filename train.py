@@ -32,7 +32,7 @@ parser.add_argument("--save-int", type=int, default=5, help='Checkpoint Save Int
 parser.add_argument("--train-tau", type=bool, default=False, help='Train time constants')
 
 # dataset
-parser.add_argument("--dataset", type=str, default="DNMNIST", help='Options: DNMNIST/ASL-DVS/DDVSGesture')
+parser.add_argument("--dataset", type=str, default="DNMNIST", help='Options: DNMNIST')
 parser.add_argument("--train-samples", type=int, default=125, help='Number of samples per classes')
 parser.add_argument("--n-train", type=int, default=64, help='N-way for training technically I guess more')
 parser.add_argument("--downsampling", type=int, default=2, help='downsampling')
